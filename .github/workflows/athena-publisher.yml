@@ -86,6 +86,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.ATHENA_DEPLOY_TOKEN }}
           API_TOKEN_GITHUB: ${{ secrets.ATHENA_DEPLOY_TOKEN }}
+          GH_TOKEN: ${{ secrets.ATHENA_DEPLOY_TOKEN }}
         run: |
           SITE="${{ matrix.site }}"
           BRANCH="${{ github.ref_name }}"
