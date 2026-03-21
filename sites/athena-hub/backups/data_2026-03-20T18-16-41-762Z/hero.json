@@ -1,0 +1,14 @@
+[
+  {
+    "title": " ",
+    "subtitle": "",
+    "cta_text": "Bekijk de Demo's",
+    "image": "hero-athenahub-1-1770366162431.webp",
+    "cta": {
+      "label": "Bekijk de Demo's",
+      "url": "#showcase"
+    },
+    "hero_overlay_transparantie": 0.02,
+    "hero_hoogte": 503
+  }
+]

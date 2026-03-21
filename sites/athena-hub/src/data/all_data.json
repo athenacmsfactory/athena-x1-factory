@@ -1,0 +1,617 @@
+{
+  "_system": [
+    {
+      "Key": "github_user",
+      "Value": "athena-cms-factory",
+      "Description": "De GitHub gebruikersnaam van de ontwikkelaar."
+    },
+    {
+      "Key": "github_repo_name",
+      "Value": "athena-hub",
+      "Description": "De specifieke repository-naam voor dit project."
+    }
+  ],
+  "all_data_showcase": [
+    {
+      "name": "Gentse Dakwerken",
+      "category": "Bouw & Renovatie",
+      "description": "Specialist in dakrenovatie en zonnepanelen in de regio Gent.",
+      "link": {
+        "label": "BEKIJK PROJECT",
+        "url": "https://athena-cms-factory.github.io/gentse-dakwerken/"
+      },
+      "image": "showcase-gentse-dakwerken.webp"
+    },
+    {
+      "name": "KDC IT Advies",
+      "category": "IT & Consultancy",
+      "description": "Strategisch IT-advies en digitale transformatie voor KMO's.",
+      "link": {
+        "label": "BEKIJK PROJECT",
+        "url": "https://athena-cms-factory.github.io/kdc-it-advies/"
+      },
+      "image": "showcase-kdc-it-advies.webp"
+    },
+    {
+      "name": "Lex & Justitia Advocaten",
+      "category": "Juridische Dienstverlening",
+      "description": "Juridische expertise in ondernemingsrecht en vastgoedrecht.",
+      "link": {
+        "label": "BEKIJK PROJECT",
+        "url": "https://athena-cms-factory.github.io/lex-justitia/"
+      },
+      "image": "showcase-lex-justitia.webp"
+    },
+    {
+      "name": "Urban Brew & Bite",
+      "category": "Horeca",
+      "description": "Specialty coffee en urban lunch experience in het hart van Gent.",
+      "link": {
+        "label": "BEKIJK PROJECT",
+        "url": "https://athena-cms-factory.github.io/urban-brew-bite/"
+      },
+      "image": "showcase-urban-brew-bite.webp"
+    },
+    {
+      "name": "De Schaar",
+      "category": "Beauty & Wellness",
+      "description": "Een moderne website voor kapsalons met focus op sfeer en team-presentatie.",
+      "link": {
+        "label": "BEKIJK PROJECT",
+        "url": "https://athena-cms-factory.github.io/de-schaar-site"
+      },
+      "image": "technische.png"
+    },
+    {
+      "name": "Bakkerij Artisanaal",
+      "category": "Detailhandel & Food",
+      "description": "Prachtige productcatalogus voor lokale winkels met bestelmogelijkheid via e-mail.",
+      "link": {
+        "label": "BEKIJK PROJECT",
+        "url": "https://athena-cms-factory.github.io/demo-bakkerij"
+      },
+      "image": "artisanal-1-1770398212360.jpeg"
+    },
+    {
+      "name": "Belgian Chocolate Shop",
+      "category": "Webshop",
+      "description": "Een webshop voor Belgische chocolaterie",
+      "link": {
+        "label": "BEKIJK PROJECT",
+        "url": "https://athena-cms-factory.github.io/chocolade-shop/"
+      },
+      "image": "hero-1770476346310.jpeg"
+    },
+    {
+      "name": "Urban Soles",
+      "category": "Webshop",
+      "description": "High-end sneaker shop met 20+ producten en AI-gegenereerde content.",
+      "link": {
+        "label": "BEKIJK PROJECT",
+        "url": "https://athena-cms-factory.github.io/urban-soles/"
+      },
+      "image": "1-1770476441932-1770476982985.jpg"
+    },
+    {
+      "name": "Cloud Architects",
+      "category": "IT / Tech",
+      "description": "Strakke, moderne website voor IT-consultants en cloud architectuur specialisten.",
+      "link": {
+        "label": "BEKIJK DEMO",
+        "url": "https://athena-cms-factory.github.io/cloud-architects/"
+      },
+      "image": "showcase-cloud-architects.jpg"
+    }
+  ],
+  "contact": [
+    {
+      "titel": "Klaar om uw online aanwezigheid te transformeren?",
+      "email": "athena.cms.factory@gmail.be",
+      "telefoon": "",
+      "locatie": "Gent, België",
+      "btw_nummer": "",
+      "linkedin_url": "contact-laptop-gent.png"
+    }
+  ],
+  "display_config": {
+    "site_name": "athena-hub",
+    "sections": {
+      "proces": {
+        "visible_fields": [],
+        "hidden_fields": [
+          "tijdsduur",
+          "stap"
+        ]
+      },
+      "showcase": {
+        "visible_fields": [],
+        "hidden_fields": []
+      }
+    }
+  },
+  "footer": [
+    {
+      "footer_text": "© 2026 Athena CMS Factory - Kracht door Eenvoud.",
+      "email": "athena.cms.factory@gmail.be",
+      "telefoon": "+32 (0) 470 00 00 00",
+      "adres": "Gent, België",
+      "facebook_url": "#",
+      "linkedin_url": "#",
+      "instagram_url": "#",
+      "tagline": "Uw Business op Snelheid. Beheerd via Google Sheets."
+    }
+  ],
+  "header": [
+    {
+      "header_height": 68,
+      "header_transparent": false,
+      "header_show_button": true,
+      "header_visible": true,
+      "header_show_title": true,
+      "header_show_logo": true,
+      "header_show_tagline": true,
+      "logo_text": "ATHENA",
+      "site_logo_image": "logo-athena-owl-tsnpbg-1770371802255.webp"
+    }
+  ],
+  "hero": [
+    {
+      "title": "",
+      "subtitle": "",
+      "cta_text": "Bekijk de Demo's",
+      "image": "hero-athenahub-1-1770366162431.webp",
+      "cta": "Bekijk de Demo's",
+      "hero_overlay_transparantie": 0.02,
+      "hero_hoogte": 503
+    }
+  ],
+  "innovatie": [],
+  "intro": [
+    {
+      "title": "De Ultieme Website-Oplossing voor de Belgische Ondernemer.",
+      "content": "Athena CMS Factory is niet zomaar een bedrijf; het is het resultaat van een traject van re-integratie en technische meesterschap. Op een eenvoudige Chromebook hebben we een systeem gebouwd dat sneller is dan de meeste dure platformen.",
+      "subcontent": "Wij geloven dat technologie toegankelijk moet zijn. Daarom gebruiken we Google Sheets als uw CMS. Als u een tabel kunt invullen, kunt u uw website beheren.",
+      "image": ""
+    }
+  ],
+  "layout_settings": {
+    "voordelen": "grid",
+    "innovatie": "list",
+    "showcase": "grid",
+    "proces": "z-pattern"
+  },
+  "links_config": {
+    "showcase:0:link": "https://athena-cms-factory.github.io/urban-brew-bite",
+    "showcase:1:link": "https://athena-cms-factory.github.io/urban-soles",
+    "showcase:2:link": "https://athena-cms-factory.github.io/chocolade-shop",
+    "showcase:3:link": "https://athena-cms-factory.github.io/academy-1",
+    "showcase:4:link": "https://athena-cms-factory.github.io/de-schaar-site",
+    "showcase:5:link": "https://athena-cms-factory.github.io/kdc-it-advies",
+    "showcase:6:link": "https://athena-cms-factory.github.io/pure-bloom-floral",
+    "showcase:7:link": "https://athena-cms-factory.github.io/athena-pro",
+    "showcase:8:link": "https://athena-cms-factory.github.io/bakkerij-de-graankorrel",
+    "showcase:9:link": "https://athena-cms-factory.github.io/cloud-architects",
+    "showcase:10:link": "https://athena-cms-factory.github.io/gentse-dakwerken",
+    "showcase:11:link": "https://athena-cms-factory.github.io/lex-justitia"
+  },
+  "proces": [
+    {
+      "stap": 1,
+      "titel": "Intake & Blueprint",
+      "tijdsduur": "1 uur",
+      "uitleg": "We bespreken uw sector en kiezen de juiste Athena Blueprint."
+    },
+    {
+      "stap": 2,
+      "titel": "Content Sync",
+      "tijdsduur": "2 uur",
+      "uitleg": "U vult uw gegevens in de Google Sheet in. Wij koppelen de Factory."
+    },
+    {
+      "stap": 3,
+      "titel": "Lancering",
+      "tijdsduur": "21 uur",
+      "uitleg": "Onze AI-engine genereert de site, voert tests uit en zet deze live op uw domein."
+    }
+  ],
+  "schema": {
+    "blueprint_name": "athena-cms-factory-promo",
+    "description": "Conversie-gerichte landingspagina voor de Athena CMS Factory. Gericht op Vlaamse KMO's die nood hebben aan een high-end website via AI-automatisatie.",
+    "features": {
+      "ecommerce": false,
+      "google_search_links": false,
+      "search_context": "Athena CMS Factory website laten maken KMO Vlaanderen AI automatisatie"
+    },
+    "data_structure": [
+      {
+        "table_name": "site_settings",
+        "columns": [
+          "site_name",
+          "tagline",
+          "logo_text",
+          "footer_text"
+        ]
+      },
+      {
+        "table_name": "contact",
+        "columns": [
+          "titel",
+          "email",
+          "telefoon",
+          "locatie",
+          "btw_nummer",
+          "linkedin_url"
+        ]
+      },
+      {
+        "table_name": "hero",
+        "columns": [
+          "title",
+          "subtitle",
+          "cta_text",
+          "image"
+        ]
+      },
+      {
+        "table_name": "intro",
+        "columns": [
+          "title",
+          "content",
+          "subcontent",
+          "image"
+        ]
+      },
+      {
+        "table_name": "voordelen",
+        "columns": [
+          "title",
+          "description",
+          "icon"
+        ]
+      },
+      {
+        "table_name": "innovatie",
+        "columns": [
+          "category",
+          "skills"
+        ]
+      },
+      {
+        "table_name": "showcase",
+        "columns": [
+          "name",
+          "category",
+          "description",
+          "link",
+          "image"
+        ]
+      },
+      {
+        "table_name": "proces",
+        "columns": [
+          "stap",
+          "titel",
+          "tijdsduur",
+          "uitleg"
+        ]
+      }
+    ],
+    "sections": [
+      {
+        "id": "hero",
+        "title": "Hoofdpagina",
+        "fields": {
+          "title": "string",
+          "subtitle": "text",
+          "cta_text": "string",
+          "image": "image"
+        }
+      },
+      {
+        "id": "intro",
+        "title": "De Revolutie in Webdesign",
+        "fields": {
+          "title": "string",
+          "content": "text",
+          "subcontent": "text",
+          "image": "image"
+        }
+      },
+      {
+        "id": "voordelen",
+        "title": "Waarom kiezen voor Athena?",
+        "fields": {
+          "items": [
+            {
+              "title": "string",
+              "description": "text",
+              "icon": "string"
+            }
+          ]
+        }
+      },
+      {
+        "id": "innovatie",
+        "title": "De Kracht van de Factory",
+        "fields": {
+          "categories": [
+            {
+              "name": "string",
+              "skills": "text"
+            }
+          ]
+        }
+      },
+      {
+        "id": "showcase",
+        "title": "Recent Gerealiseerde Sites",
+        "fields": {
+          "items": [
+            {
+              "name": "string",
+              "category": "string",
+              "description": "text",
+              "link": "string",
+              "image": "image"
+            }
+          ]
+        }
+      },
+      {
+        "id": "proces",
+        "title": "Van Aanvraag tot Live in 24u",
+        "fields": {
+          "items": [
+            {
+              "stap": "string",
+              "titel": "string",
+              "tijdsduur": "string",
+              "uitleg": "text"
+            }
+          ]
+        }
+      },
+      {
+        "id": "contact",
+        "title": "Start Uw Project",
+        "fields": {
+          "title": "string",
+          "email": "string",
+          "linkedin": "string",
+          "location": "string"
+        }
+      }
+    ]
+  },
+  "section_order": [
+    "hero",
+    "intro",
+    "voordelen",
+    "showcase",
+    "innovatie",
+    "proces",
+    "contact"
+  ],
+  "section_settings": {
+    "site_name": "athena-hub"
+  },
+  "showcase": [
+    {
+      "name": "Urban Brew & Bite",
+      "category": "Horeca",
+      "description": "Specialty coffee en urban lunch experience in het hart van Gent.",
+      "link": "https://athena-cms-factory.github.io/urban-brew-bite",
+      "image": "showcase-urban-brew-bite.webp"
+    },
+    {
+      "name": "Urban Soles",
+      "category": "Webshop",
+      "description": "High-end sneaker shop met 20+ producten en AI-gegenereerde content.",
+      "link": "https://athena-cms-factory.github.io/urban-soles",
+      "image": "1-1770476441932-1770476982985.jpg"
+    },
+    {
+      "name": "Belgian Chocolate Shop",
+      "category": "Webshop",
+      "description": "Een webshop voor Belgische chocolaterie",
+      "link": "https://athena-cms-factory.github.io/chocolade-shop",
+      "image": "hero-1770476346310.jpeg"
+    },
+    {
+      "name": "Academy-1",
+      "category": "Educatie",
+      "description": "Een modern leerplatform voor cursussen en trainingen.",
+      "link": "https://athena-cms-factory.github.io/academy-1",
+      "image": "b9367654-49e1-48f6-a95b-0c4e9f4308c6.jpg"
+    },
+    {
+      "name": "De Schaar",
+      "category": "Beauty & Wellness",
+      "description": "Een moderne website voor kapsalons met focus op sfeer en team-presentatie.",
+      "link": "https://athena-cms-factory.github.io/de-schaar-site",
+      "image": "technische.png"
+    },
+    {
+      "name": "KDC IT Advies",
+      "category": "IT & Consultancy",
+      "description": "Strategisch IT-advies en digitale transformatie voor KMO's.",
+      "link": "https://athena-cms-factory.github.io/kdc-it-advies",
+      "image": "showcase-kdc-it-advies.webp"
+    },
+    {
+      "name": "Pure Bloom Floral",
+      "category": "Retail / Lifestyle",
+      "description": "Exclusieve bloemencreaties en event-styling.",
+      "link": "https://athena-cms-factory.github.io/pure-bloom-floral",
+      "image": "showcase-pure-bloom-floral.webp"
+    },
+    {
+      "name": "Athena Pro",
+      "category": "B2B / SaaS",
+      "description": "Een professionele showcase voor geavanceerde B2B diensten en SaaS oplossingen.",
+      "link": "https://athena-cms-factory.github.io/athena-pro",
+      "image": "showcase-athena-pro.jpg"
+    },
+    {
+      "name": "Bakkerij de Graankorrel",
+      "category": "Detailhandel & Food",
+      "description": "Lokale ambachtelijke bakkerij met een uitgebreid assortiment.",
+      "link": "https://athena-cms-factory.github.io/bakkerij-de-graankorrel",
+      "image": "artisanal-1-1770398212360.jpeg"
+    },
+    {
+      "name": "Cloud Architects",
+      "category": "IT / Tech",
+      "description": "Strakke, moderne website voor IT-consultants en cloud architectuur specialisten.",
+      "link": "https://athena-cms-factory.github.io/cloud-architects",
+      "image": "showcase-cloud-architects.jpg"
+    },
+    {
+      "name": "Gentse Dakwerken",
+      "category": "Bouw & Renovatie",
+      "description": "Specialist in dakrenovatie en zonnepanelen in de regio Gent.",
+      "link": "https://athena-cms-factory.github.io/gentse-dakwerken",
+      "image": "showcase-gentse-dakwerken.webp"
+    },
+    {
+      "name": "Lex & Justitia Advocaten",
+      "category": "Juridische Dienstverlening",
+      "description": "Juridische expertise in ondernemingsrecht en vastgoedrecht.",
+      "link": "https://athena-cms-factory.github.io/lex-justitia",
+      "image": "showcase-lex-justitia.webp"
+    }
+  ],
+  "site_settings": [
+    {
+      "site_name": "Athena CMS Factory",
+      "tagline": "Uw Business op Snelheid. Beheerd via Google Sheets.",
+      "global_shadow": "soft",
+      "global_radius": "0px",
+      "content_top_offset": 16,
+      "light_bg_color": "#d0d1d2",
+      "light_header_color": "#d0d1d2",
+      "light_hero_bg_color": "#e7fdfc"
+    }
+  ],
+  "style_bindings": [
+    {
+      "Key": "site_name",
+      "Value": "athena-hub"
+    },
+    {
+      "Key": "hero:0:image",
+      "Value": {
+        "bold": false,
+        "italic": false,
+        "fontSize": "16px",
+        "textAlign": "left",
+        "fontFamily": "sans-serif",
+        "textShadow": false
+      }
+    },
+    {
+      "Key": "hero:0:title",
+      "Value": {
+        "bold": false,
+        "italic": false,
+        "fontSize": "16px",
+        "textAlign": "left",
+        "fontFamily": "sans-serif",
+        "textShadow": false
+      }
+    },
+    {
+      "Key": "intro:0:title",
+      "Value": {
+        "bold": false,
+        "italic": false,
+        "fontSize": "16px",
+        "textAlign": "left",
+        "fontFamily": "sans-serif",
+        "textShadow": false
+      }
+    },
+    {
+      "Key": "hero:0:subtitle",
+      "Value": {
+        "bold": false,
+        "italic": false,
+        "fontSize": "16px",
+        "textAlign": "left",
+        "fontFamily": "sans-serif",
+        "textShadow": false
+      }
+    },
+    {
+      "Key": "site_settings:0:site_name",
+      "Value": {
+        "bold": false,
+        "italic": false,
+        "fontSize": "16px",
+        "textAlign": "left",
+        "fontFamily": "sans-serif",
+        "textShadow": false
+      }
+    },
+    {
+      "Key": "showcase:1:link",
+      "Value": {
+        "bold": false,
+        "italic": false,
+        "fontSize": "16px",
+        "textAlign": "left",
+        "fontFamily": "sans-serif",
+        "textShadow": false
+      }
+    },
+    {
+      "Key": "showcase:0:link",
+      "Value": {
+        "bold": false,
+        "italic": false,
+        "fontSize": "16px",
+        "textAlign": "left",
+        "fontFamily": "sans-serif",
+        "textShadow": false
+      }
+    },
+    {
+      "Key": "contact:0:email",
+      "Value": {
+        "bold": false,
+        "italic": false,
+        "fontSize": "16px",
+        "textAlign": "left",
+        "fontFamily": "sans-serif",
+        "textShadow": false
+      }
+    }
+  ],
+  "style_config": [
+    {
+      "light_header_color": "#ffffff",
+      "light_bg_color": "#b6b7b9",
+      "hero_height": "85vh",
+      "hero_max_height": "150vh",
+      "hero_aspect_ratio": "16/9",
+      "hero_padding_top": 0
+    }
+  ],
+  "voordelen": [
+    {
+      "titel": "Google Sheets als CMS",
+      "description": "Beheer uw tekst en prijzen in een vertrouwde omgeving. Wij synchroniseren de data direct naar uw site.",
+      "icon": "Table"
+    },
+    {
+      "titel": "Extreme Snelheid (Vite + React)",
+      "description": "Onze sites laden in een fractie van een seconde. Goed voor uw SEO en uw klanten.",
+      "icon": "Zap"
+    },
+    {
+      "titel": "Chromebook Optimized",
+      "description": "Gebouwd op Debian 12 met minimale middelen. Dit bewijst onze focus op efficiëntie en robuustheid.",
+      "icon": "Smartphone"
+    }
+  ]
+}

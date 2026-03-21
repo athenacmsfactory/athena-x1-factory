@@ -1,0 +1,6 @@
+{
+  "siteType": "basis",
+  "name": "bakkerij-de-graankorrel",
+  "status": "local",
+  "framework": "vite-react"
+}

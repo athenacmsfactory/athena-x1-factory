@@ -1,0 +1,47 @@
+import React from 'react';
+
+const Team = ({ data, sectionName }) => {
+    if (!data || data.length === 0) return null;
+
+    return (
+        <section id={sectionName} data-dock-section={sectionName} className="py-24 px-6 bg-white">
+            <div className="max-w-7xl mx-auto">
+                <div className="text-center mb-16">
+                    <h2 className="text-4xl font-serif font-bold text-primary mb-4 capitalize">{sectionName.replace(/_/g, ' ')}</h2>
+                    <div className="h-1 w-20 bg-accent mx-auto rounded-full"></div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16">
+                    {data.map((item, index) => {
+                        const naamKey = Object.keys(item).find(k => /name|naam/i.test(k)) || 'name';
+                        const rolKey = Object.keys(item).find(k => /role|rol|functie/i.test(k)) || 'role';
+                        const bioKey = Object.keys(item).find(k => /tekst|bio|beschrijving/i.test(k)) || 'bio';
+                        const imgKey = Object.keys(item).find(k => /image|foto|afbeelding/i.test(k)) || 'image_url';
+
+                        const displayImg = item[imgKey] || "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400"; // Fallback placeholder
+
+                        return (
+                            <div key={index} className="flex flex-col items-center text-center group">
+                                <div className="w-48 h-48 rounded-full overflow-hidden mb-6 border-4 border-white shadow-2xl group-hover:scale-105 transition-transform duration-300 ring-4 ring-transparent hover:ring-accent/30 relative">
+                                    <img src={displayImg} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind={`sectionName.0.imgKey`} />
+                                </div>
+                                <h3 className="text-xl font-bold text-primary mb-1">
+                                    <span data-dock-type="text" data-dock-bind={`sectionName.0.naamKey`}>{item[naamKey]}</span>
+                                </h3>
+                                <div className="text-sm font-bold text-accent uppercase tracking-widest mb-4">
+                                    <span data-dock-type="text" data-dock-bind={`sectionName.0.rolKey`}>{item[rolKey]}</span>
+                                </div>
+                                {bioKey && (
+                                    <p className="text-slate-600 text-sm leading-relaxed max-w-xs mx-auto">
+                                        <span data-dock-type="text" data-dock-bind={`sectionName.0.bioKey`}>{item[bioKey]}</span>
+                                    </p>
+                                )}
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+        </section>
+    );
+};
+
+export default Team;

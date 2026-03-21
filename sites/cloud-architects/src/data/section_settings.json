@@ -1,0 +1,26 @@
+[
+  {
+    "id": "basis",
+    "layout": "basis",
+    "visible": true,
+    "padding": 64
+  },
+  {
+    "id": "expertise",
+    "layout": "grid",
+    "visible": true,
+    "padding": 64
+  },
+  {
+    "id": "projects",
+    "layout": "z-pattern",
+    "visible": true,
+    "padding": 64
+  },
+  {
+    "id": "packages",
+    "layout": "packages",
+    "visible": true,
+    "padding": 80
+  }
+]

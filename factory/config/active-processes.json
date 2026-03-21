@@ -1,0 +1,9 @@
+{
+  "5002": {
+    "pid": 30975,
+    "id": "athena-dock",
+    "type": "dock",
+    "startTime": "2026-03-21T22:28:25.658Z",
+    "logFile": "/home/kareltestspecial/myAgent/athena-y/factory/output/logs/athena-dock-dock.log"
+  }
+}

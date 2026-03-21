@@ -1,0 +1,133 @@
+name: 🔱 Athena Monorepo Publisher
+
+on:
+  workflow_dispatch:
+    inputs:
+      sites:
+        description: 'Site(s) om te publiceren (spatie-gescheiden, bv. "karel-portfolio-ath"). Leeg = alle sites.'
+        required: false
+        default: ''
+      run_audit:
+        description: 'Lighthouse Audit uitvoeren?'
+        type: boolean
+        default: false
+  repository_dispatch:
+    types: [publish_from_sheet]
+  push:
+    paths:
+      - 'sites/**'
+      - 'sites-external/**'
+    branches:
+      - main
+      - 'feat/**'
+      - 'fix/**'
+
+jobs:
+  discovery:
+    runs-on: ubuntu-latest
+    outputs:
+      sites: ${{ steps.set-sites.outputs.sites }}
+      any_changed: ${{ steps.set-sites.outputs.any_changed }}
+    steps:
+      - name: 🛰️ Checkout Monorepo
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🔍 Detect Changed Sites
+        id: set-sites
+        run: |
+          if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+            SITE="${{ github.event.client_payload.site }}"
+            CHANGED_SITES="[\"$SITE\"]"
+          elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            INPUT_SITES="${{ github.event.inputs.sites }}"
+            if [ -n "$INPUT_SITES" ]; then
+              CHANGED_SITES=$(echo "$INPUT_SITES" | jq -R -s -c 'split(" ") | map(gsub("^\\s+|\\s+$"; "")) | map(select(length > 0))')
+            else
+              SITES_LIST=$(ls -d sites/*/ 2>/dev/null | xargs -I{} basename {})
+              EXTERNAL_LIST=$(ls -d sites-external/*/ 2>/dev/null | xargs -I{} basename {})
+              CHANGED_SITES=$(echo -e "$SITES_LIST\n$EXTERNAL_LIST" | jq -R -s -c 'split("\n") | map(gsub("^\\s+|\\s+$"; "")) | map(select(length > 0))')
+            fi
+          else
+            BEFORE="${{ github.event.before }}"
+            if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+              BEFORE="HEAD~1"
+            fi
+            RAW_SITES=$(git diff --name-only "$BEFORE" ${{ github.event.after }} | grep -E '^(sites|sites-external)/' | cut -d/ -f2 | sort -u | tr -d '\r' | xargs)
+            CHANGED_SITES=$(echo "$RAW_SITES" | jq -R -s -c 'split(" ") | map(gsub("^\\s+|\\s+$"; "")) | map(select(length > 0))')
+          fi
+          if [ "$CHANGED_SITES" = "[]" ] || [ -z "$CHANGED_SITES" ]; then
+            echo "any_changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "any_changed=true" >> $GITHUB_OUTPUT
+            echo "sites=$CHANGED_SITES" >> $GITHUB_OUTPUT
+          fi
+
+  publish:
+    needs: discovery
+    if: needs.discovery.outputs.any_changed == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        site: ${{ fromJson(needs.discovery.outputs.sites) }}
+      fail-fast: false
+    steps:
+      - name: 🛰️ Checkout Monorepo
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🚀 Push Subtree to Client Repo
+        env:
+          GITHUB_TOKEN: ${{ secrets.ATHENA_DEPLOY_TOKEN }}
+          API_TOKEN_GITHUB: ${{ secrets.ATHENA_DEPLOY_TOKEN }}
+        run: |
+          SITE="${{ matrix.site }}"
+          BRANCH="${{ github.ref_name }}"
+          
+          # DYNAMISCHE TARGET ROUTING (v8.2)
+          if [ "${{ github.repository }}" == "athenacmsfactory/athena-x" ]; then
+            TARGET_ORG="ath-x"
+            echo "🛠️ Development environment detected. Targeting organization: $TARGET_ORG"
+          else
+            TARGET_ORG="athena-cms-factory"
+            echo "🚀 Production environment detected. Targeting organization: $TARGET_ORG"
+          fi
+
+          if [ -d "sites/$SITE" ]; then
+            PREFIX="sites/$SITE"
+          elif [ -d "sites-external/$SITE" ]; then
+            PREFIX="sites-external/$SITE"
+          else
+            exit 1
+          fi
+          TARGET_REPO="$TARGET_ORG/$SITE"
+          
+          if ! gh repo view "$TARGET_REPO" >/dev/null 2>&1; then
+            echo "✨ Creating repo $TARGET_REPO..."
+            gh repo create "$TARGET_REPO" --public --description "Athena CMS Site: $SITE"
+            sleep 5
+          fi
+
+          REMOTE_URL="https://x-access-token:${API_TOKEN_GITHUB}@github.com/${TARGET_REPO}.git"
+          SPLIT_SHA=$(git subtree split --prefix=$PREFIX $BRANCH)
+          git push "$REMOTE_URL" "$SPLIT_SHA":refs/heads/main --force
+
+          # KICKSTART gh-pages (Alleen als deze niet bestaat)
+          if ! gh api repos/$TARGET_REPO/branches/gh-pages >/dev/null 2>&1; then
+            echo "🌱 Creating gh-pages branch..."
+            gh api --method POST /repos/$TARGET_REPO/git/refs -f ref='refs/heads/gh-pages' -f sha="$SPLIT_SHA" || echo "Branch bestaat al of fout"
+            sleep 10
+          fi
+
+          # FAILSAFE Pages activatie (Alleen als deze niet aan staat)
+          if ! gh api repos/$TARGET_REPO/pages >/dev/null 2>&1; then
+            echo "🌐 Activating GitHub Pages..."
+            sleep 5
+            gh api --method POST /repos/$TARGET_REPO/pages -f source='{"branch": "gh-pages", "path": "/"}' || echo "Pages al actief of fout"
+          fi

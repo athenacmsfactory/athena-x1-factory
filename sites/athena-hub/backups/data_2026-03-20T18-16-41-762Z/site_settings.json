@@ -1,0 +1,12 @@
+[
+  {
+    "site_name": "Athena CMS Factory",
+    "tagline": "Uw Business op Snelheid. Beheerd via Google Sheets.",
+    "global_shadow": "soft",
+    "global_radius": "0px",
+    "content_top_offset": 16,
+    "light_bg_color": "#d0d1d2",
+    "light_header_color": "#d0d1d2",
+    "light_hero_bg_color": "#e7fdfc"
+  }
+]

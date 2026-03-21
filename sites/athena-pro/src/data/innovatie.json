@@ -1,0 +1,17 @@
+[
+  {
+    "name": "AI Content Intelligence",
+    "skills": "Onze AI-engine analyseert uw sector, uw concurrenten en uw unieke troeven om teksten te genereren die verkopen. Geen standaard templates, maar maatwerk op schaal.",
+    "image": "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=1000"
+  },
+  {
+    "name": "De Athena Dock Editor",
+    "skills": "Een visuele editor die direct verbonden is met uw bronbestanden. Wat u ziet is wat u krijgt, zonder de overhead van een zwaar CMS zoals WordPress.",
+    "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1000"
+  },
+  {
+    "name": "Cloud-Native Architectuur",
+    "skills": "Wij hosten op wereldwijde edge-netwerken (GitHub Pages / Cloudflare). Uw site is onverwoestbaar, razendsnel en extreem veilig.",
+    "image": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1000"
+  }
+]

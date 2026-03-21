@@ -1,0 +1,86 @@
+[
+  {
+    "name": "Urban Brew & Bite",
+    "category": "Horeca",
+    "description": "Specialty coffee en urban lunch experience in het hart van Gent.",
+    "link": "https://athena-cms-factory.github.io/urban-brew-bite",
+    "image": "showcase-urban-brew-bite.webp"
+  },
+  {
+    "name": "Urban Soles",
+    "category": "Webshop",
+    "description": "High-end sneaker shop met 20+ producten en AI-gegenereerde content.",
+    "link": "https://athena-cms-factory.github.io/urban-soles",
+    "image": "1-1770476441932-1770476982985.jpg"
+  },
+  {
+    "name": "Belgian Chocolate Shop",
+    "category": "Webshop",
+    "description": "Een webshop voor Belgische chocolaterie",
+    "link": "https://athena-cms-factory.github.io/chocolade-shop",
+    "image": "hero-1770476346310.jpeg"
+  },
+  {
+    "name": "Academy-1",
+    "category": "Educatie",
+    "description": "Een modern leerplatform voor cursussen en trainingen.",
+    "link": "https://athena-cms-factory.github.io/academy-1",
+    "image": "b9367654-49e1-48f6-a95b-0c4e9f4308c6.jpg"
+  },
+  {
+    "name": "De Schaar",
+    "category": "Beauty & Wellness",
+    "description": "Een moderne website voor kapsalons met focus op sfeer en team-presentatie.",
+    "link": "https://athena-cms-factory.github.io/de-schaar-site",
+    "image": "technische.png"
+  },
+  {
+    "name": "KDC IT Advies",
+    "category": "IT & Consultancy",
+    "description": "Strategisch IT-advies en digitale transformatie voor KMO's.",
+    "link": "https://athena-cms-factory.github.io/kdc-it-advies",
+    "image": "showcase-kdc-it-advies.webp"
+  },
+  {
+    "name": "Pure Bloom Floral",
+    "category": "Retail / Lifestyle",
+    "description": "Exclusieve bloemencreaties en event-styling.",
+    "link": "https://athena-cms-factory.github.io/pure-bloom-floral",
+    "image": "showcase-pure-bloom-floral.webp"
+  },
+  {
+    "name": "Athena Pro",
+    "category": "B2B / SaaS",
+    "description": "Een professionele showcase voor geavanceerde B2B diensten en SaaS oplossingen.",
+    "link": "https://athena-cms-factory.github.io/athena-pro",
+    "image": "showcase-athena-pro.jpg"
+  },
+  {
+    "name": "Bakkerij de Graankorrel",
+    "category": "Detailhandel & Food",
+    "description": "Lokale ambachtelijke bakkerij met een uitgebreid assortiment.",
+    "link": "https://athena-cms-factory.github.io/bakkerij-de-graankorrel",
+    "image": "artisanal-1-1770398212360.jpeg"
+  },
+  {
+    "name": "Cloud Architects",
+    "category": "IT / Tech",
+    "description": "Strakke, moderne website voor IT-consultants en cloud architectuur specialisten.",
+    "link": "https://athena-cms-factory.github.io/cloud-architects",
+    "image": "showcase-cloud-architects.jpg"
+  },
+  {
+    "name": "Gentse Dakwerken",
+    "category": "Bouw & Renovatie",
+    "description": "Specialist in dakrenovatie en zonnepanelen in de regio Gent.",
+    "link": "https://athena-cms-factory.github.io/gentse-dakwerken",
+    "image": "showcase-gentse-dakwerken.webp"
+  },
+  {
+    "name": "Lex & Justitia Advocaten",
+    "category": "Juridische Dienstverlening",
+    "description": "Juridische expertise in ondernemingsrecht en vastgoedrecht.",
+    "link": "https://athena-cms-factory.github.io/lex-justitia",
+    "image": "showcase-lex-justitia.webp"
+  }
+]

@@ -1,0 +1,6 @@
+{
+  "siteType": "academy",
+  "name": "academy-1",
+  "status": "local",
+  "framework": "vite-react"
+}
