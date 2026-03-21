@@ -22,7 +22,7 @@ async function run() {
     const manager = new AthenaDataManager(root);
 
     try {
-        await manager.pushToSheet(projectName);
+        await manager.syncToSheet(projectName);
     } catch (e) {
         console.error(`❌ Fout: ${e.message}`);
         process.exit(1);

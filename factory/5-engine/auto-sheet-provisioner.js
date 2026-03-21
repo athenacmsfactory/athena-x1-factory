@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { loadEnv } from './env-loader.js';
+import { SheetMaster } from './lib/SheetMaster.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -47,6 +48,26 @@ export async function provisionSheet(projectName, clientEmail = null) {
         const newSheetId = copyRes.data.id;
         const editUrl = `https://docs.google.com/spreadsheets/d/${newSheetId}/edit`;
         console.log(`✅ Sheet aangemaakt! ID: ${newSheetId}`);
+
+        // 1b. Geavanceerde opmaak toepassen (Dropdowns & Validatie)
+        try {
+            const sheetMaster = new SheetMaster(auth);
+            const spreadsheet = await sheets.spreadsheets.get({ spreadsheetId: newSheetId });
+            
+            // Zoek de layout_settings tab
+            const layoutSheet = spreadsheet.data.sheets.find(s => s.properties.title === 'layout_settings');
+            if (layoutSheet) {
+                console.log("🎨 Layout dropdowns toepassen...");
+                await sheetMaster.addDropdown(
+                    newSheetId, 
+                    layoutSheet.properties.sheetId, 
+                    1, 50, 1, 2, // Kolom B (Index 1)
+                    ['hero', 'grid', 'list', 'contact', 'testimonials']
+                );
+            }
+        } catch (e) {
+            console.warn("⚠️ Kon geavanceerde opmaak niet volledig toepassen:", e.message);
+        }
 
         // 2. Deel met Robot (voor CMS sync)
         let saEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;

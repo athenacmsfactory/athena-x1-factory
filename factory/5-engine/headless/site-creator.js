@@ -41,7 +41,7 @@ async function run() {
         console.log(`✅ Blueprint generated: ${blueprint.projectName}`);
         console.log(`📊 SiteType: ${blueprint.siteType}, Style: ${blueprint.styleName}`);
 
-        // The input folder is located in athena-x/input (one level above factory/)
+        // The input folder is located in athena-y/input (one level above factory/)
         const athenaXRoot = path.resolve(factoryRoot, '..');
         const inputDir = path.join(athenaXRoot, 'input');
         const projectPath = path.join(inputDir, blueprint.projectName);

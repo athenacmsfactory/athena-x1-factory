@@ -14,7 +14,7 @@ import { ask } from './cli-interface.js';
  */
 export async function loadEnv(defaultPath) {
     let result = dotenv.config({ path: defaultPath });
-    const isHeadless = process.argv.includes('--headless') || process.argv[1].includes('athena-agent.js');
+    const isHeadless = process.argv.includes('--headless') || (process.argv[1] && process.argv[1].includes('athena-agent.js'));
 
     while (result.error || !process.env.GEMINI_API_KEY) {
         if (isHeadless) {

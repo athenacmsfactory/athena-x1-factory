@@ -22,7 +22,7 @@ function doPost(e) {
   if (action === "deploy") {
     // We mikken standaard op dé Monorepo
     const monorepoUser = params.monorepo_user || "athenacmsfactory";
-    const monorepoName = params.monorepo_name || "athena-x";
+    const monorepoName = params.monorepo_name || "athena-y";
 
     const url = `https://api.github.com/repos/${monorepoUser}/${monorepoName}/dispatches`;
     const options = {

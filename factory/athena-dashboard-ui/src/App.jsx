@@ -109,6 +109,8 @@ function App() {
           <div className="mt-6 pt-2 border-t border-athena-border/30">
              <p className="text-[8px] font-black text-slate-600 uppercase tracking-widest px-3 mb-2">Snelle Tools</p>
              <ActionBtn label="DOCK" icon="⚓" onClick={() => startTool('Dock', 'http://localhost:5002')} />
+             <ActionBtn label="HEALTH" icon="🏥" onClick={() => window.open('/portfolio-status.html', '_blank')} />
+             <ActionBtn label="ANALYTICS" icon="📈" onClick={() => window.open('/conversion-analytics.html', '_blank')} />
              <ActionBtn label="REVIEW" icon="⚖️" onClick={() => window.open('http://localhost:5001/reviewer.html', '_blank')} />
              <ActionBtn label="LAYOUT" icon="🎨" onClick={() => startTool('Layout Editor', 'http://localhost:5003')} />
           </div>

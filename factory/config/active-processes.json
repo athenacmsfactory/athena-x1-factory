@@ -1,9 +1,16 @@
 {
   "5002": {
-    "pid": 5869,
+    "pid": 28366,
     "id": "athena-dock",
     "type": "dock",
-    "startTime": "2026-03-21T22:36:39.803Z",
+    "startTime": "2026-03-21T23:30:11.329Z",
     "logFile": "/home/kareltestspecial/myAgent/athena-y/factory/output/logs/athena-dock-dock.log"
+  },
+  "5006": {
+    "pid": 28958,
+    "id": "academy-1",
+    "type": "preview",
+    "startTime": "2026-03-21T23:30:25.603Z",
+    "logFile": "/home/kareltestspecial/myAgent/athena-y/factory/output/logs/academy-1-preview.log"
   }
 }

@@ -17,6 +17,11 @@ const SectionManagerPanel = (props) => {
     onMoveField,
     onToggleField,
     onToggleInline,
+    onOpenLayoutManager,
+    onOpenNavigationManager,
+    onAIRedesign,
+    onDuplicateSection,
+    onRenameSection,
     width
   } = props;
 
@@ -40,7 +45,23 @@ const SectionManagerPanel = (props) => {
     <div className="space-y-3 p-4">
       <div className="flex items-center justify-between mb-4 border-b border-slate-200 pb-2">
         <h4 className="font-black uppercase text-[10px] tracking-widest text-slate-400">Page Sections</h4>
-        <span className="text-[9px] font-bold text-slate-300 italic">{siteStructure?.sections?.length || 0} items</span>
+        <div className="flex gap-2">
+            <button 
+                onClick={onOpenNavigationManager}
+                className="px-2 py-1 bg-slate-100 text-slate-500 text-[9px] font-black uppercase rounded border border-slate-200 hover:bg-white hover:text-blue-600 transition-all"
+                title="Manage Site Navigation"
+            >
+                🧭 Nav
+            </button>
+            <button 
+                onClick={onOpenLayoutManager}
+                className="px-2 py-1 bg-slate-100 text-slate-500 text-[9px] font-black uppercase rounded border border-slate-200 hover:bg-white hover:text-blue-600 transition-all"
+                title="Manage Layout Presets"
+            >
+                🏗️ Layouts
+            </button>
+            <span className="text-[9px] font-bold text-slate-300 italic self-center">{siteStructure?.sections?.length || 0} items</span>
+        </div>
       </div>
       {(siteStructure?.sections || []).map((section, idx) => (
         <div key={section} className="flex items-center justify-between p-3 bg-white border border-slate-200 rounded shadow-sm hover:border-blue-300 transition-all group">
@@ -107,6 +128,33 @@ const SectionManagerPanel = (props) => {
                     <span className="font-bold text-blue-600">{getSectionSetting(selectedSection, 'padding') || 32}px</span>
                 </div>
             </div>
+        </div>
+
+        <div className="p-4 bg-blue-50/50 border border-blue-100 rounded-lg space-y-3">
+            <label className="text-[9px] font-black uppercase text-blue-400 block tracking-widest">AI & Section Magic</label>
+            <div className="grid grid-cols-2 gap-2">
+                <button 
+                    onClick={() => onAIRedesign(selectedSection, 'modernize')}
+                    className="py-2 bg-white border border-blue-200 text-blue-600 text-[9px] font-black uppercase rounded hover:bg-blue-600 hover:text-white transition-all shadow-sm"
+                >
+                    🪄 AI Redesign
+                </button>
+                <button 
+                    onClick={() => onDuplicateSection(selectedSection)}
+                    className="py-2 bg-white border border-slate-200 text-slate-500 text-[9px] font-black uppercase rounded hover:bg-slate-800 hover:text-white transition-all shadow-sm"
+                >
+                    👯 Duplicate
+                </button>
+            </div>
+            <button 
+                onClick={() => {
+                    const newName = window.prompt("Nieuwe naam voor deze sectie:", selectedSection);
+                    if (newName && newName !== selectedSection) onRenameSection(selectedSection, newName);
+                }}
+                className="w-full py-2 bg-white border border-slate-200 text-slate-500 text-[9px] font-black uppercase rounded hover:bg-slate-800 hover:text-white transition-all shadow-sm"
+            >
+                🏷️ Rename Section
+            </button>
         </div>
 
         <div className="space-y-3">

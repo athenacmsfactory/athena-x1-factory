@@ -5,7 +5,6 @@ import { fileURLToPath } from 'url';
 import multer from 'multer';
 import cors from 'cors';
 import 'dotenv/config';
-import { createProxyMiddleware } from 'http-proxy-middleware';
 
 // Managers & Libs
 import { AthenaConfigManager } from '../5-engine/lib/ConfigManager.js';
@@ -24,6 +23,14 @@ import { SystemController } from '../5-engine/controllers/SystemController.js';
 import { ToolController } from '../5-engine/controllers/ToolController.js';
 import { ServerController } from '../5-engine/controllers/ServerController.js';
 import { GithubController } from '../5-engine/controllers/GithubController.js';
+import { BuildController } from '../5-engine/controllers/BuildController.js';
+import { SiteHealer } from '../5-engine/controllers/SiteHealer.js';
+import { AutomationController } from '../5-engine/controllers/AutomationController.js';
+import { AthenaDataManager } from '../5-engine/lib/DataManager.js';
+import { JulesController } from '../5-engine/controllers/JulesController.js';
+import { LayoutAIController } from '../5-engine/controllers/LayoutAIController.js';
+import { LanguageController } from '../5-engine/controllers/LanguageController.js';
+import { AnalyticsController } from '../5-engine/controllers/AnalyticsController.js';
 
 
 import {
@@ -38,9 +45,6 @@ import { generateWithAI } from '../5-engine/core/ai-engine.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const root = path.resolve(__dirname, '../..');
-const externalDir = path.join(root, 'sites-external');
-console.log(`📂 Resolved Root: ${root}`);
-console.log(`📂 Resolved Input: ${path.join(root, 'input')}`);
 
 // --- INITIALIZATION ---
 const configManager = new AthenaConfigManager(root);
@@ -58,16 +62,17 @@ const systemCtrl = new SystemController(configManager, lm, sm, execService);
 const toolCtrl = new ToolController(configManager, execService);
 const serverCtrl = new ServerController(configManager, pm, execService);
 const githubCtrl = new GithubController(configManager, execService);
+const buildCtrl = new BuildController(configManager, execService);
+const healerCtrl = new SiteHealer(configManager);
+const dataManager = new AthenaDataManager(configManager.get('paths.factory'));
+const autoCtrl = new AutomationController(configManager, dataManager, siteCtrl, buildCtrl, healerCtrl);
+const julesCtrl = new JulesController(configManager);
+const layoutAICtrl = new LayoutAIController(configManager);
+const langCtrl = new LanguageController(configManager);
+const analyticsCtrl = new AnalyticsController(configManager);
 
-// --- GLOBAL ERROR HANDLING ---
-process.on('uncaughtException', (err) => {
-    console.error('🔥 UNCAUGHT EXCEPTION:', err.message);
-    console.error(err.stack);
-});
-
-process.on('unhandledRejection', (reason, promise) => {
-    console.error('🔥 UNHANDLED REJECTION:', reason);
-});
+// Start autopilot (checks for drift every 30 minutes)
+autoCtrl.start(30);
 
 const app = express();
 const port = 5000; // Forceer dashboard op poort 5001 voor de Site Reviewer
@@ -90,20 +95,12 @@ const upload = multer({ storage });
 app.use(express.json());
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
-// 🔱 v8.8 Intelligent Static Routing for External Sites
-if (fs.existsSync(externalDir)) {
-    const sites = fs.readdirSync(externalDir).filter(f => fs.statSync(path.join(externalDir, f)).isDirectory());
-    sites.forEach(site => {
-        app.use(`/${site}`, express.static(path.join(externalDir, site)));
-    });
-}
-
 app.use(express.static(root));
 
 // --- STRATEGY CHAT API ---
 app.post('/api/onboard/chat', async (req, res) => {
     const { history, companyName } = req.body;
-
+    
     const systemPrompt = `
         Je bent de Digital Strategist van Athena CMS. Jouw doel is om een nieuwe klant (${companyName || 'onbekend'}) te helpen hun online strategie te bepalen.
         Focus op:
@@ -119,9 +116,9 @@ app.post('/api/onboard/chat', async (req, res) => {
     const fullPrompt = `${systemPrompt}\n\nINTERVIEW HISTORY:\n${history ? history.map(h => `${h.role}: ${h.content}`).join('\n') : ''}\n\nStrategist:`;
 
     try {
-        const response = await generateWithAI(fullPrompt, {
+        const response = await generateWithAI(fullPrompt, { 
             isJson: false,
-            modelStack: process.env.AI_MODEL_DEFAULT || process.env.AI_MODEL || "gemini-3-flash-preview"
+            modelStack: "gemini-3-flash-preview"
         });
         res.json({ response: response || "Excuses, ik kon geen antwoord genereren. Probeer het nog eens." });
     } catch (e) {
@@ -134,7 +131,7 @@ app.post('/api/onboard/finalize', async (req, res) => {
     const { companyName, history } = req.body;
     const safeName = companyName.toLowerCase().replace(/[^a-z0-9]/g, '-');
     const clientDir = path.join(root, 'input', safeName);
-
+    
     const prompt = `
         Vat het volgende interview samen voor een technisch dossier.
         INTERVIEW:
@@ -152,7 +149,7 @@ app.post('/api/onboard/finalize', async (req, res) => {
     try {
         const report = await generateWithAI(prompt, { isJson: true });
         if (!fs.existsSync(clientDir)) fs.mkdirSync(clientDir, { recursive: true });
-
+        
         fs.writeFileSync(path.join(clientDir, 'discovery.json'), JSON.stringify(report, null, 2));
         res.json({ success: true, report });
     } catch (e) {
@@ -166,14 +163,7 @@ app.get('/api/system/logs', (req, res) => res.json(systemCtrl.getLogsStatus()));
 app.post('/api/system/logs/rotate', async (req, res) => res.json(await systemCtrl.rotateLogs()));
 app.post('/api/system/logs/clear', (req, res) => res.json(systemCtrl.clearLogs()));
 app.post('/api/system/secrets/sync', async (req, res) => res.json(await systemCtrl.syncSecrets()));
-app.get('/api/system-status', (req, res) => {
-    try {
-        res.json(systemCtrl.getSystemStatus());
-    } catch (e) {
-        console.error("System Status Error:", e.message);
-        res.status(500).json({ error: e.message });
-    }
-});
+app.get('/api/system-status', (req, res) => res.json(systemCtrl.getSystemStatus()));
 app.get('/api/config', (req, res) => res.json(systemCtrl.getSAConfig()));
 app.get('/api/settings', (req, res) => res.json(systemCtrl.getSettings()));
 app.post('/api/settings', (req, res) => res.json(systemCtrl.updateSettings(req.body)));
@@ -216,23 +206,62 @@ app.get('/api/styles', (req, res) => res.json(siteCtrl.getStyles()));
 app.get('/api/layouts/:track/:type', (req, res) => res.json(siteCtrl.getLayouts(`${req.params.track}/${req.params.type}`)));
 app.post('/api/create', async (req, res) => res.json(await siteCtrl.create(req.body)));
 app.post('/api/deploy', async (req, res) => res.json(await siteCtrl.deploy(req.body.projectName, req.body.commitMsg)));
-app.get('/api/sites/:id/theme-info', (req, res) => res.json(siteCtrl.getThemeInfo(req.params.id)));
+app.post('/api/sites/:id/theme-info', (req, res) => res.json(siteCtrl.getThemeInfo(req.params.id)));
 app.post('/api/sites/:id/update-data', (req, res) => res.json(siteCtrl.updateData(req.params.id, req.body)));
+app.post('/api/sites/:id/section-settings', (req, res) => res.json(siteCtrl.updateSectionSettings(req.params.id, req.body)));
+app.post('/api/sites/:id/display-config', (req, res) => res.json(siteCtrl.updateDisplayConfig(req.params.id, req.body)));
+app.post('/api/sites/:id/update-config', (req, res) => res.json(siteCtrl.updateConfig(req.params.id, req.body)));
+app.post('/api/sites/:id/translate', async (req, res) => res.json(await langCtrl.translateProject(req.params.id, req.body.targetLang)));
+app.post('/api/sites/:id/add-section', (req, res) => res.json(siteCtrl.addSection(req.params.id, req.body)));
+app.post('/api/sites/:id/apply-layout-preset', async (req, res) => res.json(await siteCtrl.applyLayoutPreset(req.params.id, req.body)));
+app.post('/api/sites/:id/save-style-preset', (req, res) => res.json(siteCtrl.saveStylePreset(req.params.id, req.body)));
+app.post('/api/sites/:id/save-layout-preset', (req, res) => res.json(siteCtrl.saveLayoutPreset(req.params.id, req.body)));
+app.post('/api/sites/:id/add-section', (req, res) => res.json(siteCtrl.addSection(req.params.id, req.body)));
+app.post('/api/sites/:id/duplicate-section', (req, res) => res.json(siteCtrl.duplicateSection(req.params.id, req.body)));
+app.post('/api/sites/:id/rename-section', (req, res) => res.json(siteCtrl.renameSection(req.params.id, req.body)));
+app.post('/api/sites/:id/delete-section', (req, res) => res.json(siteCtrl.deleteSection(req.params.id, req.body)));
+
 app.get('/api/sites/:name/status', (req, res) => res.json(siteCtrl.getStatus(req.params.name)));
 app.post('/api/sites/:name/install', async (req, res) => res.json(await siteCtrl.install(req.params.name)));
+app.post('/api/sites/:name/build', async (req, res) => res.json(await buildCtrl.build(req.params.name)));
+app.post('/api/sites/:name/heal', async (req, res) => res.json(await healerCtrl.heal(req.params.name)));
+app.post('/api/sites/batch-build', async (req, res) => res.json(await buildCtrl.batchBuild(req.body.sites)));
 app.post('/api/sites/:id/preview', async (req, res) => res.json(await siteCtrl.preview(req.params.id)));
 app.post('/api/sites/:id/athenify', async (req, res) => res.json(await siteCtrl.athenifySite(req.params.id)));
+app.post('/api/sites/:id/export-to-sheet', async (req, res) => res.json(await siteCtrl.runScript('6-utilities/export-site-to-sheets.js', [req.params.id])));
 app.post('/api/sites/update-deployment', (req, res) => res.json(siteCtrl.updateDeployment(req.body)));
 app.post('/api/sites/:id/pull-from-sheet', async (req, res) => res.json(await siteCtrl.pullFromSheet(req.params.id)));
 app.post('/api/sites/:id/pull-to-temp', async (req, res) => res.json(await siteCtrl.pullToTemp(req.params.id)));
-app.post('/api/sites/:id/sync-to-sheet', async (req, res) => res.json(await siteCtrl.pushToSheet(req.params.id)));
-app.post('/api/sites/:id/link-sheet', async (req, res) => res.json(await siteCtrl.linkSheet(req.params.id, req.body.sheetUrl)));
+app.post('/api/sites/:id/sync-to-sheet', async (req, res) => res.json(await siteCtrl.syncToSheet(req.params.id)));
 app.post('/api/sites/:id/safe-pull', async (req, res) => res.json(await siteCtrl.safePullFromGitHub(req.params.id)));
 app.get('/api/sites/:id/compare-sources', async (req, res) => res.json(await siteCtrl.compareSiteSources(req.params.id)));
 app.post('/api/system/pull', async (req, res) => res.json(await siteCtrl.safePullFromGitHub(req.params.id)));
 
-// --- TOOL API ---
+app.get('/api/system/automation/status', (req, res) => res.json(autoCtrl.getStatus()));
+app.post('/api/system/automation/start', (req, res) => { autoCtrl.start(req.body.interval || 30); res.json({ success: true, message: "Autopilot gestart." }); });
+app.post('/api/system/automation/stop', (req, res) => { autoCtrl.stop(); res.json({ success: true, message: "Autopilot gestopt." }); });
+app.post('/api/system/automation/run', async (req, res) => { await autoCtrl.checkAll(); res.json({ success: true, message: "Handmatige check voltooid." }); });
+
+// --- MARKETING API ---
+app.post('/api/marketing/:id/generate-blog', async (req, res) => res.json(await marketingCtrl.generateBlog(req.params.id, req.body.topic)));
+app.post('/api/marketing/:id/generate-seo', async (req, res) => res.json(await marketingCtrl.generateSEO(req.params.id)));
+app.post('/api/marketing/:id/generate-proposal', async (req, res) => res.json(await marketingCtrl.generateProposal(req.params.id)));
+app.post('/api/marketing/bulk-seo', async (req, res) => res.json(await marketingCtrl.bulkOptimizeSEO(req.body.limit)));
+
+// --- AI ASSISTANT API ---
+app.post('/api/ai/jules/advice', async (req, res) => res.json(await julesCtrl.getAdvice(req.body.prompt, req.body.siteId)));
+app.post('/api/ai/layout/generate', async (req, res) => res.json(await layoutAICtrl.generateRedesign(req.body.siteId, req.body.sectionName, req.body.goal)));
+app.post('/api/ai/layout/ab-test', async (req, res) => res.json(await layoutAICtrl.generateABTest(req.body.siteId, req.body.sectionName)));
+app.post('/api/ai/layout/suggest-mapping', async (req, res) => res.json(await layoutAICtrl.suggestMapping(req.body.siteId, req.body.tableName)));
+
+// --- ANALYTICS API ---
+app.get('/api/analytics/portfolio', async (req, res) => res.json(await analyticsCtrl.getPortfolioMetrics()));
+app.get('/api/analytics/sites/:id', async (req, res) => res.json(await analyticsCtrl.getSiteMetrics(req.params.id)));
+
+// --- TOOLS API ---
+
 app.post('/api/onboard', async (req, res) => res.json(toolCtrl.onboard(req.body.companyName, req.body.websiteUrl, req.body.clientEmail)));
+app.post('/api/tools/clone', async (req, res) => res.json(await toolCtrl.cloneProject(req.body.sourceId, req.body.targetId)));
 app.post('/api/projects/:id/scrape', async (req, res) => res.json(toolCtrl.scrape(req.params.id, req.body.inputFile)));
 app.post('/api/sites/:id/generate-variants', async (req, res) => res.json(toolCtrl.generateVariants(req.params.id, req.body.styles)));
 app.post('/api/run-script', async (req, res) => res.json(await toolCtrl.runScript(req.body.script, req.body.args)));
@@ -254,7 +283,7 @@ app.post('/api/set-site', async (req, res) => {
     }
 });
 
-app.post('/api/sync-to-sheets/:id', async (req, res) => res.json(await siteCtrl.pushToSheet(req.params.id)));
+app.post('/api/sync-to-sheets/:id', async (req, res) => res.json(await siteCtrl.syncToSheet(req.params.id)));
 app.post('/api/pull-from-sheets/:id', async (req, res) => res.json(await siteCtrl.pullFromSheet(req.params.id)));
 
 // --- SERVER API ---
@@ -282,10 +311,10 @@ app.post('/api/storage/enforce', async (req, res) => res.json(await doctorCtrl.e
 app.post('/api/storage/prune-all', async (req, res) => {
     const auditResults = doctorCtrl.audit();
     const actions = auditResults.filter(r => r.policy === 'dormant' && r.hydration === 'hydrated').map(r => ({ site: r.site, ...doctorCtrl.dehydrate(r.site) }));
-
+    
     // Ook temp data opschonen bij een prune-all
     const tempResult = await doctorCtrl.cleanupTempData();
-
+    
     res.json({ success: true, actions, tempResult });
 });
 app.post('/api/storage/cleanup-temp', async (req, res) => res.json(await doctorCtrl.cleanupTempData()));
@@ -365,59 +394,22 @@ app.get('/api/system/todo', (req, res) => {
     }
 });
 
-// 🔱 v8.8 Ultra-Robust Dynamic Site Proxy & Static Server
-// Dient als centrale hub (poort 5000) voor álle site previews om CORS te omzeilen
-app.use('/previews/:id', async (req, res, next) => {
-    const siteId = req.params.id;
-    let siteDir = path.join(root, 'sites', siteId);
-    let isExternal = false;
-
-    if (!fs.existsSync(siteDir)) {
-        siteDir = path.join(root, 'sites-external', siteId);
-        isExternal = true;
-    }
-
-    if (!fs.existsSync(siteDir)) {
-        return res.status(404).json({ error: `Site '${siteId}' niet gevonden op schijf.` });
-    }
-
-    if (isExternal) {
-        // Voor externe sites: serveer statische bestanden direct via de proxy route
-        // We verwijderen /previews/:id van het pad voor de static server
-        const subPath = req.url === '/' ? '/index.html' : req.url;
-        const filePath = path.join(siteDir, subPath.split('?')[0]);
-
-        if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
-            return res.sendFile(filePath);
-        } else if (fs.existsSync(path.join(siteDir, 'index.html'))) {
-            // Fallback naar index.html voor SPA-achtig gedrag
-            return res.sendFile(path.join(siteDir, 'index.html'));
-        }
-        return next();
-    }
-
-    // Voor native sites: Proxy naar de Vite dev server
-    const previewPort = siteCtrl.getSitePort(siteId, siteDir);
-
-    return createProxyMiddleware({
-        target: `http://127.0.0.1:${previewPort}`,
-        changeOrigin: true,
-        pathRewrite: {
-            [`^/previews/${siteId}`]: `/${siteId}`,
-        },
-        ws: true,
-        xfwd: true,
-        logLevel: 'error',
-        onProxyRes: (proxyRes, req, res) => {
-            // Herschrijf redirects
-            if (proxyRes.headers['location']) {
-                if (proxyRes.headers['location'].startsWith(`/${siteId}`)) {
-                    proxyRes.headers['location'] = `/previews/${siteId}` + proxyRes.headers['location'].substring(siteId.length + 1);
-                }
-            }
-        }
-    })(req, res, next);
+app.get('/api/system/section-library', (req, res) => {
+    const p = path.join(root, 'factory/output/SECTION_LIBRARY.json');
+    res.json(fs.existsSync(p) ? JSON.parse(fs.readFileSync(p, 'utf8')) : { sections: [] });
 });
+
+app.get('/api/system/style-presets', (req, res) => {
+    const p = path.join(root, 'factory/config/style-presets.json');
+    res.json(fs.existsSync(p) ? JSON.parse(fs.readFileSync(p, 'utf8')) : { presets: [] });
+});
+
+app.get('/api/system/layout-presets', (req, res) => {
+    const p = path.join(root, 'factory/config/layout-presets.json');
+    res.json(fs.existsSync(p) ? JSON.parse(fs.readFileSync(p, 'utf8')) : { presets: [] });
+});
+
+app.post('/api/sites/:id/apply-layout-preset', async (req, res) => res.json(await siteCtrl.applyLayoutPreset(req.params.id, req.body)));
 
 app.listen(port, () => {
     console.log(`🔱 Athena Dashboard running at http://localhost:${port}`);

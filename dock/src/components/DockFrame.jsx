@@ -7,10 +7,18 @@ import SaveEverythingModal from './SaveEverythingModal';
 import SourceConflictModal from './SourceConflictModal';
 
 import SectionManagerPanel from './SectionManagerPanel';
+import LayoutManager from './LayoutManager';
+import FieldConfigModal from './FieldConfigModal';
+import SectionDesignModal from './SectionDesignModal';
+import NavigationManager from './NavigationManager';
 
 const DockFrame = () => {
   const [selectedSite, setSelectedSite] = useState('');
   const [siteStructure, setSiteStructure] = useState(null);
+  const [showLayoutManager, setShowLayoutManager] = useState(false);
+  const [showNavigationManager, setShowNavigationManager] = useState(false);
+  const [fieldConfigItem, setFieldConfigItem] = useState(null);
+  const [sectionDesignItem, setSectionDesignItem] = useState(null);
   const [pages, setPages] = useState([]);
   const [currentPath, setCurrentPath] = useState('/');
   const [isConnected, setIsConnected] = useState(false);
@@ -20,6 +28,7 @@ const DockFrame = () => {
   const [showConflictModal, setShowConflictModal] = useState(false);
   const [conflictReport, setConflictReport] = useState(null);
   const [showHelpModal, setShowHelpModal] = useState(false);
+  const [lastSyncTime, setLastSyncTime] = useState(localStorage.getItem('athena_last_sync') || null);
   const [refreshKey, setRefreshKey] = useState(0);
   const iframeRef = useRef(null);
 
@@ -211,6 +220,38 @@ const DockFrame = () => {
         setEditingItem(event.data);
       }
 
+      if (event.data.type === 'CONFIGURE_FIELDS') {
+        const section = event.data.sectionName;
+        const config = siteStructure?.data?.display_config?.[section] || {};
+        setFieldConfigItem({ name: section, config });
+      }
+
+      if (event.data.type === 'DESIGN_SECTION') {
+        const section = event.data.sectionName;
+        const settings = siteStructure?.data?.section_settings?.[section] || {};
+        setSectionDesignItem({ name: section, settings });
+      }
+
+      if (event.data.type === 'DELETE_SECTION') {
+        deleteSection(event.data.sectionName);
+      }
+
+      if (event.data.type === 'DUPLICATE_SECTION') {
+        handleDuplicateSection(event.data.sectionName);
+      }
+
+      if (event.data.type === 'RENAME_SECTION') {
+        handleRenameSection(event.data.oldName, event.data.newName);
+      }
+
+      if (event.data.type === 'AI_REDESIGN_SECTION') {
+        handleAIRedesign(event.data.sectionName, event.data.goal);
+      }
+
+      if (event.data.type === 'AI_AB_TEST_SECTION') {
+        handleAIABTest(event.data.sectionName);
+      }
+
       if (event.data.type === 'SITE_SAVE') {
         const { binding, value } = event.data;
         saveData(binding.file, binding.index, binding.key, value);
@@ -325,6 +366,159 @@ const DockFrame = () => {
     } catch (err) {
       console.error('❌ Save failed:', err);
     }
+  };
+
+  // --- NEW ADVANCED HANDLERS (HEEL-BELANGRIJK) ---
+
+  const deleteSection = async (sectionName) => {
+    if (!window.confirm(`Weet je zeker dat je de sectie '${sectionName}' wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.`)) return;
+    
+    console.log(`🗑️ Deleting section: ${sectionName}`);
+    try {
+        const dashboardPort = import.meta.env.VITE_DASHBOARD_PORT || '5001';
+        const hostname = window.location.hostname;
+        const res = await fetch(`http://${hostname}:${dashboardPort}/api/sites/${selectedSite.id}/delete-section`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sectionName })
+        });
+        if (res.ok) {
+            window.location.reload();
+        } else {
+            alert("Fout bij verwijderen sectie.");
+        }
+    } catch (e) { console.error(e); }
+  };
+
+  const handleRenameSection = async (oldName, newName) => {
+    console.log(`🏷️ Renaming section: ${oldName} -> ${newName}`);
+    try {
+        const dashboardPort = import.meta.env.VITE_DASHBOARD_PORT || '5001';
+        const hostname = window.location.hostname;
+        const res = await fetch(`http://${hostname}:${dashboardPort}/api/sites/${selectedSite.id}/rename-section`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ oldName, newName })
+        });
+        if (res.ok) {
+            forceRefresh();
+        } else {
+            alert("Fout bij hernoemen sectie.");
+        }
+    } catch (e) { console.error(e); }
+  };
+
+  const handleDuplicateSection = async (sectionName) => {
+    console.log(`👯 Duplicating section: ${sectionName}`);
+    try {
+        const dashboardPort = import.meta.env.VITE_DASHBOARD_PORT || '5001';
+        const hostname = window.location.hostname;
+        const res = await fetch(`http://${hostname}:${dashboardPort}/api/sites/${selectedSite.id}/duplicate-section`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sectionName })
+        });
+        if (res.ok) {
+            forceRefresh();
+        } else {
+            alert("Fout bij dupliceren sectie.");
+        }
+    } catch (e) { console.error(e); }
+  };
+
+  const handleAIRedesign = async (sectionName, goal) => {
+    console.log(`🪄 Requesting AI Redesign for ${sectionName} with goal: ${goal}`);
+    try {
+        const dashboardPort = import.meta.env.VITE_DASHBOARD_PORT || '5001';
+        const hostname = window.location.hostname;
+        const res = await fetch(`http://${hostname}:${dashboardPort}/api/ai/layout/generate`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                siteId: selectedSite.id, 
+                sectionName, 
+                goal 
+            })
+        });
+        const result = await res.json();
+        if (result.success) {
+            console.log("✅ AI suggested new settings:", result.settings);
+            // Apply settings
+            const saveRes = await fetch(`http://${hostname}:${dashboardPort}/api/sites/${selectedSite.id}/section-settings`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ section: sectionName, settings: result.settings })
+            });
+            if (saveRes.ok) {
+                forceRefresh();
+                alert(`✨ AI Redesign toegepast op ${sectionName}!`);
+            }
+        } else {
+            alert("AI kon geen redesign genereren: " + result.error);
+        }
+    } catch (e) { console.error(e); }
+  };
+
+  const handleAIABTest = async (sectionName) => {
+    console.log(`🧪 Starting AI A/B Test for ${sectionName}`);
+    try {
+        const dashboardPort = import.meta.env.VITE_DASHBOARD_PORT || '5001';
+        const hostname = window.location.hostname;
+        const res = await fetch(`http://${hostname}:${dashboardPort}/api/ai/layout/ab-test`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                siteId: selectedSite.id, 
+                sectionName 
+            })
+        });
+        const result = await res.json();
+        if (result.success) {
+            forceRefresh();
+            alert(`✅ A/B Test gestart! AI heeft twee varianten gegenereerd voor ${sectionName}.`);
+        } else {
+            alert("Fout bij starten A/B Test: " + result.error);
+        }
+    } catch (e) { console.error(e); }
+  };
+
+  const handleNavigationSave = async (links) => {
+    console.log(`🧭 Saving navigation data:`, links);
+    try {
+        const dashboardPort = import.meta.env.VITE_DASHBOARD_PORT || '5001';
+        const hostname = window.location.hostname;
+        const res = await fetch(`http://${hostname}:${dashboardPort}/api/sites/${selectedSite.id}/update-json`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ file: 'navigation', data: links })
+        });
+        if (res.ok) {
+            setSiteStructure(prev => ({
+                ...prev,
+                data: { ...prev.data, navigation: links }
+            }));
+            forceRefresh();
+            setShowNavigationManager(false);
+        }
+    } catch (e) { console.error(e); }
+  };
+
+  const handleApplyLayoutPreset = async (presetId) => {
+    console.log(`🏗️ Applying layout preset: ${presetId}`);
+    try {
+        const dashboardPort = import.meta.env.VITE_DASHBOARD_PORT || '5001';
+        const hostname = window.location.hostname;
+        const res = await fetch(`http://${hostname}:${dashboardPort}/api/sites/${selectedSite.id}/apply-layout-preset`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ presetId })
+        });
+        if (res.ok) {
+            forceRefresh();
+            setShowLayoutManager(false);
+            alert("✨ Layout preset toegepast!");
+        }
+    } catch (e) { console.error(e); }
   };
 
   const handleEditorSave = async (newValue, newFormatting = null) => {
@@ -1003,6 +1197,11 @@ const DockFrame = () => {
               onMoveField={moveField}
               onToggleField={toggleFieldVisibility}
               onToggleInline={toggleFieldInline}
+              onOpenLayoutManager={() => setShowLayoutManager(true)}
+              onOpenNavigationManager={() => setShowNavigationManager(true)}
+              onAIRedesign={handleAIRedesign}
+              onDuplicateSection={handleDuplicateSection}
+              onRenameSection={handleRenameSection}
             />
           ) : (
             <DesignControls
@@ -1050,6 +1249,45 @@ const DockFrame = () => {
               onSave={handleEditorSave}
               onCancel={() => setEditingItem(null)}
               onUpload={(filename) => handleEditorSave(filename)}
+            />
+          )}
+
+          {showLayoutManager && (
+            <LayoutManager 
+              siteStructure={siteStructure}
+              onClose={() => setShowLayoutManager(false)}
+              onApplyPreset={handleApplyLayoutPreset}
+            />
+          )}
+
+          {showNavigationManager && (
+            <NavigationManager 
+              siteStructure={siteStructure}
+              onClose={() => setShowNavigationManager(false)}
+              onSave={handleNavigationSave}
+            />
+          )}
+
+          {fieldConfigItem && (
+            <FieldConfigModal 
+              item={fieldConfigItem}
+              onClose={() => setFieldConfigItem(null)}
+              onSave={(newConfig) => {
+                updateFieldConfig(fieldConfigItem.name, newConfig);
+                setFieldConfigItem(null);
+              }}
+            />
+          )}
+
+          {sectionDesignItem && (
+            <SectionDesignModal 
+              item={sectionDesignItem}
+              onClose={() => setSectionDesignItem(null)}
+              onSave={(newSettings) => {
+                // ... handle save ...
+                setSectionDesignItem(null);
+              }}
+              onAIRedesign={handleAIRedesign}
             />
           )}
         </main>

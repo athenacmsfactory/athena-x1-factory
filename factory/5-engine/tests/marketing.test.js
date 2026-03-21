@@ -17,11 +17,11 @@ describe('MarketingController', () => {
     beforeEach(() => {
         vi.restoreAllMocks();
         vi.clearAllMocks();
-
+        
         mockConfigManager = {
             get: vi.fn().mockReturnValue('/mock/factory')
         };
-
+        
         marketing = new MarketingController(mockConfigManager);
     });
 
@@ -40,7 +40,7 @@ describe('MarketingController', () => {
             marketing.dataManager.loadJSON.mockReturnValue({ company: "Test Co" });
             vi.mocked(generateWithAI).mockResolvedValue(mockSEO);
             vi.spyOn(fs, 'readdirSync').mockReturnValue(['basis.json', 'site_settings.json']);
-            vi.spyOn(fs, 'writeFileSync').mockImplementation(() => { });
+            vi.spyOn(fs, 'writeFileSync').mockImplementation(() => {});
 
             const result = await marketing.generateSEO(projectName);
 
@@ -49,7 +49,7 @@ describe('MarketingController', () => {
                 expect.stringContaining('seo.json'),
                 expect.stringContaining('Optimized Title')
             );
-            expect(marketing.dataManager.pushToSheet).toHaveBeenCalledWith(projectName);
+            expect(marketing.dataManager.syncToSheet).toHaveBeenCalledWith(projectName);
             expect(result.success).toBe(true);
             expect(result.seo.title).toBe("Optimized Title");
         });
@@ -69,7 +69,7 @@ describe('MarketingController', () => {
             vi.mocked(generateWithAI).mockResolvedValue(mockBlog);
             vi.spyOn(fs, 'existsSync').mockReturnValue(true);
             vi.spyOn(fs, 'readFileSync').mockReturnValue('[]');
-            vi.spyOn(fs, 'writeFileSync').mockImplementation(() => { });
+            vi.spyOn(fs, 'writeFileSync').mockImplementation(() => {});
 
             const result = await marketing.generateBlog(projectName, "AI rules");
 

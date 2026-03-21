@@ -41,7 +41,7 @@ async function generateMPA() {
     if (!pkg.dependencies) pkg.dependencies = {};
     pkg.dependencies["react"] = "^19.0.0";
     pkg.dependencies["react-dom"] = "^19.0.0";
-    pkg.dependencies["react-router-dom"] = "^6.20.0";
+    pkg.dependencies["react-router-dom"] = "^7.0.0";
     
     // Tailwind v4 dependencies
     if (!pkg.devDependencies) pkg.devDependencies = {};
@@ -262,6 +262,17 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             await fs.copyFile(path.join(structuredDir, file), path.join(dataDest, 'pages', file));
         }
     }
+
+    // RUN AGGREGATOR (Optimized for MPA)
+    console.log("🔗 Data aggregeren voor MPA...");
+    const { DataAggregator } = await import('./logic/data-aggregator.js');
+    // De aggregator verwacht src/data, maar voor MPA staat het in public/data
+    // We maken een tijdelijke link of we passen de aggregator aan.
+    // Voor nu: we kopiëren de data ook naar src/data voor dev-time consistentie
+    const srcDataDir = path.join(siteDir, 'src/data');
+    await fs.mkdir(srcDataDir, { recursive: true });
+    await fs.cp(dataDest, srcDataDir, { recursive: true });
+    DataAggregator.aggregate(siteDir);
 
     console.log(`✅ KLAAR! Site gegenereerd in sites/${projectName}-site`);
 }

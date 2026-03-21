@@ -19,31 +19,17 @@ import fs from 'fs';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { generateWithAI } from './core/ai-engine.js';
 
-import { aggregateAllData } from './lib/data-aggregator.js';
-
 let activeProject = null;
 
 // --- CLI OVERRIDE ---
 const args = process.argv.slice(2);
-let portArgIndex = -1;
-for (let i = 0; i < args.length; i++) {
-    if (args[i] === '--port' || args[i] === '-p') {
-        portArgIndex = i + 1;
-        break;
-    }
-}
-if (portArgIndex > 0 && args[portArgIndex]) {
-    process.env.MEDIA_MAPPER_PORT = args[portArgIndex];
-    console.log(`🎯 Port set from CLI: ${args[portArgIndex]}`);
-    args.splice(portArgIndex - 1, 2);
-}
 if (args[0]) {
     activeProject = args[0];
     console.log(`🎯 Initial site set from CLI: ${activeProject}`);
 }
 
 const app = express();
-const port = process.env.MEDIA_MAPPER_PORT || 5004;
+const port = process.env.MEDIA_MAPPER_PORT || 4004;
 
 // --- CORS & BODY PARSING ---
 app.use(express.json());
@@ -116,11 +102,6 @@ app.post('/__athena/update-json', async (req, res) => {
 
         fs.writeFileSync(dataPath, JSON.stringify(data, null, 2));
         console.log(`💾 [DATA] Update ${file}.json [${index}].${key} = ${value}`);
-
-        // 🔱 v8.1 Auto-Aggregation
-        const sitePath = path.resolve(root, '../sites', safeProject);
-        aggregateAllData(sitePath);
-
         res.json({ success: true });
     } catch (e) {
         console.error("Data update error:", e.message);
@@ -204,14 +185,11 @@ app.get('/api/data', (req, res) => {
     const EXCLUDED_TABLES = [
         'style_bindings', 
         '_system', 
-        '_links_config',
-        'all_data',
-        'all_data_showcase',
-        'section_order',
-        'section_settings',
-        'layout_settings',
-        'style_config',
-        'display_config'
+        '_links_config', 
+        'layout_settings', 
+        'section_order', 
+        'display_config',
+        'all_data' // v8 aggregated file
     ];
 
     if (fs.existsSync(dataDir)) {
@@ -304,10 +282,6 @@ app.post('/api/update', (req, res) => {
             }
 
             fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
-            
-            // 🔱 Auto-Aggregation
-            aggregateAllData(path.resolve(root, '../sites', activeProject));
-
             res.json({ success: true });
         } else {
             // Klassieke tabel array update
@@ -319,10 +293,6 @@ app.post('/api/update', (req, res) => {
 
                 const contentToWrite = wasArray ? data : data[0];
                 fs.writeFileSync(filePath, JSON.stringify(contentToWrite, null, 2));
-                
-                // 🔱 Auto-Aggregation
-                aggregateAllData(path.resolve(root, '../sites', activeProject));
-
                 res.json({ success: true });
             } else {
                 res.status(404).json({ error: "Rij niet gevonden" });
@@ -348,10 +318,6 @@ app.post('/api/upload-image', express.raw({ type: 'image/*', limit: '10mb' }), a
 
         fs.writeFileSync(path.join(targetDir, filename), req.body);
         console.log(`📸 [UPLOAD] ${filename} -> ../sites/${activeProject}/public/images`);
-
-        // 🔱 Auto-Aggregation
-        aggregateAllData(path.resolve(root, '../sites', activeProject));
-
         res.json({ success: true, filename });
     } catch (e) {
         console.error("Upload error:", e.message);
@@ -374,10 +340,6 @@ app.post('/api/delete-image', async (req, res) => {
 
         fs.unlinkSync(filePath);
         console.log(`🗑️ [DELETE] ${filename} verwijderd uit ../sites/${activeProject}/public/images`);
-
-        // 🔱 Auto-Aggregation
-        aggregateAllData(path.resolve(root, '../sites', activeProject));
-
         res.json({ success: true });
     } catch (e) {
         console.error("Delete error:", e.message);
@@ -550,10 +512,6 @@ app.post('/api/generate-image', async (req, res) => {
                             const imageBuffer = Buffer.from(imagePart.inlineData.data, 'base64');
                             fs.writeFileSync(path.join(targetDir, safeName), imageBuffer);
                             console.log(`✅ [GEMINI] Succes met ${cleanModelName}`);
-                            
-                            // 🔱 Auto-Aggregation
-                            aggregateAllData(path.resolve(root, '../sites', activeProject));
-
                             resultSent = true;
                             return res.json({ success: true, filename: safeName, provider: `gemini (${cleanModelName})` });
                         } else {
@@ -583,10 +541,6 @@ app.post('/api/generate-image', async (req, res) => {
                         if (buffer.length > 1000) {
                             fs.writeFileSync(path.join(targetDir, safeName), buffer);
                             console.log(`✅ [POLLINATIONS] Succes bij poging ${attempt}.`);
-
-                            // 🔱 Auto-Aggregation
-                            aggregateAllData(path.resolve(root, '../sites', activeProject));
-
                             resultSent = true;
                             return res.json({ success: true, filename: safeName, provider: 'pollinations' });
                         }
@@ -604,10 +558,6 @@ app.post('/api/generate-image', async (req, res) => {
             const response = await fetch(placeholderUrl);
             const buffer = Buffer.from(await response.arrayBuffer());
             fs.writeFileSync(path.join(targetDir, safeName), buffer);
-
-            // 🔱 Auto-Aggregation
-            aggregateAllData(path.resolve(root, '../sites', activeProject));
-
             resultSent = true;
             return res.json({
                 success: true,

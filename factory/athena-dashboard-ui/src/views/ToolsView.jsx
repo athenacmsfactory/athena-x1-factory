@@ -25,6 +25,15 @@ export default function ToolsView() {
       tools: [
         { id: 'storage-audit-deep', label: "Deep Storage Audit", desc: "Grondige schijfruimte analyse per site.", icon: "💾" },
         { id: 'rebuild-registry', label: "Rebuild Registry", desc: "Herstel de centrale sites.json database.", icon: "🛠️" },
+        { id: 'storage-prune', label: "Storage Prune", desc: "Verwijder ongebruikte node_modules en temp data.", icon: "🧹" },
+      ]
+    },
+    {
+      title: "AI & Automation",
+      tools: [
+        { id: 'automatic-showcase-generator', label: "Showcase Gen", desc: "Genereer automatisch portfolio screenshots.", icon: "📸" },
+        { id: 'nightly-maintenance', label: "Nightly Sync", desc: "Draai alle onderhoudstaken en backups.", icon: "🌙" },
+        { id: 'site-reviewer', label: "AI Site Review", desc: "Laat AI de site checken op fouten en stijl.", icon: "🧐" },
       ]
     }
   ]

@@ -13,30 +13,6 @@
         return (base + '/' + path).replace(new RegExp('/+', 'g'), '/');
     };
 
-    // 🔱 v8.8 Universal Binding Parser
-    // Converteert 'hero.0.titel' naar {file: 'hero', index: 0, key: 'titel'}
-    const parseBinding = (bindStr) => {
-        if (!bindStr) return {};
-        try {
-            // Check if it's already JSON
-            if (bindStr.startsWith('{')) return JSON.parse(bindStr);
-            
-            // Handle dot notation (e.g., "hero.0.titel")
-            const parts = bindStr.split('.');
-            if (parts.length >= 3) {
-                return {
-                    file: parts[0],
-                    index: parseInt(parts[1], 10),
-                    key: parts.slice(2).join('.')
-                };
-            }
-            return { key: bindStr }; // Fallback
-        } catch(e) {
-            console.warn("Athena: Kon binding niet parsen", bindStr);
-            return {};
-        }
-    };
-
     // --- 2. THEME MAPPINGS ---
     const themeMappings = {
         light: {
@@ -208,7 +184,7 @@
             const baseUrl = import.meta.env.BASE_URL || '/';
 
             elements.forEach(el => {
-                const elBind = parseBinding(el.getAttribute('data-dock-bind'));
+                const elBind = JSON.parse(el.getAttribute('data-dock-bind'));
                 if (elBind.file !== file || elBind.index !== index || elBind.key !== key) return;
 
                 const dockType = el.getAttribute('data-dock-type') || (el.tagName === 'IMG' || el.tagName === 'VIDEO' ? 'media' : 'text');
@@ -277,7 +253,7 @@
         document.body.classList.remove('dock-dragging-active');
 
         if (!target) return;
-        const bind = parseBinding(target.getAttribute('data-dock-bind'));
+        const bind = JSON.parse(target.getAttribute('data-dock-bind'));
         if (!isMediaBind(bind)) return;
 
         e.preventDefault();
@@ -314,7 +290,7 @@
             e.preventDefault();
             e.stopPropagation();
 
-            const binding = parseBinding(target.getAttribute('data-dock-bind'));
+            const binding = JSON.parse(target.getAttribute('data-dock-bind'));
             const dockType = target.getAttribute('data-dock-type') || (
                 (binding.key && (binding.key.toLowerCase().includes('foto') ||
                     binding.key.toLowerCase().includes('image') ||

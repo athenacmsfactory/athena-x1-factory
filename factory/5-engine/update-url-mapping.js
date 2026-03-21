@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 
 const spreadsheetId = '16ygVILHgFYZz2ORBshaXKbAWpvD2S-_n3n2R_4aHx3Y';
-const serviceAccountPath = '2-Productie/athena/factory/service-account.json';
+const serviceAccountPath = '2-Fabriek/athena/athena-y/factory/service-account.json';
 const projectName = 'portfolio-kbm';
 
 async function run() {
@@ -29,8 +29,8 @@ async function run() {
         };
     });
 
-    const outputPath = `2-Productie/athena/input/${projectName}/project-settings/url-sheet.json`;
-    const siteOutputPath = `2-Productie/athena/sites/${projectName}/project-settings/url-sheet.json`;
+    const outputPath = `2-Fabriek/athena/athena-y/input/${projectName}/project-settings/url-sheet.json`;
+    const siteOutputPath = `2-Fabriek/athena/athena-y/sites/${projectName}/project-settings/url-sheet.json`;
     
     fs.writeFileSync(outputPath, JSON.stringify(mapping, null, 2));
     console.log(`✅ Updated input url-sheet.json with ${Object.keys(mapping).length} tabs.`);

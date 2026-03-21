@@ -118,7 +118,7 @@ async function runOnboarding() {
         if (scrape.toLowerCase() === 'j') {
             console.log("🚀 Scraper starten...");
             try {
-                const scraperPath = path.join(__dirname, 'athena-scraper.js');
+                const scraperPath = path.join(ROOT, 'athena-scraper.js');
                 execSync(`node "${scraperPath}" "${safeName}" "${discovery.technical.legacy_url}"`, { stdio: 'inherit' });
             } catch (e) {
                 console.error(`❌ Scraping mislukt: ${e.message}`);

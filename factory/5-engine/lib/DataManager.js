@@ -54,7 +54,10 @@ export class AthenaDataManager {
 
         return new google.auth.GoogleAuth({
             keyFile: serviceAccountPath,
-            scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+            scopes: [
+                'https://www.googleapis.com/auth/spreadsheets',
+                'https://www.googleapis.com/auth/drive.metadata.readonly'
+            ],
         });
     }
 
@@ -93,11 +96,51 @@ export class AthenaDataManager {
     }
 
     /**
+     * Fixes hardcoded legacy links (e.g., athena-x -> athena-y) in content strings.
+     */
+    fixHardcodedLinks(content) {
+        if (typeof content !== 'string') return content;
+        
+        const legacyPatterns = [
+            /https?:\/\/athena-cms-factory\.github\.io/g,
+            /https?:\/\/athena-x\.github\.io/g,
+            /https?:\/\/kareltestspecial\.github\.io/g
+        ];
+
+        const currentOwner = process.env.GITHUB_OWNER || "athena-y-factory";
+        const currentDomain = `https://${currentOwner}.github.io`;
+
+        let fixed = content;
+        legacyPatterns.forEach(pattern => {
+            fixed = fixed.replace(pattern, currentDomain);
+        });
+
+        return fixed;
+    }
+
+    /**
+     * Recursively traverse data and fix links in all strings.
+     */
+    deepFixLinks(data) {
+        if (typeof data === 'string') return this.fixHardcodedLinks(data);
+        if (Array.isArray(data)) return data.map(item => this.deepFixLinks(item));
+        if (data !== null && typeof data === 'object') {
+            const fixed = {};
+            Object.entries(data).forEach(([k, v]) => {
+                fixed[k] = this.deepFixLinks(v);
+            });
+            return fixed;
+        }
+        return data;
+    }
+
+    /**
      * Load JSON data
      */
     loadJSON(filePath) {
         if (!fs.existsSync(filePath)) return null;
-        return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+        const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+        return this.deepFixLinks(data);
     }
 
     /**
@@ -110,9 +153,9 @@ export class AthenaDataManager {
     }
 
     /**
-     * Pull from Sheet (Trigger pnpm fetch-data in site)
+     * Sync from Sheet (Trigger pnpm fetch-data in site)
      */
-    async pullFromSheet(projectName) {
+    async syncFromSheet(projectName) {
         const paths = this.resolvePaths(projectName);
         if (!fs.existsSync(paths.siteDir)) throw new Error(`Site directory not found for ${projectName}`);
 
@@ -271,8 +314,54 @@ export class AthenaDataManager {
     }
 
     /**
-     * Patch a specific key in a JSON data file
+     * Check if the Google Sheet has been modified more recently than the local JSON.
      */
+    async checkSheetDrift(projectName) {
+        const paths = this.resolvePaths(projectName);
+        const sheetFile = path.join(paths.settingsDir, 'url-sheet.json');
+
+        if (!fs.existsSync(sheetFile)) return { hasDrift: false, reason: "No sheet linked" };
+
+        try {
+            const sheetConfig = JSON.parse(fs.readFileSync(sheetFile, 'utf8'));
+            const sheetId = Object.keys(sheetConfig)[0];
+            if (!sheetId) return { hasDrift: false, reason: "Invalid sheet config" };
+
+            const auth = this.getAuth();
+            const drive = google.drive({ version: 'v3', auth });
+
+            const driveFile = await drive.files.get({
+                fileId: sheetId,
+                fields: 'modifiedTime'
+            });
+
+            const sheetMtime = new Date(driveFile.data.modifiedTime);
+
+            // Check local mtime of site_settings.json
+            const localSettingsPath = path.join(paths.dataDir, 'site_settings.json');
+            if (!fs.existsSync(localSettingsPath)) return { hasDrift: true, reason: "Local settings missing" };
+
+            const localMtime = fs.statSync(localSettingsPath).mtime;
+
+            const driftMs = sheetMtime.getTime() - localMtime.getTime();
+            const hasDrift = driftMs > 5000; // Allow 5 seconds buffer
+
+            return {
+                hasDrift,
+                sheetMtime: sheetMtime.toISOString(),
+                localMtime: localMtime.toISOString(),
+                driftSeconds: Math.floor(driftMs / 1000)
+            };
+
+        } catch (e) {
+            return { hasDrift: false, error: e.message };
+        }
+    }
+
+    /**
+     * Patch a specific key in a JSON file
+     */
+
     patchData(projectName, file, index, key, value) {
         const paths = this.resolvePaths(projectName);
         const fileName = file.endsWith('.json') ? file : `${file}.json`;
@@ -304,49 +393,28 @@ export class AthenaDataManager {
     }
 
     /**
-     * Compare local data with temporary data (from Sheet)
+     * Helper to extract primitive values from objects before sheet sync.
+     * Prevents "struct_value" errors in Google Sheets API.
      */
-    compareSources(projectName) {
-        const paths = this.resolvePaths(projectName);
-        const localDir = paths.dataDir;
-        const tempDir = path.join(paths.siteDir, 'src/data-temp');
-
-        if (!fs.existsSync(localDir) || !fs.existsSync(tempDir)) {
-            return { success: false, message: "Lokale of tijdelijke data map niet gevonden." };
+    _flattenForSheet(value) {
+        if (value === null || value === undefined) return "";
+        if (typeof value === 'object' && !Array.isArray(value)) {
+            // Extract common CMS object properties
+            if (value.text !== undefined) return value.text;
+            if (value.title !== undefined) return value.title;
+            if (value.label !== undefined) return value.label;
+            if (value.url !== undefined) return value.url;
+            
+            // Fallback to stringification for unknown objects
+            return JSON.stringify(value);
         }
-
-        const localFiles = fs.readdirSync(localDir).filter(f => f.endsWith('.json'));
-        const diffs = [];
-
-        localFiles.forEach(file => {
-            const localPath = path.join(localDir, file);
-            const tempPath = path.join(tempDir, file);
-
-            if (fs.existsSync(tempPath)) {
-                const localData = fs.readFileSync(localPath, 'utf8');
-                const tempData = fs.readFileSync(tempPath, 'utf8');
-
-                if (localData !== tempData) {
-                    diffs.push({
-                        file,
-                        status: 'changed',
-                        message: `Bestand ${file} is gewijzigd op Google Sheets.`
-                    });
-                }
-            }
-        });
-
-        return {
-            success: true,
-            hasDifferences: diffs.length > 0,
-            differences: diffs
-        };
+        return value;
     }
 
     /**
      * Sync local JSON data back to Google Sheet
      */
-    async pushToSheet(projectName) {
+    async syncToSheet(projectName) {
         const paths = this.resolvePaths(projectName);
         if (!fs.existsSync(paths.siteDir)) {
              throw new Error(`Site directory not found for ${projectName}`);
@@ -386,16 +454,35 @@ export class AthenaDataManager {
 
         console.log(`🔍 Detected ${jsonFiles.length} tables to sync.`);
 
+        // --- 2b. LOAD LANGUAGE CONTROLLER ---
+        let langCtrl = null;
+        try {
+            const { LanguageController } = await import('../controllers/LanguageController.js');
+            langCtrl = new LanguageController(new (await import('./ConfigManager.js')).AthenaConfigManager(this.root));
+        } catch (e) { console.warn("⚠️ LanguageController not available for sync."); }
+
         // --- 3. UPLOAD LOOP ---
         for (const fileName of jsonFiles) {
             let tabName = fileName.replace('.json', '');
             
+            // Skip translation files directly, they are merged via the controller
+            if (tabName.includes('_')) continue;
+
             // Special mapping for system files
             if (fileName === 'style_config.json') tabName = '_style_config';
             if (fileName === 'links_config.json') tabName = '_links_config';
             
             const jsonPath = path.join(paths.dataDir, fileName);
             let jsonData = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+
+            // --- 3b. MERGE TRANSLATIONS IF AVAILABLE ---
+            if (langCtrl) {
+                const merged = langCtrl.getMergedDataForSheet(projectName, tabName);
+                if (merged) jsonData = merged;
+            }
+
+            // Ensure all links are modern
+            jsonData = this.deepFixLinks(jsonData);
 
             // Ensure tab exists in Google Sheet and url-sheet.json
             if (!urlConfig[tabName]) {
@@ -451,34 +538,13 @@ export class AthenaDataManager {
                     headers = Object.keys(jsonData[0]);
                     rows = [headers];
                     jsonData.forEach(item => {
-                        rows.push(headers.map(h => {
-                            let val = item[h];
-                            
-                            // 🔱 v8.8 Ultra-Robust Primitive Extraction for Google Sheets
-                            if (val !== null && typeof val === 'object') {
-                                // Als het een bekend CMS object is, pak de tekst
-                                if (!Array.isArray(val)) {
-                                    if (val.text !== undefined) val = val.text;
-                                    else if (val.title !== undefined) val = val.title;
-                                    else if (val.label !== undefined) val = val.label;
-                                    else if (val.value !== undefined) val = val.value;
-                                    else val = JSON.stringify(val); // Fallback voor complexe objecten
-                                } else {
-                                    // Voor arrays: comma separated string of JSON
-                                    val = val.every(i => typeof i === 'string' || typeof i === 'number') 
-                                        ? val.join(', ') 
-                                        : JSON.stringify(val);
-                                }
-                            }
-                            
-                            return val === null || val === undefined ? "" : val;
-                        }));
+                        rows.push(headers.map(h => this._flattenForSheet(item[h])));
                     });
                 }
             } else {
                 // Key-value object
                 headers = ["Key", "Value"];
-                rows = [headers, ...Object.entries(jsonData).map(([k, v]) => [k, typeof v === 'object' ? JSON.stringify(v) : v])];
+                rows = [headers, ...Object.entries(jsonData).map(([k, v]) => [k, this._flattenForSheet(v)])];
             }
 
             try {
