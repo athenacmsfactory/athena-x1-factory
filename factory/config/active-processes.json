@@ -1,1 +1,44 @@
-{}
+{
+  "5002": {
+    "pid": 22224,
+    "id": "athena-dock",
+    "type": "dock",
+    "startTime": "2026-03-22T16:47:52.267Z",
+    "logFile": "/home/kareltestspecial/0-IT/3-DEV/myAgent/athena-y/factory/output/logs/athena-dock-dock.log"
+  },
+  "5004": {
+    "pid": 28827,
+    "id": "media-mapper",
+    "type": "editor",
+    "startTime": "2026-03-22T16:16:48.646Z",
+    "logFile": "/home/kareltestspecial/0-IT/3-DEV/myAgent/athena-y/factory/output/logs/media-mapper-editor.log"
+  },
+  "5007": {
+    "pid": 21369,
+    "id": "bakkerij-de-graankorrel",
+    "type": "preview",
+    "startTime": "2026-03-22T16:47:24.431Z",
+    "logFile": "/home/kareltestspecial/0-IT/3-DEV/myAgent/athena-y/factory/output/logs/bakkerij-de-graankorrel-preview.log"
+  },
+  "5017": {
+    "pid": 24350,
+    "id": "athena-promo",
+    "type": "preview",
+    "startTime": "2026-03-22T16:50:22.991Z",
+    "logFile": "/home/kareltestspecial/0-IT/3-DEV/myAgent/athena-y/factory/output/logs/athena-promo-preview.log"
+  },
+  "6041": {
+    "pid": 20401,
+    "id": "athena-hub",
+    "type": "preview",
+    "startTime": "2026-03-22T16:46:07.238Z",
+    "logFile": "/home/kareltestspecial/0-IT/3-DEV/myAgent/athena-y/factory/output/logs/athena-hub-preview.log"
+  },
+  "6101": {
+    "pid": 21776,
+    "id": "chocolade-shop",
+    "type": "preview",
+    "startTime": "2026-03-22T16:47:32.710Z",
+    "logFile": "/home/kareltestspecial/0-IT/3-DEV/myAgent/athena-y/factory/output/logs/chocolade-shop-preview.log"
+  }
+}

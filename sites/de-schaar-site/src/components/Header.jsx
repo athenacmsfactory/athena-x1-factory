@@ -1,150 +1,147 @@
-import React from 'react';
+import React, { useState } from 'react';
+import EditableText from './EditableText';
+import EditableMedia from './EditableMedia';
+import EditableLink from './EditableLink';
+import { Link } from 'react-router-dom';
 
-/**
- * Header (Docked Track)
- * Robust Hero section with support for Title Color and detached Header Image.
- */
-function Header({ primaryTable, tableName, hero = {}, headerSettings = {}, navData = [] }) {
-  const info = Array.isArray(primaryTable) ? (primaryTable[0] || {}) : (primaryTable || {});
+function Header({ siteSettings = {}, navigationData = [] }) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const settings = Array.isArray(siteSettings) ? (siteSettings[0] || {}) : (siteSettings || {});
+  const siteName = settings.site_name || '{{PROJECT_NAME}}';
+  const logoChar = (settings.logo_text || siteName).charAt(0).toUpperCase();
 
-  const heroData = Array.isArray(hero) ? (hero[0] || {}) : hero;
-  const settings = Array.isArray(headerSettings) ? (headerSettings[0] || {}) : headerSettings;
+  // Use a reliable default logo if site_logo_image is missing
+  const displayLogo = settings.site_logo_image || "athena-icon.svg";
 
-  // Look for fields in primary table for fallbacks
-  const keys = Object.keys(info);
-  const fallbackTitleKey = keys.find(k => /naam|titel|header|kop|bedrijfsnaam/i.test(k)) || keys[0];
-  const fallbackTaglineKey = keys.find(k => /slogan|tagline|ondertitel|subtitle/i.test(k));
-
-  // Helper to safely extract text from potential Athena style-objects
-  const extractText = (val, fallback = '') => {
-    if (typeof val !== 'object' || val === null) return val ?? fallback;
-    return val.text || val.title || val.label || val.name || val.value || fallback;
+  const handleScroll = (e, url) => {
+    setIsMenuOpen(false); // Close menu on click
+    if (url && url.startsWith('#')) {
+      e.preventDefault();
+      const targetId = url.substring(1);
+      document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
-  const getImageUrl = (url) => {
-    if (!url) return '';
-    if (typeof url === 'object') url = url.text || url.url || '';
-    if (url.startsWith('http') || url.startsWith('data:')) return url;
-    const base = import.meta.env.BASE_URL || '/';
-    return (base + '/images/' + url).replace(new RegExp('/+', 'g'), '/');
-  };
-
-  // 1. Separate Titles: Hero vs Navigation
-  // Navigation Title: usually the business name from Footer table
-  const navTitleValue = extractText(info[fallbackTitleKey] || 'De Schaar');
-  
-  // Hero Title: the main headline in the middle of the page
-  const heroTitleValue = heroData.titel || heroData.title || navTitleValue;
-  
-  // Tagline
-  const rawTagline = heroData.ondertitel || heroData.tagline || (fallbackTaglineKey ? info[fallbackTaglineKey] : '');
-
-  const titleString = extractText(heroTitleValue, 'Welcome');
-  const taglineString = extractText(rawTagline, '');
-
-  const sortedNav = [...navData].sort((a, b) => (a.menu_positie || 0) - (b.menu_positie || 0));
+  const navLinks = Array.isArray(navigationData) ? navigationData : [];
 
   return (
-    <>
-      {/* Fixed Sticky Navigation Bar */}
-      <nav
-        data-dock-element="header-nav"
-        className="fixed top-0 left-0 right-0 z-[1000] w-full px-8 py-4 flex items-center justify-between border-b transition-all duration-300"
-        style={{
-          display: (settings.header_zichtbaar === false || settings.header_visible === false) ? 'none' : 'flex',
-          height: (settings.header_hoogte || settings.header_height) ? `${settings.header_hoogte || settings.header_height}px` : 'var(--header-height, auto)',
-          backgroundColor: 'var(--header-bg, var(--color-header, rgba(var(--color-primary-rgb), 0.6)))',
-          backdropFilter: 'var(--header-blur, blur(12px))',
-          borderColor: 'var(--header-border, rgba(255,255,255,0.1))'
-        }}
-      >
-        <div className="flex items-center gap-4">
-          {(settings.logo_afbeelding || settings.site_logo_image) ? (
-            <div 
-              data-dock-element="header-logo"
-              className="w-10 h-10 overflow-hidden"
-              style={{ display: (settings.toon_logo === false || settings.header_show_logo === false) ? 'none' : 'block' }}
-            >
-              <img src={getImageUrl(settings.logo_afbeelding || settings.site_logo_image)} className="w-full h-full object-contain" data-dock-type="media" data-dock-bind="header_settings.0.settings.logo_afbeelding" />
+    <nav
+      className="fixed top-0 left-0 right-0 z-[1000] px-6 transition-all duration-500 flex items-center"
+      style={{
+        display: settings.header_visible === false ? 'none' : 'flex',
+        backgroundColor: 'var(--header-bg, var(--color-header-bg, rgba(255,255,255,0.9)))',
+        backdropFilter: 'var(--header-blur, blur(16px))',
+        height: 'var(--header-height, 80px)',
+        borderBottom: 'var(--header-border, none)'
+      }}
+    >
+      <div className="max-w-7xl mx-auto w-full flex justify-between items-center">
+        {/* Logo & Identity */}
+        {(settings.header_show_logo !== false || settings.header_show_title !== false) && (
+          <Link to="/" className="flex items-center gap-4 group" onClick={() => setIsMenuOpen(false)}>
+
+            {settings.header_show_logo !== false && (
+              <div className="relative w-12 h-12 overflow-hidden transition-transform duration-500">
+                <EditableMedia
+                  src={displayLogo}
+                  cmsBind={{ file: 'site_settings', index: 0, key: 'site_logo_image' }}
+                  className="w-full h-full object-contain"
+                  fallback={logoChar}
+                />
+              </div>
+            )}
+
+            <div className="flex flex-col">
+              {settings.header_show_title !== false && (
+                <span className="text-2xl font-serif font-black tracking-tight text-primary leading-none mb-1">
+                  <EditableText value={siteName} cmsBind={{ file: 'site_settings', index: 0, key: 'site_name' }} />
+                </span>
+              )}
+              {settings.header_show_tagline !== false && settings.tagline && (
+                <span className="text-[10px] uppercase tracking-[0.3em] text-accent font-bold opacity-80">
+                  <EditableText value={settings.tagline} cmsBind={{ file: 'site_settings', index: 0, key: 'tagline' }} />
+                </span>
+              )}
             </div>
-          ) : (
-            <div 
-              data-dock-element="header-logo"
-              className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center text-xl"
-              style={{ display: (settings.toon_logo === false || settings.header_show_logo === false) ? 'none' : 'flex' }}
-            >
-              <i className="fa-solid fa-scissors text-white"></i>
+          </Link>
+        )}
+
+        {/* Desktop Action Menu */}
+        <div className="hidden md:flex items-center gap-8">
+          {/* Dynamic Navigation Links */}
+          {navLinks.length > 0 && (
+            <div className="flex gap-6 items-center mr-4">
+              {navLinks.map((link, idx) => (
+                <EditableLink
+                  key={idx}
+                  label={link.label}
+                  url={link.url}
+                  cmsBind={{ file: 'navigation', index: idx, key: 'label' }}
+                  className="text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-primary transition-colors"
+                  onClick={(e) => handleScroll(e, link.url)}
+                />
+              ))}
             </div>
           )}
-          <span className="font-serif font-bold text-xl tracking-tighter uppercase" data-dock-type="text" data-dock-bind="footer.0.bedrijfsnaam">{navTitleValue}</span>
+
+          {settings.header_show_button !== false && (
+            <EditableLink
+              as="button"
+              label={settings.header_cta_label || "Contact"}
+              url={settings.header_cta_url || "#contact"}
+              table="site_settings"
+              field="header_cta"
+              id={0}
+              className="bg-[var(--color-button-bg)] text-white px-6 py-3 rounded-[var(--button-radius,9999px)] font-bold hover:opacity-90 transition-all shadow-lg"
+              onClick={(e) => handleScroll(e, settings.header_cta_url || "#contact")}
+            />
+          )}
         </div>
 
-        <div 
-          data-dock-element="header-navbar"
-          className="hidden md:flex items-center gap-8"
-          style={{ display: (settings.toon_navigatie === false || settings.header_show_navbar === false) ? 'none' : 'flex' }}
+        {/* Mobile Toggle */}
+        <button
+          className="md:hidden text-2xl text-primary p-2"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          aria-label="Toggle menu"
         >
-          {sortedNav.map((item, idx) => (
-            <a
-              key={idx}
-              href={`#${item.slug}`}
-              data-dock-element={item.is_call_to_action ? "header-button" : undefined}
-              style={{ display: (item.is_call_to_action && (settings.toon_cta_knop === false || settings.header_show_button === false)) ? 'none' : undefined }}
-              className={`text-xs font-bold uppercase tracking-widest transition-colors hover:text-accent ${item.is_call_to_action ? 'px-5 py-2 bg-accent text-white rounded-full shadow-lg shadow-accent/20' : 'text-white/70'}`}
-            >
-              <span data-dock-type="text" data-dock-bind={`navbar.${idx}.titel_navigatie`}>{extractText(item.titel_navigatie)}</span>
-            </a>
+          <i className={`fa-solid ${isMenuOpen ? 'fa-xmark' : 'fa-bars'}`}></i>
+        </button>
+      </div>
+
+      {/* Mobile Menu Overlay */}
+      <div className={`fixed inset-x-0 top-[var(--header-height,80px)] bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 shadow-xl md:hidden transition-all duration-300 ease-in-out origin-top ${isMenuOpen ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0'}`}>
+        <div className="p-6 flex flex-col gap-4">
+          <Link to="/" className="text-lg font-bold text-primary py-2 border-b border-slate-50 dark:border-slate-800" onClick={() => setIsMenuOpen(false)}>
+            Home
+          </Link>
+
+          {/* Mobile Navigation Links */}
+          {navLinks.map((link, idx) => (
+            <EditableLink
+              key={`mob-${idx}`}
+              label={link.label}
+              url={link.url}
+              cmsBind={{ file: 'navigation', index: idx, key: 'label' }}
+              className="text-lg font-bold text-slate-600 dark:text-slate-300 py-2 border-b border-slate-50 dark:border-slate-800"
+              onClick={(e) => handleScroll(e, link.url)}
+            />
           ))}
-        </div>
-      </nav>
 
-      {/* Main Header / Hero Section */}
-      <header 
-        id="hero" 
-        data-dock-section="hero"
-        className="relative min-h-[85vh] flex flex-col overflow-hidden bg-primary text-white pt-20"
-      >
-        {/* Background Media */}
-        <div className="absolute inset-0">
-          <img src={getImageUrl(heroData.hero_afbeelding || heroData.hero_image)} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind="hero.0.heroData.hero_afbeelding" />
-          {/* Dynamic Gradient Overlay */}
-          <div
-            className="absolute inset-0 z-10 pointer-events-none"
-            style={{
-              background: `linear-gradient(to bottom, var(--hero-overlay-start, rgba(0,0,0,0.8)), var(--hero-overlay-end, rgba(0,0,0,0.3)))`
-            }}
-          ></div>
+          {settings.header_show_button !== false && (
+            <EditableLink
+              as="button"
+              label={settings.header_cta_label || "Contact"}
+              url={settings.header_cta_url || "#contact"}
+              table="site_settings"
+              field="header_cta"
+              id={0}
+              className="w-full bg-[var(--color-button-bg)] text-white px-6 py-3 rounded-[var(--button-radius,9999px)] font-bold hover:opacity-90 transition-all text-center mt-4 shadow-lg"
+              onClick={(e) => handleScroll(e, settings.header_cta_url || "#contact")}
+            />
+          )}
         </div>
-
-        <div className="flex-1 flex items-center justify-center text-center px-6 relative z-20">
-          <div className="relative z-10 max-w-4xl mx-auto reveal">
-            <h1 
-              className="text-5xl md:text-7xl lg:text-9xl mb-8 font-serif font-bold leading-tight" 
-              style={{ color: (typeof heroData.titel === 'object' && heroData.titel?.color) ? heroData.titel.color : 'inherit' }}
-              data-dock-type="text" 
-              data-dock-bind="hero.0.heroData.titel"
-            >
-              {titleString}
-            </h1>
-
-            {taglineString && (
-              <p className="text-xl md:text-3xl font-light text-white/80 mb-12 max-w-2xl mx-auto leading-relaxed italic" data-dock-type="text" data-dock-bind="hero.0.heroData.ondertitel">{taglineString}</p>
-            )}
-            <div className="flex gap-6 justify-center">
-              <a href="#tarieven" className="btn-primary px-10 py-5 text-lg">Onze Diensten</a>
-              <a href="#footer" className="px-10 py-5 border-2 border-white/30 rounded-full font-bold hover:bg-white hover:text-primary transition-all">Contact</a>
-            </div>
-          </div>
-        </div>
-
-        {/* Modern Wave Divider */}
-        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180 z-20">
-          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-[calc(100%+1.3px)] h-20 fill-background">
-            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V46.96C25.54,60.05,72.59,70.97,121.39,70.97c48.8,0,105.51-12.21,135.51-24.54l64.49,10Z"></path>
-          </svg>
-        </div>
-      </header>
-    </>
+      </div>
+    </nav>
   );
 }
 

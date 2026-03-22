@@ -160,6 +160,14 @@ export class ServerController {
     }
 
     /**
+     * Stop all site preview servers ('preview' type)
+     */
+    async stopAllSiteServers() {
+        const count = await this.pm.stopAllProcesses('preview');
+        return { success: true, message: `${count} site servers gestopt.` };
+    }
+
+    /**
      * Start the Layout Editor
      */
     async startLayoutEditor() {

@@ -25,6 +25,7 @@ export const ApiService = {
   startSiteDev: (id) => fetch(`${API_BASE}/sites/${id}/preview`, { method: 'POST' }).then(res => res.json()),
   athenifySite: (id) => fetch(`${API_BASE}/sites/${id}/athenify`, { method: 'POST' }).then(res => res.json()),
   stopSiteServer: (port) => fetch(`${API_BASE}/servers/kill/${port}`, { method: 'POST' }).then(res => res.json()),
+  stopAllSiteServers: () => fetch(`${API_BASE}/servers/stop-all`, { method: 'POST' }).then(res => res.json()),
   deploy: (projectName, commitMsg) => fetch(`${API_BASE}/deploy`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -107,6 +108,8 @@ export const ApiService = {
   pruneStorage: () => fetch(`${API_BASE}/storage/prune-all`, { method: 'POST' }).then(res => res.json()),
   prunePnpmStore: () => fetch(`${API_BASE}/storage/prune-pnpm`, { method: 'POST' }).then(res => res.json()),
   cleanupTempData: () => fetch(`${API_BASE}/storage/cleanup-temp`, { method: 'POST' }).then(res => res.json()),
+  hydrateSite: (siteName) => fetch(`${API_BASE}/storage/${siteName}/hydrate`, { method: 'POST' }).then(res => res.json()),
+  dehydrateSite: (siteName) => fetch(`${API_BASE}/storage/${siteName}/dehydrate`, { method: 'POST' }).then(res => res.json()),
 
   // Settings
   updateConfig: (config) => fetch(`${API_BASE}/settings`, {

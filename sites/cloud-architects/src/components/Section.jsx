@@ -1,6 +1,14 @@
 import React, { useEffect } from 'react';
 
 const Section = ({ data }) => {
+  const getImageUrl = (url) => {
+    if (!url) return '';
+    if (typeof url === 'object') url = url.text || url.url || '';
+    if (url.startsWith('http') || url.startsWith('data:')) return url;
+    const base = import.meta.env.BASE_URL || '/';
+    return (base + '/images/' + url).replace(new RegExp('/+', 'g'), '/');
+  };
+
   const sectionOrder = data.section_order || [];
   const layoutSettings = data.layout_settings || {};
   const sectionSettings = data.section_settings || {};
@@ -50,17 +58,17 @@ const Section = ({ data }) => {
               className="relative w-full h-auto min-h-[85vh] flex items-center justify-center overflow-hidden bg-slate-900 pt-24"
             >
               <div className="absolute inset-0 z-0">
-                <img src={hero[imgKey] || "site-logo.svg"} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind={`sectionName.0.imgKey`} />
+                <img src={getImageUrl(hero[imgKey] || "site-logo.svg")} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind={`${sectionName}.0.imgKey`} />
                 <div className="absolute inset-0 z-20 pointer-events-none" style={{
                   backgroundImage: 'linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.15))'
                 }}></div>
               </div>
               <div className="relative z-30 text-center px-6 max-w-5xl">
                 <h1 className="text-5xl md:text-7xl font-serif font-bold text-white mb-8 leading-tight drop-shadow-2xl">
-                  <span data-dock-type="text" data-dock-bind={`sectionName.0.titel`}>{heroTitle}</span>
+                  <span data-dock-type="text" data-dock-bind={`${sectionName}.0.titel`}>{heroTitle}</span>
                 </h1>
                 <p className="text-xl md:text-2xl text-white/95 max-w-3xl mx-auto mb-12 leading-relaxed drop-shadow-lg font-light italic">
-                  <span data-dock-type="text" data-dock-bind={`sectionName.0.subtitel`}>{heroSubtitle}</span>
+                  <span data-dock-type="text" data-dock-bind={`${sectionName}.0.subtitel`}>{heroSubtitle}</span>
                 </p>
                 <div className="flex justify-center">
                   <button onClick={(e) => { 
@@ -86,7 +94,7 @@ const Section = ({ data }) => {
               <div className="max-w-7xl mx-auto">
                 <div className="flex flex-col md:flex-row items-center gap-16 md:gap-24">
                   <div className="w-full md:w-1/2 aspect-square md:aspect-[4/5] rounded-[3rem] overflow-hidden shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-700">
-                    <img src={img} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind="contact.0.afbeelding" />
+                    <img src={getImageUrl(img)} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind="contact.0.afbeelding" />
                   </div>
                   <div className="flex-1 space-y-8">
                     <div className="inline-block px-4 py-1.5 bg-accent/10 text-accent rounded-full text-xs font-black uppercase tracking-widest">Contact</div>
@@ -131,16 +139,16 @@ const Section = ({ data }) => {
                             <i className={`fa-solid ${item.icon ? (iconMap[item.icon.toLowerCase()] || `fa-${item.icon.toLowerCase()}`) : 'fa-box'}`}></i>
                           </div>
                           <h3 className="text-2xl font-bold text-primary mb-2">
-                            <span data-dock-type="text" data-dock-bind={`sectionName.${index}.${item.titel}`}>{item.titel || item.package_name}</span>
+                            <span data-dock-type="text" data-dock-bind={`${sectionName}.${index}.${item.titel}`}>{item.titel || item.package_name}</span>
                           </h3>
                           <p className="text-slate-500 text-sm italic font-light">
-                            <span data-dock-type="text" data-dock-bind={`sectionName.${index}.${item.subtitel}`}>{item.subtitel || item.subtitle}</span>
+                            <span data-dock-type="text" data-dock-bind={`${sectionName}.${index}.${item.subtitel}`}>{item.subtitel || item.subtitle}</span>
                           </p>
                         </div>
                         <div className="mb-8 pb-8 border-b border-slate-100 flex items-baseline gap-1">
                           <span className="text-2xl font-bold text-primary">{item.valuta || '€'}</span>
                           <span className="text-5xl font-black text-primary tracking-tight">
-                            <span data-dock-type="text" data-dock-bind={`sectionName.${index}.${item.prijs}`}>{item.prijs || item.price}</span>
+                            <span data-dock-type="text" data-dock-bind={`${sectionName}.${index}.${item.prijs}`}>{item.prijs || item.price}</span>
                           </span>
                           <span className="text-slate-400 text-sm font-medium">{item.periode}</span>
                         </div>
@@ -183,22 +191,22 @@ const Section = ({ data }) => {
                     <div key={index} className="flex flex-col items-center text-center bg-slate-50 p-10 rounded-[2.5rem] shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300">
                       {img && (
                         <div className="w-full aspect-[4/3] rounded-[2rem] overflow-hidden mb-8 shadow-inner">
-                          <img src={img} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind={`sectionName.${index}.${item.afbeelding}`} />
+                          <img src={getImageUrl(img)} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind={`${sectionName}.${index}.${item.afbeelding}`} />
                         </div>
                       )}
                       {title && (
                         <h3 className="text-2xl font-bold text-primary mb-2">
-                          <span data-dock-type="text" data-dock-bind={`sectionName.${index}.${item.titel}`}>{title}</span>
+                          <span data-dock-type="text" data-dock-bind={`${sectionName}.${index}.${item.titel}`}>{title}</span>
                         </h3>
                       )}
                       {subtitle && (
                         <p className="text-accent text-sm font-bold uppercase tracking-widest mb-4">
-                          <span data-dock-type="text" data-dock-bind={`sectionName.${index}.${item.subtitel}`}>{subtitle}</span>
+                          <span data-dock-type="text" data-dock-bind={`${sectionName}.${index}.${item.subtitel}`}>{subtitle}</span>
                         </p>
                       )}
                       {text && (
                         <div className="text-slate-600 text-lg leading-relaxed">
-                          <span data-dock-type="text" data-dock-bind={`sectionName.${index}.${item.tekst}`}>{text}</span>
+                          <span data-dock-type="text" data-dock-bind={`${sectionName}.${index}.${item.tekst}`}>{text}</span>
                         </div>
                       )}
                     </div>

@@ -1,47 +1,71 @@
 import React from 'react';
+import EditableMedia from './EditableMedia';
+import EditableText from './EditableText';
+import EditableLink from './EditableLink';
 
-const Hero = ({ data }) => {
-  const info = data.Basisgegevens?.[0] || {};
-  
-  return (
-    <section className="relative h-screen w-full overflow-hidden flex items-center justify-center">
-      {/* Background Image with Overlay */}
-      <div className="absolute inset-0 z-0">
-        <img 
-          src={info.foto_url ? `${import.meta.env.BASE_URL}${info.foto_url}` : "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=2000"} 
-          alt="Soap Antwerp Salon" 
-          className="w-full h-full object-cover scale-105 animate-slow-zoom"
-        />
-        <div className="absolute inset-0 bg-stone-900/40 mix-blend-multiply"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-stone-900/20 via-transparent to-stone-900/60"></div>
-      </div>
+const Hero = ({ data, sectionName, features = {}, style = {} }) => {
+    const hero = data[0];
+    if (!hero) return null;
 
-      <div className="relative z-10 text-center px-6 max-w-4xl">
-        <span className="inline-block text-white/80 text-[10px] uppercase tracking-[0.4em] mb-6 animate-fade-in-up">
-          Welkom bij Soap Antwerp
-        </span>
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-white mb-8 leading-[1.1] animate-fade-in-up delay-100">
-          {info.tagline}
-        </h1>
-        <p className="text-white/70 text-lg md:text-xl font-light max-w-2xl mx-auto mb-12 leading-relaxed animate-fade-in-up delay-200">
-          Ontdek een unieke oase van rust in het hartje van Antwerpen, waar natuur en vakmanschap samenkomen.
-        </p>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 animate-fade-in-up delay-300">
-          <a href="#tarieven" className="w-full sm:w-auto px-10 py-4 bg-white text-stone-900 rounded-full text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-stone-100 transition-all shadow-2xl">
-            Ontdek onze diensten
-          </a>
-          <a href={info.boekings_url} className="w-full sm:w-auto px-10 py-4 border border-white/30 text-white backdrop-blur-sm rounded-full text-[10px] uppercase tracking-[0.2em] font-bold hover:bg-white/10 transition-all">
-            Boek direct online
-          </a>
-        </div>
-      </div>
+    const heroTitle = hero.titel || hero.hero_header || hero.site_naam;
+    const hasSearchLinks = features.google_search_links;
 
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce opacity-50">
-        <div className="w-[1px] h-12 bg-gradient-to-b from-transparent to-white"></div>
-      </div>
-    </section>
-  );
+    const getGoogleSearchUrl = (query) => {
+        return `https://www.google.com/search?q=${encodeURIComponent(query + ' ' + (features.search_context || ''))}`;
+    };
+
+    return (
+        <section
+            id="hero"
+            data-dock-section={sectionName}
+            className="relative w-full h-auto min-h-[var(--hero-height,85vh)] max-h-[var(--hero-max-height,150vh)] aspect-[var(--hero-aspect-ratio,16/9)] flex items-center justify-center overflow-hidden bg-[var(--color-hero-bg)]"
+            style={style}
+        >
+            <div className="absolute inset-0 z-0">
+                <EditableMedia
+                    src={hero.hero_afbeelding || hero.foto_url}
+                    cmsBind={{ file: sectionName, index: 0, key: hero.hero_afbeelding ? 'hero_afbeelding' : 'foto_url' }}
+                    className="w-full h-full object-cover object-top"
+                />
+                <div className="absolute inset-0 z-20 pointer-events-none" style={{
+                    backgroundImage: 'linear-gradient(to bottom, var(--hero-overlay-start, rgba(0,0,0,0.6)), var(--hero-overlay-end, rgba(0,0,0,0.6)))'
+                }}></div>
+            </div>
+            <div className="relative z-10 text-center px-6 max-w-5xl">
+                <h1 className="text-5xl md:text-8xl font-serif font-bold text-white mb-8 leading-tight drop-shadow-2xl">
+                    <EditableText value={heroTitle} cmsBind={{ file: sectionName, index: 0, key: hero.titel ? 'titel' : (hero.hero_header ? 'hero_header' : 'site_naam') }} />
+                </h1>
+                <div className="h-2 w-32 bg-accent mx-auto mb-10 rounded-full shadow-lg shadow-accent/50"></div>
+                <div className="flex flex-col items-center gap-12">
+                    <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed drop-shadow-lg font-light italic">
+                        <EditableText value={hero.ondertitel || hero.introductie} cmsBind={{ file: sectionName, index: 0, key: hero.ondertitel ? 'ondertitel' : 'introductie' }} />
+                    </p>
+                    <div className="flex flex-wrap justify-center gap-4">
+                        <EditableLink
+                            as="button"
+                            label={hero.cta_label || "Contact"}
+                            url={hero.cta_url || "#contact"}
+                            cmsBind={{ file: sectionName, index: 0, key: 'cta' }}
+                            className="bg-[var(--color-button-bg)] text-white px-10 py-4 rounded-full text-xl font-bold shadow-2xl hover:opacity-90 transition-all transform hover:scale-105"
+                            onClick={(e) => {
+                                const url = hero.cta_url || "#contact";
+                                if (url.startsWith('#')) {
+                                    e.preventDefault();
+                                    document.getElementById(url.substring(1))?.scrollIntoView({ behavior: 'smooth' });
+                                }
+                            }}
+                        />
+                        {hasSearchLinks && (
+                            <a href={getGoogleSearchUrl(heroTitle)} target="_blank" rel="noopener noreferrer" className="bg-white/10 hover:bg-white/20 text-white border border-white/30 px-8 py-3 rounded-full backdrop-blur-md transition-all font-bold flex items-center gap-3 group">
+                                <i className="fa-brands fa-google group-hover:text-accent transition-colors"></i>
+                                Zoek meer inzichten
+                            </a>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
 };
 
 export default Hero;

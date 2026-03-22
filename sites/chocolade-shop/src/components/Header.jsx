@@ -1,6 +1,7 @@
 import React from 'react';
 import { useCart } from './CartContext';
 import { Link } from 'react-router-dom';
+import EditableText from './EditableText';
 
 function Header({ primaryTable, siteSettings = {} }) {
   const cartContext = useCart ? useCart() : null;
@@ -15,10 +16,10 @@ function Header({ primaryTable, siteSettings = {} }) {
         {/* Logo / Naam */}
         <Link to="/" className="flex items-center gap-3 group">
           <div className="w-10 h-10 bg-accent rounded-xl flex items-center justify-center text-white font-serif font-bold text-xl shadow-lg shadow-accent/20 group-hover:scale-110 transition-transform">
-            {info.site_naam?.charAt(0) || info.naam?.charAt(0) || 'A'}
+            {(info.site_naam || info.naam || 'A').charAt(0)}
           </div>
           <span className="text-xl font-serif font-bold tracking-tight text-primary">
-            <span data-dock-type="text" data-dock-bind="basisgegevens.0.info.site_naam">{info.site_naam || info.naam || 'Athena'}</span>
+            <EditableText value={info.site_naam || info.naam} cmsBind={{ file: 'basisgegevens', index: 0, key: 'site_naam' }} />
           </span>
         </Link>
 

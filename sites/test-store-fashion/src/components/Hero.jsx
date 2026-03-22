@@ -1,59 +1,71 @@
 import React from 'react';
-import EditableImage from './EditableImage';
+import EditableMedia from './EditableMedia';
+import EditableText from './EditableText';
+import EditableLink from './EditableLink';
 
-/**
- * Hero Component - Fashion Store Sitetype
- * Editorial / High-Fashion Layout
- */
-export default function Hero({ data }) {
-  const info = data.Winkel_Instellingen?.[0] || {};
-  const title = info.winkelnaam || "MAISON ATHENA";
-  const tagline = info.slogan || "Spring / Summer 2026 Collection";
-  
-  const imageField = Object.keys(info).find(key => /logo|foto|banner/i.test(key));
-  const rawImg = info[imageField];
-  const imgSrc = rawImg ? (rawImg.startsWith('http') ? rawImg : `${import.meta.env.BASE_URL}images/${rawImg}`) : null;
+const Hero = ({ data, sectionName, features = {}, style = {} }) => {
+    const hero = data[0];
+    if (!hero) return null;
 
-  return (
-    <section className="relative h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image */}
-      {imgSrc && (
-        <div className="absolute inset-0 z-0">
-          <EditableImage 
-            src={imgSrc} 
-            alt={title} 
-            className="w-full h-full object-cover" 
-            cmsBind={{ file: 'Winkel_Instellingen', index: 0, key: imageField }} 
-          />
-          {/* Subtle overlay for text readability */}
-          <div className="absolute inset-0 bg-black/20"></div>
-        </div>
-      )}
+    const heroTitle = hero.titel || hero.hero_header || hero.site_naam;
+    const hasSearchLinks = features.google_search_links;
 
-      {/* Hero Content */}
-      <div className="relative z-10 text-center text-white px-6 max-w-5xl mx-auto">
-        <p className="text-xs md:text-sm uppercase tracking-[0.4em] mb-8 font-light animate-in fade-in slide-in-from-bottom-4 duration-700">
-          {tagline}
-        </p>
-        <h1 className="text-6xl md:text-9xl font-serif italic mb-12 animate-in fade-in zoom-in duration-1000 leading-none">
-          {title}
-        </h1>
-        
-        <div className="flex flex-col md:flex-row gap-6 justify-center animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
-          <a href="#producten" className="px-10 py-4 bg-white text-black text-xs font-bold uppercase tracking-[0.2em] hover:bg-black hover:text-white transition-all duration-500 min-w-[200px]">
-            Shop Women
-          </a>
-          <a href="#producten" className="px-10 py-4 border border-white text-white text-xs font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all duration-500 min-w-[200px]">
-            Shop Men
-          </a>
-        </div>
-      </div>
-      
-      {/* Footer minimal info */}
-      <div className="absolute bottom-10 w-full flex justify-between px-10 text-[10px] uppercase tracking-widest text-white/70">
-         <span>Est. 2026</span>
-         <span>Paris — Milan — New York</span>
-      </div>
-    </section>
-  );
-}
+    const getGoogleSearchUrl = (query) => {
+        return `https://www.google.com/search?q=${encodeURIComponent(query + ' ' + (features.search_context || ''))}`;
+    };
+
+    return (
+        <section
+            id="hero"
+            data-dock-section={sectionName}
+            className="relative w-full h-auto min-h-[var(--hero-height,85vh)] max-h-[var(--hero-max-height,150vh)] aspect-[var(--hero-aspect-ratio,16/9)] flex items-center justify-center overflow-hidden bg-[var(--color-hero-bg)]"
+            style={style}
+        >
+            <div className="absolute inset-0 z-0">
+                <EditableMedia
+                    src={hero.hero_afbeelding || hero.foto_url}
+                    cmsBind={{ file: sectionName, index: 0, key: hero.hero_afbeelding ? 'hero_afbeelding' : 'foto_url' }}
+                    className="w-full h-full object-cover object-top"
+                />
+                <div className="absolute inset-0 z-20 pointer-events-none" style={{
+                    backgroundImage: 'linear-gradient(to bottom, var(--hero-overlay-start, rgba(0,0,0,0.6)), var(--hero-overlay-end, rgba(0,0,0,0.6)))'
+                }}></div>
+            </div>
+            <div className="relative z-10 text-center px-6 max-w-5xl">
+                <h1 className="text-5xl md:text-8xl font-serif font-bold text-white mb-8 leading-tight drop-shadow-2xl">
+                    <EditableText value={heroTitle} cmsBind={{ file: sectionName, index: 0, key: hero.titel ? 'titel' : (hero.hero_header ? 'hero_header' : 'site_naam') }} />
+                </h1>
+                <div className="h-2 w-32 bg-accent mx-auto mb-10 rounded-full shadow-lg shadow-accent/50"></div>
+                <div className="flex flex-col items-center gap-12">
+                    <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed drop-shadow-lg font-light italic">
+                        <EditableText value={hero.ondertitel || hero.introductie} cmsBind={{ file: sectionName, index: 0, key: hero.ondertitel ? 'ondertitel' : 'introductie' }} />
+                    </p>
+                    <div className="flex flex-wrap justify-center gap-4">
+                        <EditableLink
+                            as="button"
+                            label={hero.cta_label || "Contact"}
+                            url={hero.cta_url || "#contact"}
+                            cmsBind={{ file: sectionName, index: 0, key: 'cta' }}
+                            className="bg-[var(--color-button-bg)] text-white px-10 py-4 rounded-full text-xl font-bold shadow-2xl hover:opacity-90 transition-all transform hover:scale-105"
+                            onClick={(e) => {
+                                const url = hero.cta_url || "#contact";
+                                if (url.startsWith('#')) {
+                                    e.preventDefault();
+                                    document.getElementById(url.substring(1))?.scrollIntoView({ behavior: 'smooth' });
+                                }
+                            }}
+                        />
+                        {hasSearchLinks && (
+                            <a href={getGoogleSearchUrl(heroTitle)} target="_blank" rel="noopener noreferrer" className="bg-white/10 hover:bg-white/20 text-white border border-white/30 px-8 py-3 rounded-full backdrop-blur-md transition-all font-bold flex items-center gap-3 group">
+                                <i className="fa-brands fa-google group-hover:text-accent transition-colors"></i>
+                                Zoek meer inzichten
+                            </a>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+};
+
+export default Hero;

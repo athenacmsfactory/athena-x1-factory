@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { ApiService } from '../services/ApiService';
 import { useToast } from '../services/ToastContext';
 
@@ -6,13 +7,57 @@ export default function SiteCard({ site, activeServer, onRefresh, onSEO, onSheet
   const isRunning = !!activeServer;
   const status = site.status || 'local';
   
+  const [isHydrating, setIsHydrating] = useState(false);
+  const isInstalled = site.isInstalled;
+
   const handleStartDev = async () => {
     try {
-      addToast(`Starten van server voor ${site.name}...`, 'info');
+      if (!isInstalled) {
+        addToast(`Dormante site gedetecteerd. Auto-hydratie gestart voor ${site.name}...`, 'info');
+        setIsHydrating(true);
+      } else {
+        addToast(`Starten van server voor ${site.name}...`, 'info');
+      }
       await ApiService.startSiteDev(site.name);
+      setIsHydrating(false);
       setTimeout(onRefresh, 1000);
     } catch (e) {
+      setIsHydrating(false);
       addToast("Fout bij starten server: " + e.message, 'error');
+    }
+  };
+
+  const handleHydrate = async () => {
+    try {
+      addToast(`Hydratatie van ${site.name} gestart...`, 'info');
+      setIsHydrating(true);
+      const res = await ApiService.hydrateSite(site.name);
+      setIsHydrating(false);
+      if (res.success) {
+        addToast(`Site ${site.name} is nu gehydrateerd.`, 'success');
+        onRefresh();
+      } else {
+        addToast(`Hydratatie mislukt: ${res.error}`, 'error');
+      }
+    } catch (e) {
+      setIsHydrating(false);
+      addToast(`Netwerkfout: ${e.message}`, 'error');
+    }
+  };
+
+  const handleDehydrate = async () => {
+    if (!confirm(`Weet je zeker dat je ${site.name} wilt deshydrateren? Dit verwijdert node_modules om ruimte te besparen.`)) return;
+    try {
+      addToast(`Deshydratatie van ${site.name}...`, 'info');
+      const res = await ApiService.dehydrateSite(site.name);
+      if (res.success) {
+        addToast(`Site ${site.name} is nu dormant (node_modules verwijderd).`, 'success');
+        onRefresh();
+      } else {
+        addToast(`Deshydratatie mislukt: ${res.error}`, 'error');
+      }
+    } catch (e) {
+      addToast(`Netwerkfout: ${e.message}`, 'error');
     }
   };
 
@@ -52,6 +97,7 @@ export default function SiteCard({ site, activeServer, onRefresh, onSEO, onSheet
         <div className="space-y-0.5">
           <div className="flex items-center gap-2">
             <h3 className="font-bold text-white text-[13px] tracking-tight group-hover:text-athena-accent transition-colors">{site.name}</h3>
+            {isHydrating && <span className="w-2.5 h-2.5 bg-blue-500 rounded-full animate-ping" title="Hydrateren..."></span>}
           </div>
           <p className="text-[10px] text-slate-500 font-medium uppercase flex items-center gap-2">
              <span>{status === 'live' ? 'Live on Pages' : 'Local Project'}</span>
@@ -65,16 +111,18 @@ export default function SiteCard({ site, activeServer, onRefresh, onSEO, onSheet
         </div>
         <div className="flex flex-col gap-1 items-end">
           <Badge type={isRunning ? 'live' : 'local'} label={isRunning ? 'ACTIVE' : 'OFFLINE'} />
+          <Badge type={isInstalled ? 'info' : 'local'} label={isInstalled ? '💧 HYDRATED' : '🌵 DORMANT'} />
         </div>
       </div>
 
       {/* Grid of Actions (Klassieke compacte stijl) */}
       <div className="px-3 pb-3 grid grid-cols-4 gap-1.5 mt-auto">
         <ActionButton 
-          icon={isRunning ? "↗️" : "▶️"} 
-          label={isRunning ? "OPEN" : "DEV"} 
+          icon={isRunning ? "↗️" : (isHydrating ? "⏳" : "▶️")} 
+          label={isRunning ? "OPEN" : (isHydrating ? "WAIT" : "DEV")} 
           onClick={isRunning ? () => window.open(activeServer.url, '_blank') : handleStartDev}
-          active={isRunning}
+          active={isRunning || isHydrating}
+          disabled={isHydrating}
         />
         <ActionButton 
           icon="⚓" 
@@ -82,9 +130,11 @@ export default function SiteCard({ site, activeServer, onRefresh, onSEO, onSheet
           onClick={() => ApiService.startDock().then(() => window.open(`http://localhost:5002?site=${site.name}`, '_blank'))}
         />
         <ActionButton 
-          icon="🖼️" 
-          label="MEDIA" 
-          onClick={() => ApiService.startMediaServer(site.name).then(() => window.open(`http://localhost:5004`, '_blank'))}
+          icon={isInstalled ? "🌵" : "💧"} 
+          label={isInstalled ? "DRY" : "WET"} 
+          onClick={isInstalled ? handleDehydrate : handleHydrate}
+          disabled={isRunning || isHydrating}
+          danger={isInstalled}
         />
         <ActionButton 
           icon="🛑" 
@@ -103,6 +153,11 @@ export default function SiteCard({ site, activeServer, onRefresh, onSEO, onSheet
           icon="📝" 
           label="SHEET" 
           onClick={() => onSheet(site)}
+        />
+        <ActionButton 
+          icon="🖼️" 
+          label="MEDIA" 
+          onClick={() => ApiService.startMediaServer(site.name).then(() => window.open(`http://localhost:5004`, '_blank'))}
         />
         <ActionButton 
           icon="🚀" 

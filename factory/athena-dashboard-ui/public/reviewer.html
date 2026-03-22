@@ -68,6 +68,13 @@
                     <button id="mode-live" onclick="setReviewMode('live')" class="px-2 py-1 text-[9px] font-black rounded transition-all text-slate-500 hover:text-white">LIVE</button>
                 </div>
             </div>
+            <div class="flex items-center justify-between mt-2 px-1">
+                <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500">Auto-Stop Vorige</span>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="auto-stop-toggle" class="sr-only peer" checked onchange="toggleAutoStop(this.checked)">
+                    <div class="w-8 h-4 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-blue-600"></div>
+                </label>
+            </div>
             <p id="progress-text" class="text-xs text-slate-400 mt-2">Laden van sites...</p>
         </div>
         
@@ -193,6 +200,9 @@
 
             const savedMode = localStorage.getItem('reviewer-mode') || 'local';
             setReviewMode(savedMode);
+
+            const autoStop = localStorage.getItem('reviewer-auto-stop') !== 'false';
+            document.getElementById('auto-stop-toggle').checked = autoStop;
         }
 
         // ⚓ Athena Message Interceptor
@@ -288,13 +298,19 @@
             }
 
             // Voor native sites starten we de ontwikkelserver op
+            const autoStop = document.getElementById('auto-stop-toggle').checked;
+            
             document.getElementById('site-status-container').classList.remove('hidden');
             document.getElementById('site-status-spinner').classList.remove('hidden');
             document.getElementById('site-status-text').innerText = "Opstarten...";
             document.getElementById('site-status-text').className = "text-sm text-blue-400";
 
             try {
-                const response = await fetch(`${API_BASE}/api/sites/${site.name}/preview`, { method: 'POST' });
+                const response = await fetch(`${API_BASE}/api/sites/${site.name}/preview`, { 
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ stopOthers: autoStop })
+                });
                 const result = await response.json();
 
                 if (result.success) {
@@ -305,6 +321,10 @@
             } catch (err) {
                 showError("Verbindingsfout");
             }
+        }
+
+        function toggleAutoStop(enabled) {
+            localStorage.setItem('reviewer-auto-stop', enabled);
         }
 
         function checkHealth(url) {

@@ -1,75 +1,71 @@
 import React from 'react';
-import EditableImage from './EditableImage';
+import EditableMedia from './EditableMedia';
+import EditableText from './EditableText';
+import EditableLink from './EditableLink';
 
-/**
- * Hero Component - Real Estate Sitetype
- * Luxury Property Search Layout
- */
-export default function Hero({ data }) {
-  const info = data.Agency_Info?.[0] || {};
-  const title = info.naam || "Uw Droomwoning";
-  const tagline = info.tagline || "Vind exclusief vastgoed in uw regio";
+const Hero = ({ data, sectionName, features = {}, style = {} }) => {
+    const hero = data[0];
+    if (!hero) return null;
 
-  const imageField = Object.keys(info).find(key => /logo|foto|banner|hero/i.test(key));
-  const rawImg = info[imageField];
-  const imgSrc = rawImg ? (rawImg.startsWith('http') ? rawImg : `${import.meta.env.BASE_URL}images/${rawImg}`) : null;
+    const heroTitle = hero.titel || hero.hero_header || hero.site_naam;
+    const hasSearchLinks = features.google_search_links;
 
-  return (
-    <section className="relative h-screen flex items-center justify-center text-white overflow-hidden bg-primary">
-      {/* Background with Gradient Overlay */}
-      {imgSrc ? (
-        <div className="absolute inset-0 z-0">
-           <EditableImage 
-             src={imgSrc} 
-             alt={title} 
-             className="w-full h-full object-cover animate-in fade-in zoom-in duration-[2s] brightness-75" 
-             cmsBind={{ file: 'Agency_Info', index: 0, key: imageField }} 
-           />
-           <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/30 to-transparent z-10"></div>
-        </div>
-      ) : (
-        <div className="absolute inset-0 bg-slate-900 z-0"></div>
-      )}
-      
-      <div className="relative z-20 max-w-5xl px-6 text-center animate-in slide-in-from-bottom-8 duration-1000">
-        <h1 className="text-6xl md:text-9xl font-black mb-8 leading-[0.85] tracking-tighter uppercase">
-          Find Your <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent to-white/50">Sanctuary.</span>
-        </h1>
-        <p className="text-xl md:text-3xl text-white/80 mb-16 max-w-3xl mx-auto font-light italic leading-relaxed">
-          {tagline}
-        </p>
-        
-        {/* Search Bar Overlay */}
-        <div className="bg-white/10 backdrop-blur-2xl p-3 rounded-[2rem] border border-white/20 max-w-4xl mx-auto flex flex-col md:flex-row gap-3 shadow-2xl">
-          <div className="flex-grow flex items-center bg-white rounded-[1.5rem] px-6 py-4 shadow-inner">
-             <span className="text-primary opacity-30 mr-3 text-xl">📍</span>
-             <input 
-               type="text" 
-               placeholder="Waar zoekt u een woning?" 
-               className="w-full bg-transparent text-primary font-bold outline-none placeholder:text-primary/30"
-             />
-          </div>
-          <button className="px-12 py-5 bg-accent text-white font-black uppercase tracking-[0.2em] text-xs rounded-[1.5rem] hover:bg-white hover:text-primary transition-all duration-500 shadow-xl shadow-accent/20">
-            Zoek Aanbod
-          </button>
-        </div>
+    const getGoogleSearchUrl = (query) => {
+        return `https://www.google.com/search?q=${encodeURIComponent(query + ' ' + (features.search_context || ''))}`;
+    };
 
-        {/* Quick Stats */}
-        <div className="mt-16 flex justify-center gap-12 text-white/50 font-bold uppercase tracking-widest text-[10px]">
-           <div className="flex flex-col gap-1">
-             <span className="text-white text-2xl font-black">2.5k+</span>
-             <span>Panden Verkocht</span>
-           </div>
-           <div className="flex flex-col gap-1 border-x border-white/10 px-12">
-             <span className="text-white text-2xl font-black">15+</span>
-             <span>Jaar Ervaring</span>
-           </div>
-           <div className="flex flex-col gap-1">
-             <span className="text-white text-2xl font-black">98%</span>
-             <span>Tevreden Klanten</span>
-           </div>
-        </div>
-      </div>
-    </section>
-  );
-}
+    return (
+        <section
+            id="hero"
+            data-dock-section={sectionName}
+            className="relative w-full h-auto min-h-[var(--hero-height,85vh)] max-h-[var(--hero-max-height,150vh)] aspect-[var(--hero-aspect-ratio,16/9)] flex items-center justify-center overflow-hidden bg-[var(--color-hero-bg)]"
+            style={style}
+        >
+            <div className="absolute inset-0 z-0">
+                <EditableMedia
+                    src={hero.hero_afbeelding || hero.foto_url}
+                    cmsBind={{ file: sectionName, index: 0, key: hero.hero_afbeelding ? 'hero_afbeelding' : 'foto_url' }}
+                    className="w-full h-full object-cover object-top"
+                />
+                <div className="absolute inset-0 z-20 pointer-events-none" style={{
+                    backgroundImage: 'linear-gradient(to bottom, var(--hero-overlay-start, rgba(0,0,0,0.6)), var(--hero-overlay-end, rgba(0,0,0,0.6)))'
+                }}></div>
+            </div>
+            <div className="relative z-10 text-center px-6 max-w-5xl">
+                <h1 className="text-5xl md:text-8xl font-serif font-bold text-white mb-8 leading-tight drop-shadow-2xl">
+                    <EditableText value={heroTitle} cmsBind={{ file: sectionName, index: 0, key: hero.titel ? 'titel' : (hero.hero_header ? 'hero_header' : 'site_naam') }} />
+                </h1>
+                <div className="h-2 w-32 bg-accent mx-auto mb-10 rounded-full shadow-lg shadow-accent/50"></div>
+                <div className="flex flex-col items-center gap-12">
+                    <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed drop-shadow-lg font-light italic">
+                        <EditableText value={hero.ondertitel || hero.introductie} cmsBind={{ file: sectionName, index: 0, key: hero.ondertitel ? 'ondertitel' : 'introductie' }} />
+                    </p>
+                    <div className="flex flex-wrap justify-center gap-4">
+                        <EditableLink
+                            as="button"
+                            label={hero.cta_label || "Contact"}
+                            url={hero.cta_url || "#contact"}
+                            cmsBind={{ file: sectionName, index: 0, key: 'cta' }}
+                            className="bg-[var(--color-button-bg)] text-white px-10 py-4 rounded-full text-xl font-bold shadow-2xl hover:opacity-90 transition-all transform hover:scale-105"
+                            onClick={(e) => {
+                                const url = hero.cta_url || "#contact";
+                                if (url.startsWith('#')) {
+                                    e.preventDefault();
+                                    document.getElementById(url.substring(1))?.scrollIntoView({ behavior: 'smooth' });
+                                }
+                            }}
+                        />
+                        {hasSearchLinks && (
+                            <a href={getGoogleSearchUrl(heroTitle)} target="_blank" rel="noopener noreferrer" className="bg-white/10 hover:bg-white/20 text-white border border-white/30 px-8 py-3 rounded-full backdrop-blur-md transition-all font-bold flex items-center gap-3 group">
+                                <i className="fa-brands fa-google group-hover:text-accent transition-colors"></i>
+                                Zoek meer inzichten
+                            </a>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+};
+
+export default Hero;

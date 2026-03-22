@@ -599,7 +599,7 @@ export class SiteController {
     /**
      * Start/Get preview server for a site
      */
-    async preview(id) {
+    async preview(id, options = {}) {
         let siteDir = path.join(this.sitesDir, id);
         let isExternal = false;
 
@@ -619,6 +619,29 @@ export class SiteController {
             return { success: true, status: 'ready', url: `http://localhost:5000/previews/${id}/` };
         }
 
+        //  trident v8.8.2: AUTO-HYDRATION
+        if (!hasPackageJson && !isExternal) {
+            console.warn(`⚠️ No package.json found for ${id}. Cannot auto-hydrate.`);
+        } else if (hasPackageJson && !fs.existsSync(path.join(siteDir, 'node_modules'))) {
+            console.log(`💧 Site '${id}' is dormant. Auto-hydrating before preview...`);
+            const installResult = await this.install(id);
+            if (installResult.success) {
+                // Poll for completion (max 2 minutes)
+                let pollAttempts = 0;
+                while (pollAttempts < 120) {
+                    const status = this.getStatus(id);
+                    if (status.installStatus === 'success') break;
+                    if (status.installStatus === 'failed') throw new Error(`Auto-hydration failed for ${id}: ${status.installLog}`);
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    pollAttempts++;
+                }
+                if (pollAttempts >= 120) throw new Error(`Auto-hydration timeout for ${id}.`);
+                console.log(`✅ Auto-hydration complete for ${id}. Proceeding to start server...`);
+            } else {
+                throw new Error(`Failed to trigger auto-hydration for ${id}: ${installResult.message}`);
+            }
+        }
+
         const previewPort = this.getSitePort(id, siteDir);
         const activeProcesses = this.pm.listActive();
 
@@ -628,11 +651,13 @@ export class SiteController {
             return { success: true, status: 'ready', url: `http://localhost:${previewPort}/${id}/` };
         }
 
-        // 2. STOP ALLE ANDERE PREVIEWS (om resources te besparen en poort vrij te maken)
-        for (const port in activeProcesses) {
-            if (activeProcesses[port].type === 'preview') {
-                console.log(`🧹 Stopping previous preview on port ${port} ('${activeProcesses[port].id}')...`);
-                await this.pm.stopProcessByPort(parseInt(port));
+        // 2. STOP ALLE ANDERE PREVIEWS (optioneel, om resources te besparen)
+        if (options.stopOthers !== false) {
+            for (const port in activeProcesses) {
+                if (activeProcesses[port].type === 'preview') {
+                    console.log(`🧹 Stopping previous preview on port ${port} ('${activeProcesses[port].id}')...`);
+                    await this.pm.stopProcessByPort(parseInt(port));
+                }
             }
         }
 

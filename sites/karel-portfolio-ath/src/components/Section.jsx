@@ -1,6 +1,14 @@
 import React, { useEffect } from 'react';
 
 const Section = ({ data }) => {
+  const getImageUrl = (url) => {
+    if (!url) return '';
+    if (typeof url === 'object') url = url.text || url.url || '';
+    if (url.startsWith('http') || url.startsWith('data:')) return url;
+    const base = import.meta.env.BASE_URL || '/';
+    return (base + '/images/' + url).replace(new RegExp('/+', 'g'), '/');
+  };
+
   const sectionOrder = data.section_order || [];
 
   useEffect(() => {
@@ -31,19 +39,19 @@ const Section = ({ data }) => {
           return (
             <section key={idx} id="hero" data-dock-section={sectionName} className="relative h-[90vh] flex items-center justify-center overflow-hidden">
               <div className="absolute inset-0 z-0">
-                <img src={heroImg} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind={`sectionName.0.hero.hero_afbeelding`} />
+                <img src={heroImg} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind={`${sectionName}.0.hero.hero_afbeelding`} />
                 <div className="absolute inset-0 z-20 pointer-events-none" style={{ 
                   backgroundImage: 'linear-gradient(to bottom, var(--hero-overlay-start, rgba(0,0,0,0.6)), var(--hero-overlay-end, rgba(0,0,0,0.6)))' 
                 }}></div>
               </div>
               <div className="relative z-10 text-center px-6 max-w-5xl">
                 <h1 className="text-5xl md:text-8xl font-serif font-bold text-white mb-8 leading-tight drop-shadow-2xl">
-                  <span data-dock-type="text" data-dock-bind={`sectionName.0.hero.titel`}>{heroTitle}</span>
+                  <span data-dock-type="text" data-dock-bind={`${sectionName}.0.hero.titel`}>{heroTitle}</span>
                 </h1>
                 <div className="h-2 w-32 bg-accent mx-auto mb-10 rounded-full shadow-lg shadow-accent/50"></div>
                 <div className="flex flex-col items-center gap-12">
                     <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed drop-shadow-lg font-light italic">
-                       <span data-dock-type="text" data-dock-bind={`sectionName.0.hero.ondertitel`}>{heroSub}</span>
+                       <span data-dock-type="text" data-dock-bind={`${sectionName}.0.hero.ondertitel`}>{heroSub}</span>
                     </p>
                     <div className="flex flex-wrap justify-center gap-4">
                         <button onClick={scrollToContact} className="bg-[var(--color-button-bg)] text-white px-10 py-5 rounded-full text-xl font-bold shadow-2xl hover:opacity-90 transition-all transform hover:scale-105">
@@ -79,17 +87,17 @@ const Section = ({ data }) => {
                      <div key={index} className="flex flex-col bg-white p-10 rounded-[3rem] shadow-xl hover:shadow-2xl transition-all duration-500 group border border-slate-100">
                        {imgKey && item[imgKey] && (
                          <div className="h-48 rounded-3xl mb-8 overflow-hidden">
-                           <img src={item[imgKey]} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-dock-type="media" data-dock-bind={`sectionName.0.imgKey`} />
+                           <img src={getImageUrl(item[imgKey])} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-dock-type="media" data-dock-bind={`${sectionName}.0.imgKey`} />
                          </div>
                        )}
                        
                        <h3 className="text-2xl font-serif font-bold text-primary mb-4 group-hover:text-accent transition-colors">
-                         {titleKey && <span data-dock-type="text" data-dock-bind={`sectionName.0.titleKey`}>{item[titleKey]}</span>}
+                         {titleKey && <span data-dock-type="text" data-dock-bind={`${sectionName}.0.titleKey`}>{item[titleKey]}</span>}
                        </h3>
                        
                        {textKeys.map(tk => (
                          <p key={tk} className="text-lg text-slate-600 font-light leading-relaxed mb-6">
-                           <span data-dock-type="text" data-dock-bind={`sectionName.0.tk`}>{item[tk]}</span>
+                           <span data-dock-type="text" data-dock-bind={`${sectionName}.0.tk`}>{item[tk]}</span>
                          </p>
                        ))}
 

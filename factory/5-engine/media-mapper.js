@@ -21,15 +21,23 @@ import { generateWithAI } from './core/ai-engine.js';
 
 let activeProject = null;
 
-// --- CLI OVERRIDE ---
+// --- CLI ARGUMENTS ---
 const args = process.argv.slice(2);
-if (args[0]) {
-    activeProject = args[0];
-    console.log(`🎯 Initial site set from CLI: ${activeProject}`);
+let customPort = null;
+
+for (let i = 0; i < args.length; i++) {
+    if (args[i] === '--port' && args[i+1]) {
+        customPort = parseInt(args[i+1]);
+        i++;
+    } else if (!args[i].startsWith('--')) {
+        activeProject = args[i];
+    }
 }
 
+if (activeProject) console.log(`🎯 Initial site set from CLI: ${activeProject}`);
+
 const app = express();
-const port = process.env.MEDIA_MAPPER_PORT || 4004;
+const port = customPort || process.env.MEDIA_MAPPER_PORT || 5004;
 
 // --- CORS & BODY PARSING ---
 app.use(express.json());

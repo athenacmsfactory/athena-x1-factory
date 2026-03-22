@@ -124,15 +124,16 @@ export class AthenaProcessManager {
         let changed = false;
 
         for (const port in registry) {
-            const pid = registry[port].pid;
+            const entry = registry[port];
+            const pid = entry.pid;
             try {
                 // Check if alive using signal 0
                 process.kill(pid, 0); 
-                active[port] = registry[port];
+                active[port] = entry;
             } catch (e) {
                 // EPERM means it's alive but not ours, ESRCH means it's dead
                 if (e.code === 'EPERM') {
-                    active[port] = registry[port];
+                    active[port] = entry;
                 } else {
                     changed = true;
                     console.log(`🧹 Cleaning up stale registry entry for port ${port}`);
@@ -142,5 +143,24 @@ export class AthenaProcessManager {
 
         if (changed) this.saveRegistry(active);
         return active;
+    }
+
+    /**
+     * Stop all tracked processes, optionally filtered by type
+     */
+    async stopAllProcesses(typeFilter = null) {
+        const registry = this.getRegistry();
+        const ports = Object.keys(registry);
+        let stoppedCount = 0;
+
+        for (const port of ports) {
+            const info = registry[port];
+            if (!typeFilter || info.type === typeFilter) {
+                const stopped = await this.stopProcessByPort(parseInt(port));
+                if (stopped) stoppedCount++;
+            }
+        }
+
+        return stoppedCount;
     }
 }

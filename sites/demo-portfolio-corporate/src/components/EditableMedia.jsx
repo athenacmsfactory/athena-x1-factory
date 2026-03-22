@@ -14,9 +14,14 @@ export default function EditableMedia({ src, alt, className, cmsBind, ...props }
     return null;
   }
 
-  const finalSrc = (src && !src.startsWith('http') && !src.startsWith('/') && !src.startsWith('data:'))
-    ? `${import.meta.env.BASE_URL}images/${src}`.replace(/\/+/g, '/')
-    : src;
+  let finalPath = src;
+  if (typeof src === 'string' && src && !src.startsWith('http') && !src.startsWith('/') && !src.startsWith('data:')) {
+    // v8.1: Robust detection of root public assets (logo.svg, favicon.ico, etc)
+    const isRootPublic = src.startsWith('./') || src.endsWith('.svg') || src.endsWith('.ico') || src === 'site-logo.svg' || src === 'athena-icon.svg';
+    const pathPrefix = isRootPublic ? '' : 'images/';
+    finalPath = `${import.meta.env.BASE_URL}${pathPrefix}${src.replace('./', '')}`.replace(/\/+/g, '/');
+  }
+  const finalSrc = finalPath;
 
   const isVideo = src && (src.endsWith('.mp4') || src.endsWith('.webm'));
 
@@ -35,8 +40,12 @@ export default function EditableMedia({ src, alt, className, cmsBind, ...props }
   }) : null;
 
   return (
-    <div className={`relative group ${className}`} data-dock-bind={dockBind}
-      data-dock-type="media">
+    <div
+      className={`relative group ${className} cursor-pointer hover:ring-2 hover:ring-blue-400/40 rounded-sm transition-all duration-200`}
+      data-dock-bind={dockBind}
+      data-dock-type="media"
+      title={cmsBind ? `Shift+Klik om "${cmsBind.key}" te bewerken in de Dock` : undefined}
+    >
       {renderMedia()}
     </div>
   );

@@ -1,4 +1,5 @@
 import React from 'react';
+import EditableMedia from './EditableMedia';
 
 const Testimonials = ({ data, sectionName }) => {
     if (!data || data.length === 0) return null;
@@ -21,21 +22,25 @@ const Testimonials = ({ data, sectionName }) => {
                             <div key={index} className="bg-white p-8 rounded-[2rem] shadow-xl border border-slate-100 flex flex-col relative">
                                 <i className="fa-solid fa-quote-left text-4xl text-accent/20 mb-6 absolute top-8 left-8"></i>
                                 <div className="mb-6 relative z-10 text-lg leading-relaxed text-slate-600 italic">
-                                    "<span data-dock-type="text" data-dock-bind={`sectionName.0.citaatKey`}>{item[citaatKey]}</span>"
+                                    "<span data-dock-type="text" data-dock-bind={`${sectionName}.${index}.${citaatKey}`}>{item[citaatKey]}</span>"
                                 </div>
                                 <div className="mt-auto flex items-center gap-4 border-t border-slate-100 pt-6">
                                     {imgKey && item[imgKey] && (
                                         <div className="w-12 h-12 rounded-full overflow-hidden shadow-sm flex-shrink-0">
-                                            <img src={item[imgKey]} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind={`sectionName.0.imgKey`} />
+                                            <EditableMedia 
+                                                src={item[imgKey]} 
+                                                className="w-full h-full object-cover" 
+                                                cmsBind={{ file: sectionName, index, key: imgKey }}
+                                            />
                                         </div>
                                     )}
                                     <div>
                                         <div className="font-bold text-primary">
-                                            <span data-dock-type="text" data-dock-bind={`sectionName.0.auteurKey`}>{item[auteurKey]}</span>
+                                            <span data-dock-type="text" data-dock-bind={`${sectionName}.${index}.${auteurKey}`}>{item[auteurKey]}</span>
                                         </div>
-                                        {roleKey && (
+                                        {roleKey && item[roleKey] && (
                                             <div className="text-sm text-accent font-semibold uppercase tracking-wider">
-                                                <span data-dock-type="text" data-dock-bind={`sectionName.0.roleKey`}>{item[roleKey]}</span>
+                                                <span data-dock-type="text" data-dock-bind={`${sectionName}.${index}.${roleKey}`}>{item[roleKey]}</span>
                                             </div>
                                         )}
                                     </div>

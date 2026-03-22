@@ -1,4 +1,5 @@
 import React from 'react';
+import EditableMedia from './EditableMedia';
 
 const Team = ({ data, sectionName }) => {
     if (!data || data.length === 0) return null;
@@ -20,17 +21,21 @@ const Team = ({ data, sectionName }) => {
                         return (
                             <div key={index} className="flex flex-col items-center text-center group">
                                 <div className="w-48 h-48 rounded-full overflow-hidden mb-6 border-4 border-white shadow-2xl group-hover:scale-105 transition-transform duration-300 ring-4 ring-transparent hover:ring-accent/30 relative">
-                                    <img src={item[imgKey]} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind={`sectionName.0.imgKey`} />
+                                    <EditableMedia 
+                                        src={item[imgKey]} 
+                                        className="w-full h-full object-cover" 
+                                        cmsBind={{ file: sectionName, index, key: imgKey }}
+                                    />
                                 </div>
                                 <h3 className="text-xl font-bold text-primary mb-1">
-                                    <span data-dock-type="text" data-dock-bind={`sectionName.0.naamKey`}>{item[naamKey]}</span>
+                                    <span data-dock-type="text" data-dock-bind={`${sectionName}.${index}.${naamKey}`}>{item[naamKey]}</span>
                                 </h3>
                                 <div className="text-sm font-bold text-accent uppercase tracking-widest mb-4">
-                                    <span data-dock-type="text" data-dock-bind={`sectionName.0.rolKey`}>{item[rolKey]}</span>
+                                    <span data-dock-type="text" data-dock-bind={`${sectionName}.${index}.${rolKey}`}>{item[rolKey]}</span>
                                 </div>
-                                {bioKey && (
+                                {bioKey && item[bioKey] && (
                                     <p className="text-slate-600 text-sm leading-relaxed max-w-xs mx-auto">
-                                        <span data-dock-type="text" data-dock-bind={`sectionName.0.bioKey`}>{item[bioKey]}</span>
+                                        <span data-dock-type="text" data-dock-bind={`${sectionName}.${index}.${bioKey}`}>{item[bioKey]}</span>
                                     </p>
                                 )}
                             </div>

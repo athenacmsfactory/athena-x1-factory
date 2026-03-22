@@ -1,58 +1,52 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useDisplayConfig } from './DisplayConfigContext';
 
 /**
  * EditableMedia (Docked Track)
- * Handles images and videos with Dock-driven editing.
+ * Passive wrapper that binds to the Athena Dock.
  */
-export default function EditableMedia({ src: rawSrc, alt, className, cmsBind, dataItem = {}, ...props }) {
+export default function EditableMedia({ src, alt, className, cmsBind, ...props }) {
+  const { isFieldVisible } = useDisplayConfig() || {};
   const isDev = import.meta.env.DEV;
-  const [hasError, setHasError] = useState(false);
 
-  // Path resolution
-  const baseUrl = import.meta.env.BASE_URL || '/';
-  const src = (rawSrc && !rawSrc.startsWith('http') && !rawSrc.startsWith('/') && !rawSrc.startsWith('data:'))
-    ? `${baseUrl}images/${rawSrc}`.replace(/\/+/g, '/')
-    : rawSrc;
-
-  const isVideo = src && (src.endsWith('.mp4') || src.endsWith('.webm') || src.includes('video'));
-  const loopKey = `${cmsBind?.key}_loop`;
-  const isLooping = dataItem[loopKey] !== false && dataItem[loopKey] !== "false";
-
-  const renderContent = () => {
-    if (src && !hasError) {
-      if (isVideo) {
-          return <video src={src} autoPlay loop={isLooping} muted playsInline className="w-full h-full object-cover" onError={() => setHasError(true)} />;
-      }
-      return <img src={src} alt={alt} className="w-full h-full object-cover" onError={() => setHasError(true)} {...props} />;
-    }
-    return (
-      <div className="w-full h-full bg-slate-100 flex flex-col items-center justify-center text-slate-300 gap-2 border-2 border-dashed border-slate-200 min-h-[150px]">
-        <i className={`fa-solid ${isVideo ? 'fa-video' : 'fa-image'} text-4xl opacity-20`}></i>
-        <span className="text-[10px] uppercase font-bold opacity-40">Slot: {cmsBind?.key}</span>
-      </div>
-    );
-  };
-
-  if (!isDev) {
-    if (!src || hasError) return null;
-    if (isVideo) return <video src={src} autoPlay loop={isLooping} muted playsInline className={className} {...props} />;
-    return <img src={src} alt={alt} className={className} onError={() => setHasError(true)} {...props} />;
+  // Visibility Check
+  if (isFieldVisible && cmsBind && !isFieldVisible(cmsBind.file, cmsBind.key)) {
+    return null;
   }
 
-  const dockBind = JSON.stringify({ 
-    file: cmsBind?.file, 
-    index: cmsBind?.index || 0, 
-    key: cmsBind?.key 
-  });
+  let finalPath = src;
+  if (typeof src === 'string' && src && !src.startsWith('http') && !src.startsWith('/') && !src.startsWith('data:')) {
+    // v8.1: Robust detection of root public assets (logo.svg, favicon.ico, etc)
+    const isRootPublic = src.startsWith('./') || src.endsWith('.svg') || src.endsWith('.ico') || src === 'site-logo.svg' || src === 'athena-icon.svg';
+    const pathPrefix = isRootPublic ? '' : 'images/';
+    finalPath = `${import.meta.env.BASE_URL}${pathPrefix}${src.replace('./', '')}`.replace(/\/+/g, '/');
+  }
+  const finalSrc = finalPath;
+
+  const isVideo = src && (src.endsWith('.mp4') || src.endsWith('.webm'));
+
+  const renderMedia = () => {
+    if (isVideo) return <video src={finalSrc} className={className} autoPlay muted loop playsInline {...props} />;
+    if (!src) return <div className={`bg-slate-200 flex items-center justify-center text-slate-400 ${className}`}>🖼️</div>;
+    return <img src={finalSrc} alt={alt} className={className} {...props} />;
+  };
+
+  if (!isDev) return renderMedia();
+
+  const dockBind = cmsBind ? JSON.stringify({
+    file: cmsBind.file,
+    index: cmsBind.index || 0,
+    key: cmsBind.key
+  }) : null;
 
   return (
-    <div 
+    <div
+      className={`relative group ${className} cursor-pointer hover:ring-2 hover:ring-blue-400/40 rounded-sm transition-all duration-200`}
       data-dock-bind={dockBind}
       data-dock-type="media"
-      className={`relative group overflow-hidden cursor-pointer hover:ring-4 hover:ring-blue-500/30 transition-all ${className}`}
-      {...props}
+      title={cmsBind ? `Shift+Klik om "${cmsBind.key}" te bewerken in de Dock` : undefined}
     >
-      {renderContent()}
+      {renderMedia()}
     </div>
   );
 }

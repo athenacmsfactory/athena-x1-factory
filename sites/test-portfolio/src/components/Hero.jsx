@@ -1,72 +1,71 @@
 import React from 'react';
-import EditableImage from './EditableImage';
+import EditableMedia from './EditableMedia';
+import EditableText from './EditableText';
+import EditableLink from './EditableLink';
 
-/**
- * Hero Component - Portfolio Sitetype
- * Modern Digital Brutalism / High-Impact Layout
- */
-export default function Hero({ data }) {
-  const profile = data.Profiel?.[0] || {};
-  const fullName = profile.volledige_naam || "Creator";
-  const tagline = profile.tagline || "Designing the Future";
-  
-  const imageField = Object.keys(profile).find(key => /foto|portret|image|background/i.test(key));
-  const rawImg = profile[imageField];
-  const imgSrc = rawImg ? (rawImg.startsWith('http') ? rawImg : `${import.meta.env.BASE_URL}images/${rawImg}`) : null;
+const Hero = ({ data, sectionName, features = {}, style = {} }) => {
+    const hero = data[0];
+    if (!hero) return null;
 
-  return (
-    <section className="relative min-h-[90vh] flex items-center justify-center bg-background text-text overflow-hidden pt-20">
-      
-      {/* Background Visual (Abstract or Photo) */}
-      <div className="absolute inset-0 z-0 opacity-20">
-        {imgSrc ? (
-          <EditableImage 
-             src={imgSrc} 
-             alt={fullName} 
-             className="w-full h-full object-cover grayscale" 
-             cmsBind={{ file: 'Profiel', index: 0, key: imageField }} 
-           />
-        ) : (
-          <div className="w-full h-full bg-[radial-gradient(circle_at_center,_var(--color-primary)_1px,_transparent_1px)] bg-[length:24px_24px] opacity-20"></div>
-        )}
-      </div>
+    const heroTitle = hero.titel || hero.hero_header || hero.site_naam;
+    const hasSearchLinks = features.google_search_links;
 
-      <div className="container mx-auto px-6 relative z-10 text-center max-w-5xl">
-        <div className="inline-block mb-8 px-4 py-2 border border-primary/20 rounded-full animate-in fade-in slide-in-from-bottom-4 duration-700">
-           <span className="text-xs font-bold uppercase tracking-[0.2em] text-accent">Available for work</span>
-        </div>
+    const getGoogleSearchUrl = (query) => {
+        return `https://www.google.com/search?q=${encodeURIComponent(query + ' ' + (features.search_context || ''))}`;
+    };
 
-        <h1 className="text-7xl md:text-9xl font-black tracking-tighter mb-8 leading-[0.9] text-primary mix-blend-difference animate-in fade-in zoom-in duration-1000">
-          {fullName}
-        </h1>
-        
-        <p className="text-2xl md:text-4xl text-secondary font-light mb-16 max-w-3xl mx-auto leading-tight italic animate-in slide-in-from-bottom-8 duration-1000 delay-200">
-          {tagline}
-        </p>
-        
-        <div className="flex flex-col sm:flex-row justify-center gap-6 animate-in slide-in-from-bottom-12 duration-1000 delay-500">
-          <a 
-            href="#projects" 
-            className="px-10 py-5 bg-primary text-white font-black uppercase tracking-widest text-sm hover:bg-accent transition-all duration-300 shadow-xl shadow-primary/20"
-          >
-            View Work
-          </a>
-          {profile.contact_email && (
-            <a 
-              href={`mailto:${profile.contact_email}`} 
-              className="px-10 py-5 border-2 border-primary text-primary font-black uppercase tracking-widest text-sm hover:bg-primary hover:text-white transition-all duration-300"
-            >
-              Get in Touch
-            </a>
-          )}
-        </div>
-      </div>
+    return (
+        <section
+            id="hero"
+            data-dock-section={sectionName}
+            className="relative w-full h-auto min-h-[var(--hero-height,85vh)] max-h-[var(--hero-max-height,150vh)] aspect-[var(--hero-aspect-ratio,16/9)] flex items-center justify-center overflow-hidden bg-[var(--color-hero-bg)]"
+            style={style}
+        >
+            <div className="absolute inset-0 z-0">
+                <EditableMedia
+                    src={hero.hero_afbeelding || hero.foto_url}
+                    cmsBind={{ file: sectionName, index: 0, key: hero.hero_afbeelding ? 'hero_afbeelding' : 'foto_url' }}
+                    className="w-full h-full object-cover object-top"
+                />
+                <div className="absolute inset-0 z-20 pointer-events-none" style={{
+                    backgroundImage: 'linear-gradient(to bottom, var(--hero-overlay-start, rgba(0,0,0,0.6)), var(--hero-overlay-end, rgba(0,0,0,0.6)))'
+                }}></div>
+            </div>
+            <div className="relative z-10 text-center px-6 max-w-5xl">
+                <h1 className="text-5xl md:text-8xl font-serif font-bold text-white mb-8 leading-tight drop-shadow-2xl">
+                    <EditableText value={heroTitle} cmsBind={{ file: sectionName, index: 0, key: hero.titel ? 'titel' : (hero.hero_header ? 'hero_header' : 'site_naam') }} />
+                </h1>
+                <div className="h-2 w-32 bg-accent mx-auto mb-10 rounded-full shadow-lg shadow-accent/50"></div>
+                <div className="flex flex-col items-center gap-12">
+                    <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed drop-shadow-lg font-light italic">
+                        <EditableText value={hero.ondertitel || hero.introductie} cmsBind={{ file: sectionName, index: 0, key: hero.ondertitel ? 'ondertitel' : 'introductie' }} />
+                    </p>
+                    <div className="flex flex-wrap justify-center gap-4">
+                        <EditableLink
+                            as="button"
+                            label={hero.cta_label || "Contact"}
+                            url={hero.cta_url || "#contact"}
+                            cmsBind={{ file: sectionName, index: 0, key: 'cta' }}
+                            className="bg-[var(--color-button-bg)] text-white px-10 py-4 rounded-full text-xl font-bold shadow-2xl hover:opacity-90 transition-all transform hover:scale-105"
+                            onClick={(e) => {
+                                const url = hero.cta_url || "#contact";
+                                if (url.startsWith('#')) {
+                                    e.preventDefault();
+                                    document.getElementById(url.substring(1))?.scrollIntoView({ behavior: 'smooth' });
+                                }
+                            }}
+                        />
+                        {hasSearchLinks && (
+                            <a href={getGoogleSearchUrl(heroTitle)} target="_blank" rel="noopener noreferrer" className="bg-white/10 hover:bg-white/20 text-white border border-white/30 px-8 py-3 rounded-full backdrop-blur-md transition-all font-bold flex items-center gap-3 group">
+                                <i className="fa-brands fa-google group-hover:text-accent transition-colors"></i>
+                                Zoek meer inzichten
+                            </a>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+};
 
-      {/* Footer Text */}
-      <div className="absolute bottom-10 left-0 w-full px-10 flex justify-between text-[10px] font-bold uppercase tracking-widest text-secondary/50">
-         <span>Based in Europe</span>
-         <span>Scroll to explore</span>
-      </div>
-    </section>
-  );
-}
+export default Hero;

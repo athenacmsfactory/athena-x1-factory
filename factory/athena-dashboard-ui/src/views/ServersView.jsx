@@ -61,7 +61,23 @@ export default function ServersView() {
       </div>
 
       <div>
-        <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 border-b border-athena-border pb-2">Actieve Site Servers</h3>
+        <div className="flex items-center justify-between mb-4 border-b border-athena-border pb-2">
+           <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Actieve Site Servers</h3>
+           {activeServers.filter(s => !systemServers.some(ss => ss.port === s.port)).length > 0 && (
+             <button 
+               onClick={async () => {
+                 if (confirm("Weet je zeker dat je ALLE site servers wilt stoppen?")) {
+                   addToast("Stoppen van alle site servers...", "info");
+                   await ApiService.stopAllSiteServers();
+                   refresh();
+                 }
+               }}
+               className="text-[9px] font-black bg-rose-500/10 border border-rose-500/20 text-rose-500 px-3 py-1 rounded-sm hover:bg-rose-500 hover:text-white transition-all uppercase tracking-widest"
+             >
+               Stop Alle Site Servers
+             </button>
+           )}
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {activeServers.filter(s => !systemServers.some(ss => ss.port === s.port)).map((server, idx) => (
             <ServerCard 

@@ -1,105 +1,148 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import EditableText from './EditableText';
+import EditableMedia from './EditableMedia';
+import EditableLink from './EditableLink';
+import { Link } from 'react-router-dom';
 
-export default function Header({ data }) {
-    const { title, nav, logo: rawLogo } = data || {};
-    const [isScrolled, setIsScrolled] = useState(false);
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const location = useLocation();
+function Header({ siteSettings = {}, navigationData = [] }) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const settings = Array.isArray(siteSettings) ? (siteSettings[0] || {}) : (siteSettings || {});
+  const siteName = settings.site_name || '{{PROJECT_NAME}}';
+  const logoChar = (settings.logo_text || siteName).charAt(0).toUpperCase();
 
-    // Path resolution voor logo
-    const baseUrl = import.meta.env.BASE_URL || '/';
-    const logo = (rawLogo && rawLogo !== "" && !rawLogo.startsWith('http') && !rawLogo.startsWith('/') && !rawLogo.startsWith('data:'))
-        ? `${baseUrl}${rawLogo}`.replace(/\/+/g, '/')
-        : (rawLogo || null);
+  // Use a reliable default logo if site_logo_image is missing
+  const displayLogo = settings.site_logo_image || "athena-icon.svg";
 
-    // Scroll effect voor een 'floating' header
-    useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 20);
-        };
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
+  const handleScroll = (e, url) => {
+    setIsMenuOpen(false); // Close menu on click
+    if (url && url.startsWith('#')) {
+      e.preventDefault();
+      const targetId = url.substring(1);
+      document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
-    // Sluit mobiel menu bij navigatie
-    useEffect(() => {
-        setMobileMenuOpen(false);
-    }, [location]);
+  const navLinks = Array.isArray(navigationData) ? navigationData : [];
 
-    return (
-        <header className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${
-            isScrolled 
-            ? 'py-3 bg-white/90 backdrop-blur-md shadow-lg shadow-slate-200/50 border-b border-slate-100' 
-            : 'py-6 bg-white border-b border-slate-100'
-        }`}>
-            <div className="max-w-7xl mx-auto px-6">
-                <div className="flex justify-between items-center h-10">
-                    {/* LOGO & TITLE */}
-                    <Link to="/" className="flex items-center gap-4 group">
-                        <div className="relative">
-                            {logo ? (
-                                <img src={logo} alt={title} className="h-10 w-auto object-contain transition-transform group-hover:scale-110" />
-                            ) : (
-                                <div className="w-10 h-10 bg-blue-600 rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-lg shadow-blue-200 group-hover:rotate-12 transition-transform">
-                                    {(title || 'A').charAt(0).toUpperCase()}
-                                </div>
-                            )}
-                        </div>
-                        <div className="flex flex-col">
-                            <span className="text-xl font-black tracking-tighter text-slate-900 leading-none">{title || 'fpc-gent'}</span>
-                        </div>
-                    </Link>
+  return (
+    <nav
+      className="fixed top-0 left-0 right-0 z-[1000] px-6 transition-all duration-500 flex items-center"
+      style={{
+        display: settings.header_visible === false ? 'none' : 'flex',
+        backgroundColor: 'var(--header-bg, var(--color-header-bg, rgba(255,255,255,0.9)))',
+        backdropFilter: 'var(--header-blur, blur(16px))',
+        height: 'var(--header-height, 80px)',
+        borderBottom: 'var(--header-border, none)'
+      }}
+    >
+      <div className="max-w-7xl mx-auto w-full flex justify-between items-center">
+        {/* Logo & Identity */}
+        {(settings.header_show_logo !== false || settings.header_show_title !== false) && (
+          <Link to="/" className="flex items-center gap-4 group" onClick={() => setIsMenuOpen(false)}>
 
-                    {/* DESKTOP NAV */}
-                    <nav className="hidden md:flex items-center gap-1">
-                        {nav && nav.map((item, idx) => {
-                            const isActive = location.hash === item.href;
-                            return (
-                                <a 
-                                    key={idx} 
-                                    href={item.href}
-                                    className={`px-4 py-2 text-sm font-bold rounded-xl transition-all ${
-                                        isActive 
-                                        ? 'bg-blue-50 text-blue-600' 
-                                        : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
-                                    }`}
-                                >
-                                    {item.label}
-                                </a>
-                            );
-                        })}
-                    </nav>
-
-                    {/* MOBILE TOGGLE */}
-                    <button 
-                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                        className="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 bg-slate-50 rounded-xl text-slate-600"
-                    >
-                        <span className={`w-5 h-0.5 bg-current transition-all ${mobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
-                        <span className={`w-5 h-0.5 bg-current transition-all ${mobileMenuOpen ? 'opacity-0' : ''}`}></span>
-                        <span className={`w-5 h-0.5 bg-current transition-all ${mobileMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
-                    </button>
-                </div>
-            </div>
-
-            {/* MOBILE MENU */}
-            {mobileMenuOpen && (
-                <div className="md:hidden absolute top-full left-0 right-0 bg-white border-b border-slate-100 shadow-2xl animate-in slide-in-from-top-4 duration-300">
-                    <div className="p-6 flex flex-col gap-2">
-                        {nav && nav.map((item, idx) => (
-                            <a 
-                                key={idx} 
-                                href={item.href}
-                                className="px-6 py-4 text-lg font-bold text-slate-700 hover:bg-slate-50 rounded-2xl transition-colors flex items-center justify-between"
-                            >
-                                {item.label}
-                                <i className="fa-solid fa-chevron-right text-slate-200"></i>
-                            </a>
-                        ))}
-                    </div>
-                </div>
+            {settings.header_show_logo !== false && (
+              <div className="relative w-12 h-12 overflow-hidden transition-transform duration-500">
+                <EditableMedia
+                  src={displayLogo}
+                  cmsBind={{ file: 'site_settings', index: 0, key: 'site_logo_image' }}
+                  className="w-full h-full object-contain"
+                  fallback={logoChar}
+                />
+              </div>
             )}
-        </header>
-    );
+
+            <div className="flex flex-col">
+              {settings.header_show_title !== false && (
+                <span className="text-2xl font-serif font-black tracking-tight text-primary leading-none mb-1">
+                  <EditableText value={siteName} cmsBind={{ file: 'site_settings', index: 0, key: 'site_name' }} />
+                </span>
+              )}
+              {settings.header_show_tagline !== false && settings.tagline && (
+                <span className="text-[10px] uppercase tracking-[0.3em] text-accent font-bold opacity-80">
+                  <EditableText value={settings.tagline} cmsBind={{ file: 'site_settings', index: 0, key: 'tagline' }} />
+                </span>
+              )}
+            </div>
+          </Link>
+        )}
+
+        {/* Desktop Action Menu */}
+        <div className="hidden md:flex items-center gap-8">
+          {/* Dynamic Navigation Links */}
+          {navLinks.length > 0 && (
+            <div className="flex gap-6 items-center mr-4">
+              {navLinks.map((link, idx) => (
+                <EditableLink
+                  key={idx}
+                  label={link.label}
+                  url={link.url}
+                  cmsBind={{ file: 'navigation', index: idx, key: 'label' }}
+                  className="text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-primary transition-colors"
+                  onClick={(e) => handleScroll(e, link.url)}
+                />
+              ))}
+            </div>
+          )}
+
+          {settings.header_show_button !== false && (
+            <EditableLink
+              as="button"
+              label={settings.header_cta_label || "Contact"}
+              url={settings.header_cta_url || "#contact"}
+              table="site_settings"
+              field="header_cta"
+              id={0}
+              className="bg-[var(--color-button-bg)] text-white px-6 py-3 rounded-[var(--button-radius,9999px)] font-bold hover:opacity-90 transition-all shadow-lg"
+              onClick={(e) => handleScroll(e, settings.header_cta_url || "#contact")}
+            />
+          )}
+        </div>
+
+        {/* Mobile Toggle */}
+        <button
+          className="md:hidden text-2xl text-primary p-2"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          aria-label="Toggle menu"
+        >
+          <i className={`fa-solid ${isMenuOpen ? 'fa-xmark' : 'fa-bars'}`}></i>
+        </button>
+      </div>
+
+      {/* Mobile Menu Overlay */}
+      <div className={`fixed inset-x-0 top-[var(--header-height,80px)] bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 shadow-xl md:hidden transition-all duration-300 ease-in-out origin-top ${isMenuOpen ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0'}`}>
+        <div className="p-6 flex flex-col gap-4">
+          <Link to="/" className="text-lg font-bold text-primary py-2 border-b border-slate-50 dark:border-slate-800" onClick={() => setIsMenuOpen(false)}>
+            Home
+          </Link>
+
+          {/* Mobile Navigation Links */}
+          {navLinks.map((link, idx) => (
+            <EditableLink
+              key={`mob-${idx}`}
+              label={link.label}
+              url={link.url}
+              cmsBind={{ file: 'navigation', index: idx, key: 'label' }}
+              className="text-lg font-bold text-slate-600 dark:text-slate-300 py-2 border-b border-slate-50 dark:border-slate-800"
+              onClick={(e) => handleScroll(e, link.url)}
+            />
+          ))}
+
+          {settings.header_show_button !== false && (
+            <EditableLink
+              as="button"
+              label={settings.header_cta_label || "Contact"}
+              url={settings.header_cta_url || "#contact"}
+              table="site_settings"
+              field="header_cta"
+              id={0}
+              className="w-full bg-[var(--color-button-bg)] text-white px-6 py-3 rounded-[var(--button-radius,9999px)] font-bold hover:opacity-90 transition-all text-center mt-4 shadow-lg"
+              onClick={(e) => handleScroll(e, settings.header_cta_url || "#contact")}
+            />
+          )}
+        </div>
+      </div>
+    </nav>
+  );
 }
+
+export default Header;

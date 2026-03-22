@@ -1,4 +1,5 @@
 import React from 'react';
+import EditableMedia from './EditableMedia';
 
 const GenericSection = ({ data, sectionName, layout = 'list', features = {}, style = {} }) => {
     if (!data || data.length === 0) return null;
@@ -58,7 +59,11 @@ const GenericSection = ({ data, sectionName, layout = 'list', features = {}, sty
                                 <div key={index} className="flex flex-col overflow-hidden bg-white/5 backdrop-blur-sm rounded-[2.5rem] shadow-xl border border-white/10 hover:border-accent/30 transition-all duration-500 group">
                                     {imgKey && item[imgKey] && (
                                         <div className="w-full aspect-video overflow-hidden">
-                                            <img src={item[imgKey]} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-dock-type="media" data-dock-bind={`sectionName.0.imgKey`} />
+                                            <EditableMedia 
+                                                src={item[imgKey]} 
+                                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                                                cmsBind={{ file: sectionName, index, key: imgKey }}
+                                            />
                                         </div>
                                     )}
                                     <div className="p-10 flex flex-col items-center text-center flex-1">
@@ -69,17 +74,14 @@ const GenericSection = ({ data, sectionName, layout = 'list', features = {}, sty
                                         )}
                                         {titleKey && (
                                             <h3 className="text-2xl font-bold text-primary mb-4 leading-tight">
-                                                <span data-dock-type="text" data-dock-bind={`sectionName.0.titleKey`}>{item[titleKey]}</span>
+                                                <span data-dock-type="text" data-dock-bind={`${sectionName}.${index}.${titleKey}`}>{item[titleKey]}</span>
                                             </h3>
                                         )}
                                         {textKeys.map(tk => (
                                             <div key={tk} className="text-slate-400 text-lg leading-relaxed mb-4">
-                                                <span data-dock-type="text" data-dock-bind={`sectionName.0.tk`}>{item[tk]}</span>
+                                                <span data-dock-type="text" data-dock-bind={`${sectionName}.${index}.${tk}`}>{item[tk]}</span>
                                             </div>
                                         ))}
-                                        {(item.link || item.link_url) && (
-                                            <a href={"#"} data-dock-type="link" data-dock-bind="site_settings.0.titel">{}</a>
-                                        )}
                                     </div>
                                 </div>
                             );
@@ -89,18 +91,22 @@ const GenericSection = ({ data, sectionName, layout = 'list', features = {}, sty
                             <div key={index} className={`flex flex-col items-center text-center ${isEven ? 'md:flex-row' : 'md:flex-row-reverse'} gap-12 md:gap-20`}>
                                 {imgKey && item[imgKey] && (
                                     <div className="w-full md:w-1/2 aspect-[4/3] rounded-[3rem] overflow-hidden shadow-2xl rotate-1 group hover:rotate-0 transition-transform duration-500 border-8 border-white/5">
-                                        <img src={item[imgKey]} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind={`sectionName.0.imgKey`} />
+                                        <EditableMedia 
+                                            src={item[imgKey]} 
+                                            className="w-full h-full object-cover" 
+                                            cmsBind={{ file: sectionName, index, key: imgKey }}
+                                        />
                                     </div>
                                 )}
                                 <div className="flex-1">
                                     {titleKey && (
                                         <h3 className="text-3xl font-serif font-bold text-primary leading-tight mb-8">
-                                            <span data-dock-type="text" data-dock-bind={`sectionName.0.titleKey`}>{item[titleKey]}</span>
+                                            <span data-dock-type="text" data-dock-bind={`${sectionName}.${index}.${titleKey}`}>{item[titleKey]}</span>
                                         </h3>
                                     )}
                                     {textKeys.map(tk => (
                                         <div key={tk} className="text-xl leading-relaxed text-slate-400 mb-6 font-light">
-                                            <span data-dock-type="text" data-dock-bind={`sectionName.0.tk`}>{item[tk]}</span>
+                                            <span data-dock-type="text" data-dock-bind={`${sectionName}.${index}.${tk}`}>{item[tk]}</span>
                                         </div>
                                     ))}
                                 </div>

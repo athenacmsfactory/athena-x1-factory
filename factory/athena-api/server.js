@@ -226,7 +226,7 @@ app.post('/api/sites/:name/install', async (req, res) => res.json(await siteCtrl
 app.post('/api/sites/:name/build', async (req, res) => res.json(await buildCtrl.build(req.params.name)));
 app.post('/api/sites/:name/heal', async (req, res) => res.json(await healerCtrl.heal(req.params.name)));
 app.post('/api/sites/batch-build', async (req, res) => res.json(await buildCtrl.batchBuild(req.body.sites)));
-app.post('/api/sites/:id/preview', async (req, res) => res.json(await siteCtrl.preview(req.params.id)));
+app.post('/api/sites/:id/preview', async (req, res) => res.json(await siteCtrl.preview(req.params.id, req.body)));
 app.post('/api/sites/:id/athenify', async (req, res) => res.json(await siteCtrl.athenifySite(req.params.id)));
 app.post('/api/sites/:id/export-to-sheet', async (req, res) => res.json(await siteCtrl.runScript('6-utilities/export-site-to-sheets.js', [req.params.id])));
 app.post('/api/sites/update-deployment', (req, res) => res.json(siteCtrl.updateDeployment(req.body)));
@@ -289,6 +289,7 @@ app.post('/api/pull-from-sheets/:id', async (req, res) => res.json(await siteCtr
 // --- SERVER API ---
 app.get('/api/servers/check/:port', (req, res) => res.json(serverCtrl.checkStatus(req.params.port)));
 app.post('/api/servers/stop/:type', async (req, res) => res.json(await serverCtrl.stopByType(req.params.type)));
+app.post('/api/servers/stop-all', async (req, res) => res.json(await serverCtrl.stopAllSiteServers()));
 app.get('/api/servers/active', (req, res) => res.json({ servers: serverCtrl.getActive(req.hostname) }));
 app.post('/api/servers/kill/:port', async (req, res) => res.json(await serverCtrl.kill(req.params.port)));
 app.post('/api/start-layout-server', async (req, res) => res.json(await serverCtrl.startLayoutEditor()));
@@ -317,6 +318,8 @@ app.post('/api/storage/prune-all', async (req, res) => {
     
     res.json({ success: true, actions, tempResult });
 });
+app.post('/api/storage/:siteName/hydrate', async (req, res) => res.json(await doctorCtrl.hydrate(req.params.siteName)));
+app.post('/api/storage/:siteName/dehydrate', (req, res) => res.json(doctorCtrl.dehydrate(req.params.siteName)));
 app.post('/api/storage/cleanup-temp', async (req, res) => res.json(await doctorCtrl.cleanupTempData()));
 app.post('/api/storage/prune-pnpm', (req, res) => res.json(doctorCtrl.prunePnpmStore()));
 

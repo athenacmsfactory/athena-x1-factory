@@ -56,6 +56,9 @@ export default function EditableLink({
   const content = finalLabel || children || actualUrl;
   const safeContent = typeof content === 'object' && !React.isValidElement(content) ? (content.text || content.label || JSON.stringify(content)) : content;
 
+  // 2b. Variant Logic
+  const variantClass = actualValue?.variant ? `btn-${actualValue.variant}` : "";
+
   // 3. Robust Individual Styles (v8.4.1 Standard)
   const individualStyle = useMemo(() => {
     if (!isObject) return style;
@@ -78,7 +81,7 @@ export default function EditableLink({
 
   if (!isDev) {
     return (
-      <Tag href={Tag === 'a' ? actualUrl : undefined} className={className} style={individualStyle} {...props}>
+      <Tag href={Tag === 'a' ? actualUrl : undefined} className={`${className} ${variantClass}`} style={individualStyle} {...props}>
         {safeContent}
       </Tag>
     );
@@ -98,7 +101,7 @@ export default function EditableLink({
       data-dock-bind={dockBind}
       data-dock-type="link"
       data-dock-label={dockLabel}
-      className={`${className} cursor-pointer hover:ring-2 hover:ring-blue-400/40 rounded-sm transition-all`}
+      className={`${className} ${variantClass} cursor-pointer hover:ring-2 hover:ring-blue-400/40 transition-all`}
       style={individualStyle}
       title={`Shift+Klik om "${dockLabel}" te bewerken in de Dock (Normale klik om link te volgen)`}
       {...props}

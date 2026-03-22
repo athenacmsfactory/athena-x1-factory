@@ -3,6 +3,14 @@ import Team from './Team';
 import Testimonials from './Testimonials';
 
 const Section = ({ data }) => {
+  const getImageUrl = (url) => {
+    if (!url) return '';
+    if (typeof url === 'object') url = url.text || url.url || '';
+    if (url.startsWith('http') || url.startsWith('data:')) return url;
+    const base = import.meta.env.BASE_URL || '/';
+    return (base + '/images/' + url).replace(new RegExp('/+', 'g'), '/');
+  };
+
   const sectionOrder = data.section_order || [];
   const layoutSettings = data.layout_settings || {};
   const sectionSettings = data.section_settings || {};
@@ -52,18 +60,18 @@ const Section = ({ data }) => {
               className="relative w-full h-auto min-h-[85vh] flex items-center justify-center overflow-hidden bg-slate-900 pt-24"
             >
               <div className="absolute inset-0 z-0">
-                <img src={hero[imgKey]} className="w-full h-full object-cover object-top" data-dock-type="media" data-dock-bind={`sectionName.0.imgKey`} />
+                <img src={getImageUrl(hero[imgKey])} className="w-full h-full object-cover object-top" data-dock-type="media" data-dock-bind={`${sectionName}.0.imgKey`} />
                 <div className="absolute inset-0 z-20 pointer-events-none" style={{
                   backgroundImage: 'linear-gradient(to bottom, var(--hero-overlay-start, rgba(0,0,0,0.4)), var(--hero-overlay-end, rgba(0,0,0,0.2)))'
                 }}></div>
               </div>
               <div className="relative z-30 text-center px-6 max-w-5xl">
                 <h1 className="text-5xl md:text-8xl font-serif font-bold text-white mb-8 leading-tight drop-shadow-2xl">
-                  <span data-dock-type="text" data-dock-bind={`sectionName.0.Object.keys(hero).find(k`}>{heroTitle}</span>
+                  <span data-dock-type="text" data-dock-bind={`${sectionName}.0.Object.keys(hero).find(k`}>{heroTitle}</span>
                 </h1>
                 <div className="h-2 w-32 bg-accent mx-auto mb-10 rounded-full shadow-lg shadow-accent/50"></div>
                 <p className="text-xl md:text-2xl text-white/95 max-w-3xl mx-auto mb-12 leading-relaxed drop-shadow-lg font-light italic">
-                  <span data-dock-type="text" data-dock-bind={`sectionName.0.Object.keys(hero).find(k`}>{heroSubtitle}</span>
+                  <span data-dock-type="text" data-dock-bind={`${sectionName}.0.Object.keys(hero).find(k`}>{heroSubtitle}</span>
                 </p>
                 <div className="flex justify-center">
                   <button onClick={(e) => { 
@@ -107,17 +115,17 @@ const Section = ({ data }) => {
                       <div key={index} className="flex flex-col items-center text-center bg-[var(--color-card-bg,#ffffff)] p-10 rounded-[2.5rem] shadow-xl border border-slate-100 hover:shadow-2xl transition-all duration-300">
                         {img && (
                           <div className="w-full aspect-[4/3] rounded-[2rem] overflow-hidden mb-8 shadow-inner">
-                            <img src={img} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind={`sectionName.${index}.${Object.keys(item).find(k}`} />
+                            <img src={getImageUrl(img)} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind={`${sectionName}.${index}.${Object.keys(item).find(k}`} />
                           </div>
                         )}
                         {title && (
                           <h3 className="text-2xl font-bold text-primary mb-4 leading-tight">
-                            <span data-dock-type="text" data-dock-bind={`sectionName.${index}.${Object.keys(item).find(k}`}>{title}</span>
+                            <span data-dock-type="text" data-dock-bind={`${sectionName}.${index}.${Object.keys(item).find(k}`}>{title}</span>
                           </h3>
                         )}
                         {text && (
                           <div className="text-slate-600 text-lg leading-relaxed">
-                            <span data-dock-type="text" data-dock-bind={`sectionName.${index}.${Object.keys(item).find(k}`}>{text}</span>
+                            <span data-dock-type="text" data-dock-bind={`${sectionName}.${index}.${Object.keys(item).find(k}`}>{text}</span>
                           </div>
                         )}
                       </div>
@@ -128,18 +136,18 @@ const Section = ({ data }) => {
                     <div key={index} className={`flex flex-col items-center text-center ${currentLayout === 'list' ? '' : (isEven ? 'md:flex-row' : 'md:flex-row-reverse')} gap-12 md:gap-20`}>
                       {img && (
                         <div className="w-full md:w-1/2 aspect-[4/3] rounded-[3rem] overflow-hidden shadow-2xl rotate-1 group hover:rotate-0 transition-transform duration-500 border-8 border-[var(--color-card-bg,#ffffff)]">
-                          <img src={img} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind={`sectionName.${index}.${Object.keys(item).find(k}`} />
+                          <img src={getImageUrl(img)} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind={`${sectionName}.${index}.${Object.keys(item).find(k}`} />
                         </div>
                       )}
                       <div className="flex-1">
                         {title && (
                           <h3 className="text-3xl font-serif font-bold text-primary mb-8 leading-tight">
-                            <span data-dock-type="text" data-dock-bind={`sectionName.${index}.${Object.keys(item).find(k}`}>{title}</span>
+                            <span data-dock-type="text" data-dock-bind={`${sectionName}.${index}.${Object.keys(item).find(k}`}>{title}</span>
                           </h3>
                         )}
                         {text && (
                           <div className="text-xl leading-relaxed text-slate-600 mb-6 font-light">
-                            <span data-dock-type="text" data-dock-bind={`sectionName.${index}.${Object.keys(item).find(k}`}>{text}</span>
+                            <span data-dock-type="text" data-dock-bind={`${sectionName}.${index}.${Object.keys(item).find(k}`}>{text}</span>
                           </div>
                         )}
                       </div>

@@ -15,12 +15,11 @@ export default function EditableMedia({ src, alt, className, cmsBind, ...props }
   }
 
   let finalPath = src;
-  if (src && !src.startsWith('http') && !src.startsWith('/') && !src.startsWith('data:')) {
-    // Als de Media Mapper een pad heeft gezet (bv. "public/images/...") hoeven we niets te doen
-    // Maar als het een simpele filename is, voegen we BASE_URL en images/ toe
-    const isSimpleFilename = !src.includes('/');
-    const pathPrefix = isSimpleFilename ? 'images/' : '';
-    finalPath = `${import.meta.env.BASE_URL}${pathPrefix}${src}`.replace(/\/+/g, '/');
+  if (typeof src === 'string' && src && !src.startsWith('http') && !src.startsWith('/') && !src.startsWith('data:')) {
+    // v8.1: Robust detection of root public assets (logo.svg, favicon.ico, etc)
+    const isRootPublic = src.startsWith('./') || src.endsWith('.svg') || src.endsWith('.ico') || src === 'site-logo.svg' || src === 'athena-icon.svg';
+    const pathPrefix = isRootPublic ? '' : 'images/';
+    finalPath = `${import.meta.env.BASE_URL}${pathPrefix}${src.replace('./', '')}`.replace(/\/+/g, '/');
   }
   const finalSrc = finalPath;
 
@@ -45,7 +44,7 @@ export default function EditableMedia({ src, alt, className, cmsBind, ...props }
       className={`relative group ${className} cursor-pointer hover:ring-2 hover:ring-blue-400/40 rounded-sm transition-all duration-200`}
       data-dock-bind={dockBind}
       data-dock-type="media"
-      title={cmsBind ? `Klik om "${cmsBind.key}" te bewerken in de Dock` : undefined}
+      title={cmsBind ? `Shift+Klik om "${cmsBind.key}" te bewerken in de Dock` : undefined}
     >
       {renderMedia()}
     </div>
