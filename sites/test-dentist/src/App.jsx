@@ -1,3 +1,4 @@
+import { HashRouter as Router } from 'react-router-dom';
 import React from 'react';
 import Header from './components/Header';
 import Section from './components/Section';
@@ -9,7 +10,8 @@ import Section from './components/Section';
 const App = ({ data }) => {
   if (!data) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-surface">
+      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <div className="min-h-screen flex items-center justify-center bg-surface">
         <div className="animate-pulse text-accent font-serif text-2xl">Laden...</div>
       </div>
     );
@@ -43,6 +45,7 @@ const App = ({ data }) => {
         </div>
       </footer>
     </div>
+      </Router>
   );
 };
 

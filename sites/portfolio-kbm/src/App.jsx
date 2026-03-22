@@ -1,3 +1,4 @@
+import { HashRouter as Router } from 'react-router-dom';
 import { DisplayConfigProvider } from './components/DisplayConfigContext';
 import React from 'react';
 import './index.css';
@@ -10,7 +11,8 @@ const Hero = ({ data }) => {
   };
   
   return (
-    <header data-dock-type="hero" data-dock-id="0">
+    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <header data-dock-type="hero" data-dock-id="0">
       <div className="badge">Fase 1: Inventarisatie & Overzicht</div>
       <h1 className="hero-title" data-dock-id="title">{heroData.title}</h1>
       <p className="hero-subtitle" data-dock-id="subtitle">
@@ -84,6 +86,7 @@ const Footer = () => {
         Gegenereerd op basis van live GitHub data van KarelTestSpecial & athenacmsfactory.
       </p>
     </footer>
+      </Router>
   );
 };
 

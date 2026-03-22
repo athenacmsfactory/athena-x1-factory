@@ -2,21 +2,25 @@
   {
     "titel": {
       "text": "De Schaar",
-      "color": "#d36912",
+      "color": "#ee7c11",
       "fontSize": "",
       "fontWeight": "normal",
       "fontStyle": "normal",
-      "textAlign": "center",
+      "textAlign": "left",
       "fontFamily": "",
       "shadowX": 0,
       "shadowY": 0,
-      "shadowBlur": 6,
-      "shadowColor": "#fdfcfc",
+      "shadowBlur": 0,
+      "shadowColor": "rgba(0,0,0,0.5)",
       "paddingTop": 0,
-      "paddingBottom": 200
+      "paddingBottom": 0
     },
+    "ondertitel": "Uw kapper in het hart van Gent. Wij zorgen voor een frisse look die bij u past.",
     "hero_afbeelding": "hero_de-schaar-1.png",
-    "hero_overlay_transparantie": "0.45",
-    "hero_overlay_opacity": "0.1"
+    "knop": {
+      "label": "ons aanbod",
+      "url": "#tarieven"
+    },
+    "hero_overlay_transparantie": 0.16
   }
 ]

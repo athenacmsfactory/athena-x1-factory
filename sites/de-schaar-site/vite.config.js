@@ -9,6 +9,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig(async ({ command }) => {
   const isDev = command === 'serve';
+  const base = `/${path.basename(__dirname)}/`;
   let athenaEditorPlugin = null;
 
   // De editor plugin is alleen nodig (en beschikbaar) tijdens lokale development
@@ -27,7 +28,7 @@ export default defineConfig(async ({ command }) => {
 
   return {
     // Gebruik relatieve paden voor maximale compatibiliteit (Dock & GitHub Pages)
-    base: process.env.NODE_ENV === 'production' ? '/de-schaar-site/' : '/', 
+    base: base, 
     plugins: [
       react(),
       tailwindcss(),
@@ -50,7 +51,6 @@ export default defineConfig(async ({ command }) => {
       port: parseInt(process.env.PORT) || 6110,
       allowedHosts: true, 
       hmr: {
-        host: true,
         port: parseInt(process.env.PORT) || 6110
       }
     },

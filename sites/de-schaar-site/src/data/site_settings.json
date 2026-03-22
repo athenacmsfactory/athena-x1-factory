@@ -9,5 +9,6 @@
   "dark_heading_color": "#d73c3c",
   "dark_accent_color": "#d35555",
   "light_accent_color": "#b3b3b3",
-  "light_heading_color": "#a18e17"
+  "light_heading_color": "#a18e17",
+  "header_show_logo": false
 }

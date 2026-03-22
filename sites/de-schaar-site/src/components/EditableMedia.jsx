@@ -18,7 +18,8 @@ export default function EditableMedia({ src, alt, className, cmsBind, ...props }
   if (typeof src === 'string' && src && !src.startsWith('http') && !src.startsWith('/') && !src.startsWith('data:')) {
     // v8.1: Robust detection of root public assets (logo.svg, favicon.ico, etc)
     const isRootPublic = src.startsWith('./') || src.endsWith('.svg') || src.endsWith('.ico') || src === 'site-logo.svg' || src === 'athena-icon.svg';
-    const pathPrefix = isRootPublic ? '' : 'images/';
+    const isImagesPrefix = src.startsWith('images/');
+    const pathPrefix = (isRootPublic || isImagesPrefix) ? '' : 'images/';
     finalPath = `${import.meta.env.BASE_URL}${pathPrefix}${src.replace('./', '')}`.replace(/\/+/g, '/');
   }
   const finalSrc = finalPath;

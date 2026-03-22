@@ -100,7 +100,8 @@ export default function EditableLink({
       href={Tag === 'a' ? actualUrl : undefined}
       data-dock-bind={dockBind}
       data-dock-type="link"
-      data-dock-label={dockLabel}
+      data-dock-label={finalLabel}
+      data-dock-url={actualUrl}
       className={`${className} ${variantClass} cursor-pointer hover:ring-2 hover:ring-blue-400/40 transition-all`}
       style={individualStyle}
       title={`Shift+Klik om "${dockLabel}" te bewerken in de Dock (Normale klik om link te volgen)`}

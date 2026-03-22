@@ -1,9 +1,11 @@
+import { HashRouter as Router } from 'react-router-dom';
 import { DisplayConfigProvider } from './components/DisplayConfigContext';
 import React, { useMemo, useState, useEffect } from 'react';
 import Header from './components/Header';
 import Section from './components/Section';
 import Footer from './components/Footer';
 import StyleInjector from './components/StyleInjector';
+import Hero from './components/Hero';
 
 const App = ({ data: initialData }) => {
   const [data, setData] = useState(initialData);
@@ -30,7 +32,6 @@ const App = ({ data: initialData }) => {
           const newData = { ...prev };
           const targetFile = file || (key.startsWith('header_') ? 'header_settings' : 'site_settings');
           
-          // Ensure target file entry exists in state
           if (!newData[targetFile]) {
             newData[targetFile] = (index !== undefined) ? [] : {};
           }
@@ -109,9 +110,8 @@ const App = ({ data: initialData }) => {
 
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
-  }, []);
+  }, [data]);
 
-  // 🔥 [v33 Bridge]: Deel actuele data met de Dock-connector
   useEffect(() => {
     if (window.athenaScan) {
       window.athenaScan(data);
@@ -122,28 +122,34 @@ const App = ({ data: initialData }) => {
   
   return (
     <DisplayConfigProvider data={data}>
-      <div className="min-h-screen bg-[var(--color-background)] text-[var(--color-text)] transition-colors duration-500">
-        <StyleInjector data={data} />
-        
-        <Header 
-          primaryTable={primaryTable} 
-          tableName="footer" 
-          hero={data['hero']} 
-          headerSettings={data['header_settings']}
-          navData={data['navbar']}
-        />
-        
-        <main>
-          <Section data={data} />
-        </main>
+      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <div className="min-h-screen bg-[var(--color-background)] text-[var(--color-text)] transition-colors duration-500">
+          <StyleInjector data={data} />
+          
+          <Header 
+            primaryTable={primaryTable} 
+            tableName="footer" 
+            hero={data['hero']} 
+            siteSettings={data['site_settings']}
+            headerSettings={data['header_settings']}
+            headerData={data['header']}
+            navData={data['navbar']}
+          />
+          
+          <Hero data={data['hero']} />
+          
+          <main>
+            <Section data={data} />
+          </main>
 
-        <Footer 
-          primaryTable={data['footer']} 
-          socialData={data['social_media']}
-          openingData={data['openingsuren']}
-          locationData={data['locatie']}
-        />
-      </div>
+          <Footer 
+            primaryTable={data['footer']} 
+            socialData={data['social_media']}
+            openingData={data['openingsuren']}
+            locationData={data['locatie']}
+          />
+        </div>
+      </Router>
     </DisplayConfigProvider>
   );
 };

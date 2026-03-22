@@ -1,6 +1,6 @@
 {
-  "short_name": "{{PROJECT_NAME}}",
-  "name": "{{PROJECT_NAME}}",
+  "short_name": "Demo Portfolio",
+  "name": "Demo Portfolio",
   "icons": [
     {
       "src": "athena-icon.svg",

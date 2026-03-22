@@ -1,3 +1,4 @@
+import { HashRouter as Router } from 'react-router-dom';
 import React from 'react';
 import Hero from './components/Hero';
 import Projects from './components/Projects';
@@ -33,7 +34,8 @@ const App = ({ data }) => {
   };
 
   return (
-    <div className="min-h-screen bg-background font-sans text-text selection:bg-accent selection:text-white">
+    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <div className="min-h-screen bg-background font-sans text-text selection:bg-accent selection:text-white">
       <Hero data={enrichedData} />
       <main>
         <Projects data={enrichedData} />
@@ -42,6 +44,7 @@ const App = ({ data }) => {
       </main>
       <Footer profile={profile} socials={socials} />
     </div>
+      </Router>
   );
 };
 

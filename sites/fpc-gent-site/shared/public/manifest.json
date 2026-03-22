@@ -1,6 +1,6 @@
 {
-  "short_name": "{{PROJECT_NAME}}",
-  "name": "{{PROJECT_NAME}}",
+  "short_name": "Fpc Gent Site",
+  "name": "Fpc Gent Site",
   "icons": [
     {
       "src": "athena-icon.svg",

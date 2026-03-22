@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import RepeaterControls from './RepeaterControls';
+import EditableText from './EditableText';
+import EditableMedia from './EditableMedia';
 
 const Section = ({ data }) => {
   const isDev = import.meta.env.DEV;
@@ -83,15 +85,7 @@ const Section = ({ data }) => {
     return idxA - idxB;
   });
 
-  const getText = (val) => (typeof val === 'object' && val !== null) ? (val.text || '') : val;
 
-  const getImageUrl = (url) => {
-    if (!url) return '';
-    if (typeof url === 'object') url = url.text || url.url || '';
-    if (url.startsWith('http') || url.startsWith('data:')) return url;
-    const base = import.meta.env.BASE_URL || '/';
-    return (base + '/images/' + url).replace(new RegExp('/+', 'g'), '/');
-  };
 
   if (!data || Object.keys(data).length === 0) {
     return <div className="p-20 text-center opacity-50">Data aan het laden...</div>;
@@ -169,11 +163,11 @@ const Section = ({ data }) => {
               <div className="max-w-6xl mx-auto">
                 <header className="mb-24 text-center max-w-3xl mx-auto group/header relative">
                   <h2 className="text-5xl md:text-6xl font-serif font-bold mb-8 text-[var(--color-heading)] text-center">
-                    <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
+                    <EditableText value={sectionTitle} cmsBind={metaBind('title')} />
                   </h2>
                   <div className="h-1.5 w-12 mx-auto mb-8 bg-accent"></div>
                   <div className="text-xl italic font-light opacity-60 text-text text-center">
-                    <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
+                    <EditableText value={sectionSubtitle} cmsBind={metaBind('subtitle')} />
                   </div>
                 </header>
 
@@ -183,7 +177,11 @@ const Section = ({ data }) => {
                       <div className="relative group/category">
                         <div className="flex items-center gap-6 mb-10">
                           <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-lg shrink-0">
-                            <img src={getImageUrl(group.afbeelding)} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind={`diensten_hoofdgroepen.${group.originalIndex}.afbeelding`} />
+                            <EditableMedia 
+                              src={group.afbeelding} 
+                              className="w-full h-full object-cover" 
+                              cmsBind={{ file: 'diensten_hoofdgroepen', index: group.originalIndex, key: 'afbeelding' }} 
+                            />
                           </div>
                           <div className="flex-1">
                             <h3 className="text-3xl font-serif font-bold text-accent uppercase tracking-[0.2em]">
@@ -201,7 +199,7 @@ const Section = ({ data }) => {
                                 <div className="flex-1 border-b border-dotted border-slate-300 dark:border-white/10 mx-2 relative top-[-4px] opacity-40"></div>
                                 <div className="flex items-center gap-2">
                                   <span className="text-[10px] uppercase tracking-widest opacity-40 font-bold whitespace-nowrap">
-                                    {getText(item.prijs_indicatie)}
+                                    <EditableText value={item.prijs_indicatie} cmsBind={{ file: 'tarieven', index: item.absoluteIndex, key: 'prijs_indicatie' }} />
                                   </span>
                                   <span className="font-serif font-bold text-xl text-text" data-dock-type="text" data-dock-bind={`tarieven.${item.absoluteIndex}.basis_prijs`}>{item.basis_prijs}</span>
                                 </div>
@@ -237,11 +235,11 @@ const Section = ({ data }) => {
 
               <header className="mb-24 text-center max-w-3xl mx-auto group/header relative">
                 <h2 className="text-5xl md:text-6xl font-serif font-bold mb-8 text-[var(--color-heading)] text-center">
-                  <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
+                  <EditableText value={sectionTitle} cmsBind={metaBind('title')} />
                 </h2>
                 <div className="h-1.5 w-12 mx-auto mb-8 bg-accent"></div>
                 <div className="text-xl italic font-light opacity-60 text-text text-center">
-                  <span data-dock-type="text" data-dock-bind="site_settings.0.titel">...</span>
+                  <EditableText value={sectionSubtitle} cmsBind={metaBind('subtitle')} />
                 </div>
               </header>
 
@@ -316,7 +314,7 @@ const Section = ({ data }) => {
 
                         const TagName = tagName;
                         return (
-                          <TagName className={className} data-dock-type="text" data-dock-bind={`${config.table.toLowerCase()}.${0}.${k}`}>{item[k]}</TagName>
+                          <TagName key={i} className={className} data-dock-type="text" data-dock-bind={`${config.table.toLowerCase()}.${index}.${k}`}>{item[k]}</TagName>
                         );
                       })}
                     </div>
@@ -346,7 +344,11 @@ const Section = ({ data }) => {
                       <article key={index} className={itemClass + ' flex flex-col ' + (isEven ? 'md:flex-row' : 'md:flex-row-reverse') + ' items-center gap-16 md:gap-24'}>
                         {imgKey && (
                           <div className="w-full md:w-1/2 aspect-square md:aspect-video rounded-[3rem] overflow-hidden shadow-2xl">
-                            <img src={getImageUrl(item[imgKey] || item.afbeelding || item.foto)} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind={`${config.table.toLowerCase()}.${index}.${imgKey}`} />
+                            <EditableMedia 
+                              src={item[imgKey] || item.afbeelding || item.foto} 
+                              className="w-full h-full object-cover" 
+                              cmsBind={{ file: config.table.toLowerCase(), index, key: imgKey }} 
+                            />
                           </div>
                         )}
                         <div className={`w-full ${imgKey ? 'md:w-1/2' : 'max-w-3xl mx-auto'} text-center ${imgKey ? 'md:text-left' : ''}`}>
@@ -361,7 +363,11 @@ const Section = ({ data }) => {
                       <article key={index} className={itemClass + ' flex flex-col md:flex-row items-start gap-12 border-b border-slate-100 dark:border-white/5 pb-24 last:border-0'}>
                         {imgKey && (
                           <div className="w-32 h-32 rounded-full overflow-hidden flex-shrink-0 shadow-lg">
-                            <img src={getImageUrl(item[imgKey] || item.afbeelding || item.foto)} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind={`${config.table.toLowerCase()}.${index}.${imgKey}`} />
+                            <EditableMedia 
+                              src={item[imgKey] || item.afbeelding || item.foto} 
+                              className="w-full h-full object-cover" 
+                              cmsBind={{ file: config.table.toLowerCase(), index, key: imgKey }} 
+                            />
                           </div>
                         )}
                         <div className="flex-1">
@@ -375,7 +381,11 @@ const Section = ({ data }) => {
                     <article key={index} className={itemClass + ' ' + (currentLayout === 'focus' && index === 0 ? 'md:col-span-3' : 'w-full md:w-[calc(45%)] lg:w-[calc(30%)] min-w-[300px]')}>
                       {imgKey && (
                         <div className={'relative overflow-hidden mb-10 ' + (currentLayout === 'focus' && index === 0 ? 'aspect-video rounded-[4rem]' : 'aspect-square rounded-[3rem]') + ' shadow-2xl'}>
-                          <img src={getImageUrl(item[imgKey] || item.afbeelding || item.foto)} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind={`${config.table.toLowerCase()}.${index}.${imgKey}`} />
+                          <EditableMedia 
+                            src={item[imgKey] || item.afbeelding || item.foto} 
+                            className="w-full h-full object-cover" 
+                            cmsBind={{ file: config.table.toLowerCase(), index, key: imgKey }} 
+                          />
                         </div>
                       )}
                       {renderContents()}

@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 function Header({ siteSettings = {}, navigationData = [] }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const settings = Array.isArray(siteSettings) ? (siteSettings[0] || {}) : (siteSettings || {});
-  const siteName = settings.site_name || '{{PROJECT_NAME}}';
+  const siteName = settings.site_name || 'Pure Relaxation Nature';
   const logoChar = (settings.logo_text || siteName).charAt(0).toUpperCase();
 
   // Use a reliable default logo if site_logo_image is missing
