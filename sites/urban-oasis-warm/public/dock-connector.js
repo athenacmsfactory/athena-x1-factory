@@ -1,1 +1,0 @@
-../../../factory/2-templates/shared/boilerplate/dock-connector.js

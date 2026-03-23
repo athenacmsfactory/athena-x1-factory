@@ -1,11 +1,7 @@
 /**
- * 🚜 Athena 3.0 Vault Forklift (v2)
+ * 🚜 Athena 3.0 Vault Forklift (v4)
  * Moves sites between Factory (athena-y) and Vault (athena-vault-v8-1).
- * Handles (De)hydration automatically.
- * 
- * Usage: 
- *   node factory/6-utilities/vault-forklift.js --to-vault <site-name>
- *   node factory/6-utilities/vault-forklift.js --from-vault <site-name>
+ * Handles (De)hydration and Symlink Materialization automatically.
  */
 
 import fs from 'fs';
@@ -16,7 +12,6 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Configuration
-// Root is ~/0-IT/3-DEV/myAgent
 const ROOT = path.resolve(__dirname, '../../..'); 
 const FACTORY_SITES = path.join(ROOT, 'athena-y/sites');
 const VAULT_ROOT = path.join(ROOT, 'athena-vault-v8-1');
@@ -34,6 +29,37 @@ function dehydrate(sitePath) {
     });
 }
 
+/**
+ * Converts symlinks to real files.
+ * MUST be run while the site is still in the Factory!
+ */
+function materialize(sitePath) {
+    console.log(`💎 Materializing symlinks...`);
+    try {
+        const files = execSync(`find "${sitePath}" -type l`).toString().split('\n').filter(Boolean);
+        
+        files.forEach(linkPath => {
+            try {
+                // Determine absolute path of the target while still in factory
+                const targetPath = fs.readlinkSync(linkPath);
+                const absoluteTarget = path.resolve(path.dirname(linkPath), targetPath);
+                
+                if (fs.existsSync(absoluteTarget)) {
+                    fs.unlinkSync(linkPath);
+                    fs.copyFileSync(absoluteTarget, linkPath);
+                    console.log(`  ✅ Materialized: ${path.relative(sitePath, linkPath)}`);
+                } else {
+                    console.warn(`  ⚠️ Target not found for ${linkPath}: ${absoluteTarget}`);
+                }
+            } catch (e) {
+                console.warn(`  ⚠️ Failed to materialize ${linkPath}: ${e.message}`);
+            }
+        });
+    } catch (e) {
+        console.log("  ℹ️ No symlinks found to materialize.");
+    }
+}
+
 function hydrate(sitePath) {
     console.log(`💧 Hydrating... (running pnpm install)`);
     try {
@@ -45,7 +71,7 @@ function hydrate(sitePath) {
 }
 
 async function run() {
-    const mode = process.argv[2]; // --to-vault or --from-vault
+    const mode = process.argv[2]; 
     const siteName = process.argv[3];
 
     if (!mode || !siteName) {
@@ -62,17 +88,40 @@ async function run() {
             process.exit(1);
         }
 
-        console.log(`🚜 Moving '${siteName}' to Vault...`);
+        console.log(`\n🚜 FORKLIFT: [FACTORY] -> [VAULT] ('${siteName}')`);
+        
+        // 1. Materialize FIRST (while paths to shared/ are valid)
+        materialize(source);
+
+        // 2. Dehydrate
         dehydrate(source);
 
+        // 3. Ensure vault exists
         if (!fs.existsSync(VAULT_SITES)) fs.mkdirSync(VAULT_SITES, { recursive: true });
         
-        // Move instead of rsync to be true to the "forklift" metaphor and avoid duplicates
+        // 4. Move the folder
+        if (fs.existsSync(dest)) {
+            console.log(`  ⚠️ Destination already exists in Vault. Overwriting...`);
+            execSync(`rm -rf "${dest}"`);
+        }
         execSync(`mv "${source}" "${dest}"`);
         
-        // Ledger update in Vault
+        // 5. Hardening: Freeze the site for production
+        const configPath = path.join(dest, 'vite.config.js');
+        if (fs.existsSync(configPath)) {
+            let content = fs.readFileSync(configPath, 'utf8');
+            const pluginRegex = /let athenaEditorPlugin = null;[\s\S]*?if\s*\(isDev\)\s*\{[\s\S]*?\}[\s\S]*?\}/;
+            content = content.replace(pluginRegex, 'let athenaEditorPlugin = null; // [Athena 3.0 Vault Hardened]');
+            const baseRegex = /base:\s*(process\.env\.NODE_ENV === 'production' \? '.*?' : '\/')|base:\s*'.*?'/;
+            content = content.replace(baseRegex, "base: './'");
+            fs.writeFileSync(configPath, content);
+            console.log(`  🔒 Hardened vite.config.js`);
+        }
+        
+        // 6. Ledger update in Vault
         try {
             execSync(`git add . && git commit -m "🚜 Parked site: ${siteName}"`, { cwd: VAULT_ROOT });
+            console.log(`  📝 Vault ledger updated.`);
         } catch (e) {}
 
         console.log(`\n🎉 Site '${siteName}' is now safely parked in the Vault.`);
@@ -86,22 +135,22 @@ async function run() {
             process.exit(1);
         }
 
-        console.log(`🚜 Fetching '${siteName}' from Vault...`);
+        console.log(`\n🚜 FORKLIFT: [VAULT] -> [FACTORY] ('${siteName}')`);
         
         if (!fs.existsSync(FACTORY_SITES)) fs.mkdirSync(FACTORY_SITES, { recursive: true });
         
         execSync(`mv "${source}" "${dest}"`);
         
+        // Hydrate in factory
         hydrate(dest);
 
         // Ledger update in Vault (removal)
         try {
             execSync(`git add . && git commit -m "🚜 Unparked site: ${siteName}"`, { cwd: VAULT_ROOT });
+            console.log(`  📝 Vault ledger updated.`);
         } catch (e) {}
 
         console.log(`\n🎉 Site '${siteName}' is back in the Factory and ready for work.`);
-    } else {
-        console.error("❌ Invalid mode. Use --to-vault or --from-vault.");
     }
 }
 
