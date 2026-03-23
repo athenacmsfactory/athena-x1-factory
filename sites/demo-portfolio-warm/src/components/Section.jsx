@@ -70,7 +70,7 @@ const Section = ({ data }) => {
             <section key={idx} id={sectionName} data-dock-section={sectionName} className="py-24 px-6 bg-background">
               <div className="max-w-7xl mx-auto">
                 <h2 className="text-4xl font-serif font-bold mb-16 text-center text-primary uppercase tracking-widest">{sectionName.replace(/_/g, ' ')}</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                <div className="flex flex-wrap justify-center gap-12">
                   {items.map((item, index) => {
                     const priceValue = parseFloat(String(item.prijs || 0).replace(/[^0-9.,]/g, '').replace(',', '.'));
                     const titleKey = Object.keys(item).find(k => /naam|titel/i.test(k)) || 'naam';

@@ -75,7 +75,7 @@ const Section = ({ data }) => {
                 <div className="h-2 w-32 bg-accent rounded-full"></div>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+              <div className="flex flex-wrap justify-center gap-12">
                 {items.map((item, index) => {
                    if (item._visible === false || item._visible === "false" || item.visible === false || item.visible === "false") return null;
                    

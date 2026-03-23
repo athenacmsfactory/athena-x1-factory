@@ -115,14 +115,14 @@ const Section = ({ data }) => {
                    <div className="w-20 h-1.5 bg-[var(--color-primary)] rounded-full mx-auto lg:mx-0"></div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="flex flex-wrap justify-center gap-8">
                   {items.map((item, index) => {
                     const title = resolveContent(item, 'title');
                     const text = resolveContent(item, 'text');
                     return (
                       <div 
                         key={index} 
-                        className="p-10 bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:border-[var(--color-primary)]/20 transition-all group"
+                        className="p-10 bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:border-[var(--color-primary)]/20 transition-all group w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.4rem)]"
                         style={{ backgroundColor: settings.card_bg_color || undefined, borderRadius: 'var(--radius-custom, 12px)' }}
                       >
                         <div className="w-16 h-16 bg-slate-50 flex items-center justify-center mb-8 text-[var(--color-primary)] text-3xl group-hover:bg-[var(--color-primary)] group-hover:text-white transition-all rounded-xl">
@@ -158,13 +158,13 @@ const Section = ({ data }) => {
                    </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+                <div className="flex flex-wrap justify-center gap-8">
                   {items.map((item, index) => {
                     const title = resolveContent(item, 'title');
                     const text = resolveContent(item, 'text');
                     const img = resolveContent(item, 'image');
                     return (
-                      <div key={index} className="group relative overflow-hidden rounded-2xl bg-white shadow-lg flex flex-col border border-slate-100">
+                      <div key={index} className="group relative overflow-hidden rounded-2xl bg-white shadow-lg flex flex-col border border-slate-100 w-full md:w-[calc(50%-1rem)] lg:w-[calc(50%-1rem)] max-w-lg">
                         <div className="aspect-[16/9] overflow-hidden bg-slate-100">
                           <EditableMedia
                             src={getImageUrl(img)}

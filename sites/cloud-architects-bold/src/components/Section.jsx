@@ -115,7 +115,7 @@ const Section = ({ data }) => {
                   </h2>
                   <div className="h-2 w-24 bg-accent mx-auto"></div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                <div className="flex flex-wrap justify-center gap-12">
                   {items.map((item, index) => {
                     const isPopular = item.popular === true || item.popular === 'true';
                     const title = resolveContent(item, 'title');
@@ -123,7 +123,7 @@ const Section = ({ data }) => {
                     const price = item.prijs || item.price || '';
 
                     return (
-                      <div key={index} className={`flex flex-col h-full p-12 rounded-none border-4 transition-all duration-500 hover:-translate-y-2 ${isPopular ? 'bg-secondary border-black text-black shadow-[12px_12px_0px_#000]' : 'bg-[var(--color-card-bg)] border-[var(--color-text)] shadow-[8px_8px_0px_var(--color-text)]'}`}>
+                      <div key={index} className={`flex flex-col h-full p-12 rounded-none border-4 transition-all duration-500 hover:-translate-y-2 w-full md:w-[calc(50%-1.5rem)] lg:w-[calc(33.333%-2rem)] ${isPopular ? 'bg-secondary border-black text-black shadow-[12px_12px_0px_#000]' : 'bg-[var(--color-card-bg)] border-[var(--color-text)] shadow-[8px_8px_0px_var(--color-text)]'}`}>
                         <div className="mb-12">
                           <h3 className="text-3xl font-black uppercase tracking-tighter mb-4">
                             <EditableText value={title} cmsBind={{ file: sectionName, index, key: 'titel' }} />
@@ -169,14 +169,14 @@ const Section = ({ data }) => {
                 <div className="h-2 w-24 bg-accent"></div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16">
+              <div className="flex flex-wrap justify-center gap-x-16 gap-y-24">
                 {items.map((item, index) => {
                   const title = resolveContent(item, 'title');
                   const text = resolveContent(item, 'text');
                   const img = resolveContent(item, 'image');
 
                   return (
-                    <div key={index} className="flex flex-col items-start p-0 rounded-none overflow-hidden group">
+                    <div key={index} className="flex flex-col items-start p-0 rounded-none overflow-hidden group w-full md:w-[calc(50%-2rem)] lg:w-[calc(33.333%-2.7rem)] max-w-[450px]">
                       {img && (
                         <div className="w-full aspect-video overflow-hidden mb-10 border-4 border-black shadow-[8px_8px_0px_#000] rotate-1 group-hover:rotate-0 transition-transform duration-500">
                           <EditableMedia 

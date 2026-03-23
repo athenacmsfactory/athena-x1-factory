@@ -18,7 +18,7 @@ const Section = ({ title, data, tableName }) => {
 
   // Render logic based on layout (Simplified)
   const gridClasses = {
-    grid: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8',
+    grid: 'flex flex-wrap justify-center gap-8',
     list: 'flex flex-col gap-6',
     'z-pattern': 'flex flex-col gap-12',
     focus: 'flex flex-col gap-24'
@@ -64,7 +64,7 @@ const Section = ({ title, data, tableName }) => {
             return (
               <article 
                 key={absoluteIndex} 
-                className={`card group reveal flex ${currentLayout === 'list' ? 'flex-row items-center gap-6' : 'flex-col'} h-full`}
+                className={`card group reveal flex ${currentLayout === 'list' ? 'flex-row items-center gap-6' : 'flex-col'} h-full w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.34rem)]`}
               >
                 <div className={`relative ${currentLayout === 'list' ? 'w-48 h-32' : 'h-64'} mb-6 overflow-hidden rounded-2xl shrink-0`}>
                   <img 

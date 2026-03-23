@@ -28,10 +28,10 @@
     "logFile": "/home/kareltestspecial/0-IT/3-DEV/myAgent/athena-y/factory/output/logs/cloud-architects-corporate-preview.log"
   },
   "5610": {
-    "pid": 32590,
+    "pid": 10651,
     "id": "cloud-architects-bold",
     "type": "preview",
-    "startTime": "2026-03-23T12:11:45.719Z",
+    "startTime": "2026-03-23T12:39:44.172Z",
     "logFile": "/home/kareltestspecial/0-IT/3-DEV/myAgent/athena-y/factory/output/logs/cloud-architects-bold-preview.log"
   }
 }

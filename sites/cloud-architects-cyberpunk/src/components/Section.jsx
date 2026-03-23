@@ -91,7 +91,7 @@ const Section = ({ data }) => {
                    <EditableText bind="hero.0.titel" value={title} />
                 </h1>
 
-                <div className="flex flex-col md:flex-row items-center justify-center gap-12 mt-16">
+                <div className="flex flex-wrap justify-center gap-12 mt-16">
                   <p className="text-xl text-slate-300 max-w-xl text-center md:text-left font-mono border-r-2 border-primary/30 pr-8 italic leading-relaxed">
                     <EditableText bind="hero.0.ondertitel" value={subtitle} />
                   </p>
@@ -120,14 +120,14 @@ const Section = ({ data }) => {
                    <span className="text-xs font-mono text-primary animate-pulse hidden md:block">STATUS: OPTIMIZED_LOAD // 00:03:12</span>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1">
+                <div className="flex flex-wrap justify-center gap-1">
                   {items.map((item, index) => {
                     const title = resolveContent(item, 'title');
                     const text = resolveContent(item, 'text');
                     return (
                       <div 
                         key={index} 
-                        className="group p-12 bg-black border border-primary/10 hover:border-primary transition-all relative overflow-hidden"
+                        className="group p-12 bg-black border border-primary/10 hover:border-primary transition-all relative overflow-hidden w-full md:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.7rem)]"
                         style={{ backgroundColor: settings.card_bg_color || undefined }}
                       >
                         <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-100 group-hover:translate-x-0 translate-x-4 transition-all">

@@ -63,7 +63,7 @@ const Section = ({ title, data, tableName }) => {
             return (
               <article 
                 key={absoluteIndex} 
-                className={`card group reveal flex ${currentLayout === 'list' ? 'flex-row items-center gap-6' : 'flex-col'} h-full`}
+                className={`card group reveal flex ${currentLayout === 'list' ? 'flex-row items-center gap-6' : 'flex-col'} h-full w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.34rem)]`}
               >
                 <div className={`relative ${currentLayout === 'list' ? 'w-48 h-32' : 'h-64'} mb-6 overflow-hidden rounded-2xl shrink-0`}>
                   <img 

@@ -93,4 +93,12 @@
   .badge {
     @apply px-3 py-1 bg-accent/10 text-accent text-xs font-bold uppercase tracking-widest rounded-full;
   }
+
+  .athena-grid-centered {
+    @apply flex flex-wrap justify-center gap-8 w-full;
+  }
+  
+  .athena-grid-centered > * {
+    @apply w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.34rem)];
+  }
 }

@@ -12,7 +12,7 @@ const Section = ({ data }) => {
             <h2 className="text-3xl font-black mb-12 text-slate-900 uppercase tracking-tighter">
               {sec.table}
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            <div className="flex flex-wrap justify-center gap-10">
               {items.map((item, index) => (
                 <div key={index} className="group p-8 bg-white border border-slate-100 rounded-3xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                    {Object.entries(item).map(([key, val]) => {

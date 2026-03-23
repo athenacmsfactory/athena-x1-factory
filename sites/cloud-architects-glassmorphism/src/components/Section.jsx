@@ -118,7 +118,7 @@ const Section = ({ data }) => {
                   </h2>
                   <div className="h-1.5 w-24 bg-white/20 mx-auto rounded-full"></div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                <div className="flex flex-wrap justify-center gap-12">
                   {items.map((item, index) => {
                     const isPopular = item.popular === true || item.popular === 'true';
                     const title = resolveContent(item, 'title');
@@ -126,7 +126,7 @@ const Section = ({ data }) => {
                     const price = item.prijs || item.price || '';
 
                     return (
-                      <div key={index} className={`flex flex-col h-full p-10 rounded-3xl border transition-all duration-300 ${isPopular ? 'glass-featured border-white/40' : 'glass border-white/10'}`}>
+                      <div key={index} className={`flex flex-col h-full p-10 rounded-3xl border transition-all duration-300 w-full md:w-[calc(50%-1.5rem)] lg:w-[calc(33.333%-2rem)] ${isPopular ? 'glass-featured border-white/40' : 'glass border-white/10'}`}>
                         <div className="mb-10">
                           <h3 className="text-2xl font-bold mb-2">
                             <EditableText value={title} cmsBind={{ file: sectionName, index, key: 'titel' }} />
@@ -227,7 +227,7 @@ const Section = ({ data }) => {
                   <div className="h-1.5 w-24 bg-white/20 rounded-full"></div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                <div className="flex flex-wrap justify-center gap-12">
                   {items.map((item, index) => {
                     const title = resolveContent(item, 'title');
                     const text = resolveContent(item, 'text');
@@ -235,7 +235,7 @@ const Section = ({ data }) => {
                     const icon = item.icon || 'star'; // Assuming icon is a direct property
 
                     return (
-                      <div key={index} className="flex flex-col items-start glass p-8 rounded-3xl border border-white/10 group hover:border-white/30 transition-all">
+                      <div key={index} className="flex flex-col items-center glass p-8 rounded-3xl border border-white/10 group hover:border-white/30 transition-all w-full md:w-[calc(50%-1.5rem)] lg:w-[calc(33.333%-2rem)]">
                         {img ? (
                           <div className="w-full aspect-video overflow-hidden mb-8 rounded-2xl relative">
                             <EditableMedia

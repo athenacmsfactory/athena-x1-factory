@@ -18,7 +18,7 @@ const Section = ({ data }) => {
                 <div className="h-1.5 w-24 bg-accent mx-auto rounded-full"></div>
               </header>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                <div className="flex flex-wrap justify-center gap-12">
                 {items.filter(item => Object.keys(item).some(k => k !== 'absoluteIndex' && !k.startsWith('_'))).map((item, index) => {
                   const titleKey = Object.keys(item).filter(k => k !== 'absoluteIndex').find(k => k.toLowerCase().includes('naam') || k.toLowerCase().includes('gerecht'));
                   const priceKey = Object.keys(item).filter(k => k !== 'absoluteIndex').find(k => k.toLowerCase().includes('prijs'));
