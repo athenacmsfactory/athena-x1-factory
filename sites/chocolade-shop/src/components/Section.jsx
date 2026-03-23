@@ -20,34 +20,36 @@ const Section = ({ data }) => {
         const items = data[sectionName] || [];
         if (items.length === 0) return null;
 
-        // 1. Hero Sectie (Basisgegevens)
-        if (sectionName === 'basisgegevens') {
+        // 1. Hero Sectie
+        if (sectionName === 'hero') {
           const hero = items[0];
           return (
             <section 
               key={idx} 
-              data-dock-section="basisgegevens"
+              data-dock-section="hero"
               className="relative h-[90vh] flex items-center justify-center overflow-hidden"
             >
               <div className="absolute inset-0 z-0">
                 <EditableMedia 
-                  src={hero.hero_afbeelding} 
+                  src={hero.afbeelding} 
                   className="w-full h-full object-cover" 
-                  cmsBind={{ file: 'basisgegevens', index: 0, key: 'hero_afbeelding' }} 
+                  cmsBind={{ file: 'hero', index: 0, key: 'afbeelding' }} 
                 />
                 <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
               </div>
               <div className="relative z-10 text-center px-6 max-w-4xl">
                 <h1 className="text-5xl md:text-7xl font-serif font-bold text-white mb-8 drop-shadow-xl">
-                  <EditableText value={hero.hero_header} cmsBind={{ file: 'basisgegevens', index: 0, key: 'hero_header' }} />
+                  <EditableText value={hero.titel} cmsBind={{ file: 'hero', index: 0, key: 'titel' }} />
                 </h1>
                 <div className="h-1.5 w-24 bg-accent mx-auto mb-8"></div>
-                <button 
-                  onClick={() => document.getElementById('producten')?.scrollIntoView({behavior: 'smooth'})}
-                  className="bg-white text-black px-10 py-4 rounded-full font-bold hover:bg-accent hover:text-white transition-all shadow-2xl"
-                >
-                  Ontdek onze pralines
-                </button>
+                {hero.button_tekst && (
+                  <button 
+                    onClick={() => document.getElementById('producten')?.scrollIntoView({behavior: 'smooth'})}
+                    className="bg-white text-black px-10 py-4 rounded-full font-bold hover:bg-accent hover:text-white transition-all shadow-2xl"
+                  >
+                    <EditableText value={hero.button_tekst} cmsBind={{ file: 'hero', index: 0, key: 'button_tekst' }} />
+                  </button>
+                )}
               </div>
             </section>
           );

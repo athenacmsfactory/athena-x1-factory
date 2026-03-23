@@ -13,9 +13,9 @@ const Layout = ({ data, children }) => {
   return (
     <div className="min-h-screen bg-[var(--color-background)] text-[var(--color-text)] transition-colors duration-500">
       <StyleInjector siteSettings={data['site_settings']} />
-      <Header primaryTable={data.basisgegevens} siteSettings={data['site_settings']} />
+      <Header siteSettings={data['_site_settings']} />
       <main className="pt-20">{children}</main>
-      <Footer primaryTable={data.basisgegevens} />
+      <Footer data={data} siteSettings={data['_site_settings']} />
       <CartOverlay />
     </div>
   );

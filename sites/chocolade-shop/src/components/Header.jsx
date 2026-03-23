@@ -3,9 +3,9 @@ import { useCart } from './CartContext';
 import { Link } from 'react-router-dom';
 import EditableText from './EditableText';
 
-function Header({ primaryTable, siteSettings = {} }) {
+function Header({ siteSettings = {} }) {
   const cartContext = useCart ? useCart() : null;
-  const info = Array.isArray(primaryTable) ? (primaryTable[0] || {}) : (primaryTable || {});
+  const info = siteSettings;
   
   return (
     <nav 
@@ -16,10 +16,10 @@ function Header({ primaryTable, siteSettings = {} }) {
         {/* Logo / Naam */}
         <Link to="/" className="flex items-center gap-3 group">
           <div className="w-10 h-10 bg-accent rounded-xl flex items-center justify-center text-white font-serif font-bold text-xl shadow-lg shadow-accent/20 group-hover:scale-110 transition-transform">
-            {(info.site_naam || info.naam || 'A').charAt(0)}
+            {(info.site_naam || info.bedrijfsnaam || 'A').charAt(0)}
           </div>
           <span className="text-xl font-serif font-bold tracking-tight text-primary">
-            <EditableText value={info.site_naam || info.naam} cmsBind={{ file: 'basisgegevens', index: 0, key: 'site_naam' }} />
+            <EditableText value={info.site_naam || info.bedrijfsnaam} cmsBind={{ file: '_site_settings', index: 0, key: 'site_naam' }} />
           </span>
         </Link>
 
