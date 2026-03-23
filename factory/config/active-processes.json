@@ -27,6 +27,13 @@
     "startTime": "2026-03-23T16:46:40.561Z",
     "logFile": "/home/kareltestspecial/0-IT/3-DEV/myAgent/athena-y/factory/output/logs/ai-consultant-smartbe-preview.log"
   },
+  "5017": {
+    "pid": 2118,
+    "id": "athena-promo",
+    "type": "preview",
+    "startTime": "2026-03-23T16:52:23.656Z",
+    "logFile": "/home/kareltestspecial/0-IT/3-DEV/myAgent/athena-y/factory/output/logs/athena-promo-preview.log"
+  },
   "5200": {
     "pid": 32524,
     "id": "test-dentist",
