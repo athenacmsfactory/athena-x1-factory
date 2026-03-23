@@ -23,10 +23,10 @@ const AppContent = ({ data }) => {
   const sectionOrder = data.section_order || [];
 
   const componentMap = {
-    profile: () => <Hero profile={profile} />,
-    projects: () => <Projects projects={projects} />,
-    services: () => <Services services={services} />,
-    testimonials: () => <Testimonials testimonials={testimonials} />
+    profile: () => <Hero data={data['profile']} sectionName="profile" />,
+    projects: () => <Projects projects={data['projects']} />,
+    services: () => <Services services={data['services']} />,
+    testimonials: () => <Testimonials testimonials={data['testimonials']} />
   };
 
   return (

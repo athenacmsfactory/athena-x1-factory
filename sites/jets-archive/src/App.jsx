@@ -61,7 +61,7 @@ const App = ({ data: initialData }) => {
                 </div>
                 
                 <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
-                  <h1 className="text-4xl md:text-7xl font-black mb-6 tracking-tight">
+                  <h1 className="text-4xl md:text-7xl font-black mb-6 tracking-tight text-white drop-shadow-2xl">
                     <span data-dock-type="text" data-dock-bind="basis.0.hero_header">{basis.hero_header || 'Vliegende Iconen'}</span>
                   </h1>
                   <p className="text-xl md:text-2xl text-sky-200 font-light max-w-2xl mx-auto mb-10">

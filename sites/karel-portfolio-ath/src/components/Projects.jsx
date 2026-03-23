@@ -2,6 +2,17 @@ import React from 'react';
 import RepeaterControls from './RepeaterControls';
 
 const Projects = ({ projects }) => {
+    const getImageUrl = (url) => {
+    if (!url) return '';
+    if (typeof url === 'object') url = url.text || url.url || '';
+    if (url.startsWith('http') || url.startsWith('data:')) return url;
+    const base = import.meta.env.BASE_URL || '/';
+    if (url.startsWith(base) && base !== '/') return url;
+    const isRootPublic = url.startsWith('./') || url.endsWith('.svg') || url.endsWith('.ico') || url === 'site-logo.svg' || url === 'athena-icon.svg';
+    const hasImagesPrefix = url.includes('/images/') || url.startsWith('images/');
+    const pathPrefix = (isRootPublic || hasImagesPrefix) ? '' : 'images/';
+    return (base + pathPrefix + url.replace('./', '')).replace(new RegExp('/+', 'g'), '/');
+  };
   return (
     <section id="projects" className="py-32 px-6">
       <div className="max-w-7xl mx-auto">
@@ -22,7 +33,7 @@ const Projects = ({ projects }) => {
             <div key={idx} className="group relative">
               <RepeaterControls file="projects" index={idx} isHidden={project.hidden} />
               <div className="relative aspect-[16/10] rounded-[40px] overflow-hidden bg-zinc-900 border border-white/5 mb-8">
-                <img src={getImageUrl(project.image_url)} className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" data-dock-type="media" data-dock-bind={`projects.${idx}.${image_url}`} />
+                <img src={getImageUrl(project.image_url)} className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" data-dock-type="media" data-dock-bind={`projects.${idx}.image_url`} />
                 <div className="absolute top-6 left-6">
                   <span className="px-4 py-2 bg-black/50 backdrop-blur-md rounded-full text-[10px] font-black uppercase tracking-widest border border-white/10">
                     <span data-dock-type="text" data-dock-bind={`projects.${idx}.titel`}>{project.titel || "..."}</span>

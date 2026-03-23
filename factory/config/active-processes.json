@@ -13,6 +13,34 @@
     "startTime": "2026-03-23T12:44:28.653Z",
     "logFile": "/home/kareltestspecial/0-IT/3-DEV/myAgent/athena-y/factory/output/logs/media-mapper-editor.log"
   },
+  "5006": {
+    "pid": 32619,
+    "id": "academy-1",
+    "type": "preview",
+    "startTime": "2026-03-23T16:46:32.101Z",
+    "logFile": "/home/kareltestspecial/0-IT/3-DEV/myAgent/athena-y/factory/output/logs/academy-1-preview.log"
+  },
+  "5016": {
+    "pid": 370,
+    "id": "ai-consultant-smartbe",
+    "type": "preview",
+    "startTime": "2026-03-23T16:46:40.561Z",
+    "logFile": "/home/kareltestspecial/0-IT/3-DEV/myAgent/athena-y/factory/output/logs/ai-consultant-smartbe-preview.log"
+  },
+  "5200": {
+    "pid": 32524,
+    "id": "test-dentist",
+    "type": "preview",
+    "startTime": "2026-03-23T16:46:20.358Z",
+    "logFile": "/home/kareltestspecial/0-IT/3-DEV/myAgent/athena-y/factory/output/logs/test-dentist-preview.log"
+  },
+  "5484": {
+    "pid": 32441,
+    "id": "pure-relaxation-glassmorphism",
+    "type": "preview",
+    "startTime": "2026-03-23T16:46:11.260Z",
+    "logFile": "/home/kareltestspecial/0-IT/3-DEV/myAgent/athena-y/factory/output/logs/pure-relaxation-glassmorphism-preview.log"
+  },
   "5982": {
     "pid": 26031,
     "id": "demo-consultant",
@@ -20,11 +48,60 @@
     "startTime": "2026-03-23T16:26:13.449Z",
     "logFile": "/home/kareltestspecial/0-IT/3-DEV/myAgent/athena-y/factory/output/logs/demo-consultant-preview.log"
   },
+  "6001": {
+    "pid": 535,
+    "id": "athena-pro",
+    "type": "preview",
+    "startTime": "2026-03-23T16:47:01.772Z",
+    "logFile": "/home/kareltestspecial/0-IT/3-DEV/myAgent/athena-y/factory/output/logs/athena-pro-preview.log"
+  },
+  "6041": {
+    "pid": 457,
+    "id": "athena-hub",
+    "type": "preview",
+    "startTime": "2026-03-23T16:46:50.717Z",
+    "logFile": "/home/kareltestspecial/0-IT/3-DEV/myAgent/athena-y/factory/output/logs/athena-hub-preview.log"
+  },
+  "6104": {
+    "pid": 30576,
+    "id": "karel-portfolio-ath",
+    "type": "preview",
+    "startTime": "2026-03-23T16:41:02.349Z",
+    "logFile": "/home/kareltestspecial/0-IT/3-DEV/myAgent/athena-y/factory/output/logs/karel-portfolio-ath-preview.log"
+  },
+  "6105": {
+    "pid": 31891,
+    "id": "karel-webdesign",
+    "type": "preview",
+    "startTime": "2026-03-23T16:45:29.793Z",
+    "logFile": "/home/kareltestspecial/0-IT/3-DEV/myAgent/athena-y/factory/output/logs/karel-webdesign-preview.log"
+  },
+  "6106": {
+    "pid": 32188,
+    "id": "nieuwe-tanden",
+    "type": "preview",
+    "startTime": "2026-03-23T16:45:52.039Z",
+    "logFile": "/home/kareltestspecial/0-IT/3-DEV/myAgent/athena-y/factory/output/logs/nieuwe-tanden-preview.log"
+  },
+  "6107": {
+    "pid": 32275,
+    "id": "portfolio-kbm",
+    "type": "preview",
+    "startTime": "2026-03-23T16:45:57.764Z",
+    "logFile": "/home/kareltestspecial/0-IT/3-DEV/myAgent/athena-y/factory/output/logs/portfolio-kbm-preview.log"
+  },
   "6225": {
     "pid": 26361,
     "id": "jets-archive",
     "type": "preview",
     "startTime": "2026-03-23T16:27:15.199Z",
     "logFile": "/home/kareltestspecial/0-IT/3-DEV/myAgent/athena-y/factory/output/logs/jets-archive-preview.log"
+  },
+  "6390": {
+    "pid": 32362,
+    "id": "pure-relaxation",
+    "type": "preview",
+    "startTime": "2026-03-23T16:46:03.089Z",
+    "logFile": "/home/kareltestspecial/0-IT/3-DEV/myAgent/athena-y/factory/output/logs/pure-relaxation-preview.log"
   }
 }

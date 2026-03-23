@@ -1,0 +1,437 @@
+{
+  "_system": [
+    {
+      "Key": "github_user",
+      "Value": "athenacmsfactory",
+      "Description": "De GitHub gebruikersnaam van de ontwikkelaar."
+    },
+    {
+      "Key": "github_repo_name",
+      "Value": "[Repo]",
+      "Description": "De specifieke repository-naam voor dit project."
+    }
+  ],
+  "contact": [
+    {
+      "titel": "Contacteer ons",
+      "email": "karel.decherf@gmail.com",
+      "telefoon": "",
+      "locatie": "",
+      "btw_nummer": "",
+      "linkedin_url": ""
+    }
+  ],
+  "display_config": {
+    "sections": {
+      "profile": {
+        "visible_fields": [
+          "professional_title",
+          "bio_long",
+          "avatar_url",
+          "contact_email",
+          "cta_text"
+        ],
+        "hidden_fields": []
+      }
+    }
+  },
+  "layout_settings": {},
+  "profile": [
+    {
+      "full_name": "KAREL DECHERF",
+      "tagline": "Bridging innovation and solid engineering through Full-Stack Development and AI Automation.",
+      "professional_title": "Full Stack Developer & AI Automation Specialist",
+      "bio_short": "Gedreven en analytische IT-professional met een levenslange passie voor programmeren en een solide achtergrond in webontwikkeling.",
+      "bio_long": "Gedreven en analytische IT-professional met een levenslange passie voor programmeren en een solide achtergrond in webontwikkeling. Ervaren in een breed scala aan technologieën, waaronder Java, JavaScript, TypeScript, Python en SQL. De continue ontwikkeling en publicatie van diverse projecten, waaronder meerdere Chrome Web Store-extensies en open-source code op GitHub, geven een indruk van mijn actuele vaardigheden. Na een periode van inactiviteit, ben ik dankzij de technologische vooruitgang weer volledig inzetbaar en gemotiveerd om met mijn probleemoplossend vermogen en technische expertise bij te dragen aan een vooruitstrevend team.",
+      "avatar_url": "0-IDfotoD.jpeg",
+      "contact_email": "karel.decherf@gmail.be",
+      "cta_text": "Let's Talk"
+    }
+  ],
+  "projects": [
+    {
+      "title": "Vegan BioTech Report",
+      "category": "Web Development / Automation",
+      "summary": "Een geautomatiseerde nieuwsbrief en longread website die AI en GitHub Actions inzet voor continue dataverzameling en publicatie.",
+      "description": "Dit project is een demonstratie van CI/CD en automation in contentcreatie. De website verzamelt en presenteert automatisch nieuws en longreads gerelateerd aan vegan biotech. Het gebruikt AI om de data te verwerken en GitHub Actions om het volledige proces – van dataverzameling tot publicatie – te beheren, wat zorgt voor efficiëntie en minimale menselijke tussenkomst.",
+      "tech_stack": "Python, GitHub Actions, AI, Web Scraping, HTML/CSS",
+      "demo_url": "https://athena-y-factory.github.io/Vegan-BioTech-Report/",
+      "repo_url": "",
+      "image_url": "VBT_home_hero-1769898204601-1769906198605.png",
+      "status": ""
+    },
+    {
+      "title": "New Tab Organizer",
+      "category": "",
+      "summary": "",
+      "description": "A customizable startpage with your bookmarks and notes.",
+      "tech_stack": "",
+      "demo_url": "https://chromewebstore.google.com/detail/new-tab-organizer/llhggelkoodddbgmnmfplcmchbbkkjpk",
+      "repo_url": "",
+      "image_url": "unnamed-1769906272244.png",
+      "status": ""
+    },
+    {
+      "title": "Battery Percentage Versie",
+      "category": "",
+      "summary": "",
+      "description": "Displays the battery percentage in digital form on the toolbar or its own floating window, and sends smart notifications.",
+      "tech_stack": "",
+      "demo_url": "https://chromewebstore.google.com/detail/bcknfhofonlfillmlonppglflhgdbeoa",
+      "repo_url": "",
+      "image_url": "unnamed-1769906307815.png",
+      "status": ""
+    },
+    {
+      "title": "Very Practical Clock",
+      "category": "",
+      "summary": "",
+      "description": "A customizable digital clock that always stays on top",
+      "tech_stack": "",
+      "demo_url": "https://chromewebstore.google.com/detail/very-practical-clock/ncooonkkjoeikgkbbljefnmhldpgdpdn",
+      "repo_url": "",
+      "image_url": "unnamed-1769906333673.png",
+      "status": ""
+    },
+    {
+      "title": "Google AI Studio - File Reader",
+      "category": "AI & Automation / Data Analysis",
+      "summary": "",
+      "description": "Converts Google AI Studio File into an easy-to-read text file",
+      "tech_stack": "",
+      "demo_url": "https://chromewebstore.google.com/detail/google-ai-studio-file-rea/holadmfpcclmpmkdkmcanifihneflfop",
+      "repo_url": "",
+      "image_url": "unnamed-1769906357171.png",
+      "status": ""
+    },
+    {
+      "title": "Athena CMS Factory",
+      "category": "Web Development AI & Automation",
+      "summary": "",
+      "description": "An AI Agentic framework for rapid website development and client friendly conten management",
+      "tech_stack": "",
+      "demo_url": "",
+      "repo_url": "",
+      "image_url": "4620e29d-4ba6-472f-9751-648e9de97c90-md-1769898671085-1769906218485.jpg",
+      "status": ""
+    }
+  ],
+  "schema": {
+    "blueprint_name": "karel-portfolio-ath",
+    "track": "docked",
+    "data_structure": [
+      {
+        "table_name": "site_settings",
+        "columns": [
+          {
+            "name": "site_title",
+            "description": "Titel van de website."
+          },
+          {
+            "name": "site_description",
+            "description": "Meta beschrijving van de site."
+          },
+          {
+            "name": "contact_email",
+            "description": "Algemeen contact e-mailadres."
+          },
+          {
+            "name": "logo_text",
+            "description": "Tekst voor het logo."
+          },
+          {
+            "name": "theme",
+            "description": "dark of light"
+          }
+        ]
+      },
+      {
+        "table_name": "profile",
+        "columns": [
+          {
+            "name": "full_name",
+            "description": "Naam van de persoon."
+          },
+          {
+            "name": "tagline",
+            "description": "Korte slogan."
+          },
+          {
+            "name": "professional_title",
+            "description": "Bv. Full Stack Developer."
+          },
+          {
+            "name": "bio_short",
+            "description": "Intro voor de hero."
+          },
+          {
+            "name": "bio_long",
+            "description": "Lange bio voor de about sectie."
+          },
+          {
+            "name": "avatar_url",
+            "description": "URL naar profielfoto."
+          },
+          {
+            "name": "contact_email",
+            "description": "E-mailadres voor contact."
+          },
+          {
+            "name": "cta_text",
+            "description": "Tekst op de knop."
+          }
+        ]
+      },
+      {
+        "table_name": "projects",
+        "columns": [
+          {
+            "name": "title",
+            "description": "Projectnaam."
+          },
+          {
+            "name": "category",
+            "description": "Bv. Web, App, AI."
+          },
+          {
+            "name": "summary",
+            "description": "Korte samenvatting."
+          },
+          {
+            "name": "description",
+            "description": "Gedetailleerde beschrijving."
+          },
+          {
+            "name": "tech_stack",
+            "description": "Komma-gescheiden technologieën."
+          },
+          {
+            "name": "demo_url",
+            "description": "Link naar demo."
+          },
+          {
+            "name": "repo_url",
+            "description": "Link naar GitHub."
+          },
+          {
+            "name": "image_url",
+            "description": "Project screenshot URL."
+          },
+          {
+            "name": "status",
+            "description": "Live, In Progress, etc."
+          }
+        ]
+      },
+      {
+        "table_name": "services",
+        "columns": [
+          {
+            "name": "title",
+            "description": "Naam van de dienst."
+          },
+          {
+            "name": "description",
+            "description": "Uitleg van de dienst."
+          },
+          {
+            "name": "icon_name",
+            "description": "Icoon naam (Lucide)."
+          }
+        ]
+      },
+      {
+        "table_name": "testimonials",
+        "columns": [
+          {
+            "name": "client_name",
+            "description": "Naam van de klant."
+          },
+          {
+            "name": "company",
+            "description": "Bedrijf van de klant."
+          },
+          {
+            "name": "quote",
+            "description": "De testimonial tekst."
+          }
+        ]
+      },
+      {
+        "table_name": "socials",
+        "columns": [
+          {
+            "name": "platform",
+            "description": "Bv. LinkedIn."
+          },
+          {
+            "name": "url",
+            "description": "Link naar profiel."
+          },
+          {
+            "name": "icon",
+            "description": "Icoon naam."
+          }
+        ]
+      }
+    ],
+    "design_system": {
+      "colors": {
+        "primary": "#3b82f6",
+        "secondary": "#050505",
+        "accent": "#f59e0b",
+        "background": "#050505",
+        "surface": "#111111"
+      },
+      "radius": "1.5rem",
+      "font_sans": "Inter, system-ui, sans-serif"
+    }
+  },
+  "section_order": [
+    "site_settings",
+    "profile",
+    "projects",
+    "services",
+    "testimonials",
+    "socials",
+    "contact"
+  ],
+  "section_settings": [
+    {
+      "id": "site_settings",
+      "title": "site settings",
+      "subtitle": "Overzicht van site_settings"
+    },
+    {
+      "id": "profile",
+      "title": "profile",
+      "subtitle": "Overzicht van profile"
+    },
+    {
+      "id": "projects",
+      "title": "projects",
+      "subtitle": "Overzicht van projects"
+    },
+    {
+      "id": "services",
+      "title": "services",
+      "subtitle": "Overzicht van services"
+    },
+    {
+      "id": "testimonials",
+      "title": "testimonials",
+      "subtitle": "Overzicht van testimonials"
+    },
+    {
+      "id": "socials",
+      "title": "socials",
+      "subtitle": "Overzicht van socials"
+    }
+  ],
+  "services": [
+    {
+      "title": "Full-Stack Applicatie ontwikkeling",
+      "description": "Ontwikkeling van robuuste en schaalbare webapplicaties van scratch tot deployment, met expertise in moderne stacks zoals Java (Spring Boot), React/TypeScript en PostgreSQL.",
+      "icon_name": "Code"
+    },
+    {
+      "title": "AI Integratie & Workflow Automatisering",
+      "description": "Implementeren van AI-tools (zoals Google Gemini en Copilot) om bedrijfsprocessen te automatiseren, van data-extractie tot intelligente rapportage en CI/CD via GitHub Actions.",
+      "icon_name": "Robot"
+    },
+    {
+      "title": "Cloud & DevOps Consultancy",
+      "description": "Opzetten en onderhouden van infrastructuren met tools zoals Docker, Nginx, PostgreSQL en cloud providers (GCP/Azure) voor optimale prestaties en continue integratie/delivery.",
+      "icon_name": "Cloud"
+    },
+    {
+      "title": "Custom Web Tools & Extensies",
+      "description": "Bouwen van gespecialiseerde tools, Google Workspace Add-ons en Chrome Web Store-extensies om unieke, dagelijkse workflowproblemen op te lossen en efficiëntie te verhogen.",
+      "icon_name": "Tool"
+    }
+  ],
+  "site_settings": [
+    {
+      "site_title": "Portfolio van Karel Decherf",
+      "site_description": "Portfolio website van Karel Decherf, Full Stack Developer & AI Automation Specialist.",
+      "contact_email": "karel.decherf@gmail.be",
+      "logo_text": "Karel Decherf",
+      "theme": "dark",
+      "site_logo_image": "/site-logo.svg",
+      "site_name": "karel-portfolio-ath",
+      "light_text_color": "#b8bfd1",
+      "hero_height": "85vh",
+      "hero_max_height": "150vh",
+      "hero_aspect_ratio": "16/9"
+    }
+  ],
+  "socials": [
+    {
+      "platform": "LinkedIn",
+      "url": "https://linkedin.com/in/karel-decherf-8212a9221",
+      "icon": "LinkedIn"
+    },
+    {
+      "platform": "GitHub",
+      "url": "https://github.com/KarelTestSpecial",
+      "icon": "GitHub"
+    }
+  ],
+  "style_bindings": {
+    "profile:0:full_name": {
+      "bold": true,
+      "italic": false,
+      "fontSize": "56px",
+      "textAlign": "left",
+      "fontFamily": "Roboto",
+      "textShadow": false
+    },
+    "site_settings:0:site_name": {
+      "bold": false,
+      "italic": false,
+      "fontSize": "16px",
+      "textAlign": "left",
+      "fontFamily": "monospace",
+      "textShadow": false
+    },
+    "services:0:title": {
+      "bold": true,
+      "italic": false,
+      "fontSize": "24px",
+      "textAlign": "start",
+      "fontFamily": "Playfair Display, ui-serif, Georgia, serif",
+      "textShadow": false
+    },
+    "testimonials:1:company": {
+      "bold": true,
+      "italic": false,
+      "fontSize": "10px",
+      "textAlign": "start",
+      "fontFamily": "Inter, ui-sans-serif, system-ui, sans-serif",
+      "textShadow": false
+    },
+    "testimonials:0:company": {
+      "bold": true,
+      "italic": false,
+      "fontSize": "10px",
+      "textAlign": "start",
+      "fontFamily": "Inter, ui-sans-serif, system-ui, sans-serif",
+      "textShadow": false
+    }
+  },
+  "style_config": {
+    "site_name": "karel-portfolio-ath"
+  },
+  "testimonials": [
+    {
+      "client_name": "",
+      "company": "",
+      "quote": "Karels analytische aanpak en diepgaande kennis van zowel webtechnologieën als AI-automatisering waren cruciaal voor de lancering van ons geautomatiseerde rapportageplatform. Zijn probleemoplossend vermogen is ongeëvenaard."
+    },
+    {
+      "client_name": "",
+      "company": "",
+      "quote": "Een gedreven en ervaren full-stack ontwikkelaar. Karel's vermogen om robuuste systemen te bouwen met moderne stacks zoals Java/Spring en React, gecombineerd met zijn precisie in het werk, maken hem een waardevolle aanwinst voor elk complex project."
+    }
+  ]
+}

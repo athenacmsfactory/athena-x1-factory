@@ -14,12 +14,6 @@ const Section = ({ data }) => {
   };
   const sectionOrder = data.section_order || [];
 
-  const getImgSrc = (img) => {
-    if (!img) return `${import.meta.env.BASE_URL}images/placeholder.jpg`;
-    if (img.startsWith('http')) return img;
-    return `${import.meta.env.BASE_URL}images/img`;
-  };
-
   const handleScroll = (e, targetId) => {
     if (e.shiftKey) return;
     const target = document.getElementById(targetId);
@@ -48,7 +42,7 @@ const Section = ({ data }) => {
           return (
             <section key={idx} data-dock-section="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden">
               <div className="absolute inset-0 z-0">
-                <img src={getImageUrl(getImgSrc(item.afbeelding))} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind="hero.0.afbeelding" />
+                <img src={getImageUrl(item.afbeelding)} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind="hero.0.afbeelding" />
                 <div className="absolute inset-0 z-20 pointer-events-none" style={{ 
                   backgroundImage: 'linear-gradient(to right, var(--hero-overlay-start, rgba(0,0,0,0.8)), var(--hero-overlay-end, rgba(0,0,0,0.32)))' 
                 }}></div>
@@ -84,7 +78,7 @@ const Section = ({ data }) => {
                 <div className="w-full md:w-1/2 relative">
                   <div className="absolute -top-10 -left-10 w-40 h-40 bg-accent/10 rounded-full blur-3xl"></div>
                   <div className="relative rounded-[4rem] overflow-hidden shadow-2xl border-8 border-[var(--color-border)]">
-                    <img src={getImageUrl(getImgSrc(item.afbeelding))} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind="intro.0.afbeelding" />
+                    <img src={getImageUrl(item.afbeelding)} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind="intro.0.afbeelding" />
                   </div>
                 </div>
                 <div className="flex-1">
@@ -152,7 +146,7 @@ const Section = ({ data }) => {
                       </div>
                       <div className="w-full md:w-1/2 relative">
                         <div className="aspect-square rounded-[5rem] overflow-hidden shadow-2xl border-4 border-white/10">
-                           <img src={getImageUrl(getImgSrc(item.afbeelding))} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind={`innovatie.${index}.afbeelding`} />
+                           <img src={getImageUrl(item.afbeelding)} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind={`innovatie.${index}.afbeelding`} />
                         </div>
                       </div>
                     </div>
@@ -175,7 +169,7 @@ const Section = ({ data }) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
                   {items.map((item, index) => (
                     <a key={index} href={item.url} target="_blank" rel="noopener noreferrer" className="group relative rounded-[4rem] overflow-hidden shadow-2xl aspect-[4/3] block">
-                      <img src={getImageUrl(getImgSrc(item.afbeelding))} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" data-dock-type="media" data-dock-bind={`showcase.${index}.afbeelding`} />
+                      <img src={getImageUrl(item.afbeelding)} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" data-dock-type="media" data-dock-bind={`showcase.${index}.afbeelding`} />
                       <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-primary)]/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-12">
                         <h4 className="text-3xl font-bold text-white mb-2">
                           <span data-dock-type="text" data-dock-bind={`showcase.${index}.naam`}>{item.naam}</span>
