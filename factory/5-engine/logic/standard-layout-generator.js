@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { ComponentRegistry, getComponentForSection } from '../lib/component-registry.js';
+import { getComponentForSection } from '../lib/component-registry.js';
 import { TransformationEngine } from '../core/TransformationEngine.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -17,50 +17,60 @@ export function generateSectionComponent(blueprint, editorStrategy = 'docked') {
   const sections = blueprint.data_structure.map(t => t.table_name);
   const usedComponents = new Set();
 
-  // Decide which components are needed
+  // Decide which components are needed (always include GenericSection as fallback)
   sections.forEach(sec => {
     const comp = getComponentForSection(sec);
     if (comp) usedComponents.add(comp);
   });
 
-  const imports = Array.from(usedComponents).map(c => `import ${c.name} from '${c.path}';`).join('\n');
+  // Build imports — GenericSection is hardcoded in the template, exclude from dynamic list
+  const dynamicImports = Array.from(usedComponents)
+    .filter(c => c.name !== 'GenericSection')
+    .map(c => {
+      const cleanPath = c.path.replace('./components/', './');
+      return `import ${c.name} from '${cleanPath}';`;
+    });
+
+  const imports = dynamicImports.join('\n');
   const features = JSON.stringify(blueprint.features || {});
-
-  // Footer Logic
-  const footerType = blueprint.features?.footer || 'minimal';
-  let footerImport = "";
-  let footerComponent = "";
-
-  if (footerType === 'expanded') {
-      footerImport = "import Footer from './FooterExpanded';";
-      footerComponent = "<Footer data={data} />";
-  } else if (footerType === 'columns') {
-      footerImport = "import Footer from './FooterColumns';";
-      footerComponent = "<Footer data={data} />";
-  } else {
-      footerImport = "import Footer from './FooterMinimal';";
-      footerComponent = "<Footer data={data} />";
-  }
 
   // Template Path
   const templatePath = path.join(__dirname, '../../2-templates/logic/Section.base.jsx');
   const templateContent = fs.readFileSync(templatePath, 'utf8');
 
-  // Mapping Logic Generation
-  const mappingLogic = `
-      // Mapping Logic (Synced with Registry)
-      if (lower === 'basis' || lower === 'basisgegevens' || lower === 'hero') {
-          return layout === 'split' ? SplitHero : Hero;
-      }
-      if (lower.includes('about') || lower.includes('info')) return AboutSection;
-      if (lower.includes('testimonial') || lower.includes('review') || lower.includes('ervaring')) return Testimonials;
-      if (lower.includes('team') || lower.includes('medewerker') || lower.includes('wie_zijn_wij')) return Team;
-      if (lower.includes('faq') || lower.includes('vragen')) return FAQ;
-      if (lower.includes('cta') || lower.includes('banner') || lower.includes('actie')) return CTA;
-      if (lower.includes('product') || lower.includes('shop') || lower.includes('dienst') || lower.includes('feature')) {
-          return layout === 'balanced' ? GridBalanced : ProductGrid;
-      }
-  `.trim();
+  // Build mapping logic dynamically — only reference components that ARE imported
+  const importedNames = new Set(
+    Array.from(usedComponents)
+      .filter(c => c.name !== 'GenericSection')
+      .map(c => c.name)
+  );
+
+  const conditions = [];
+  if (importedNames.has('Hero')) {
+    conditions.push(`if (lower === 'basis' || lower === 'basisgegevens' || lower === 'hero') return Hero;`);
+  }
+  if (importedNames.has('AboutSection')) {
+    conditions.push(`if (lower.includes('about') || lower.includes('info')) return AboutSection;`);
+  }
+  if (importedNames.has('Testimonials')) {
+    conditions.push(`if (lower.includes('testimonial') || lower.includes('review') || lower.includes('ervaring')) return Testimonials;`);
+  }
+  if (importedNames.has('Team')) {
+    conditions.push(`if (lower.includes('team') || lower.includes('medewerker') || lower.includes('wie_zijn_wij')) return Team;`);
+  }
+  if (importedNames.has('FAQ')) {
+    conditions.push(`if (lower.includes('faq') || lower.includes('vragen')) return FAQ;`);
+  }
+  if (importedNames.has('CTA')) {
+    conditions.push(`if (lower.includes('cta') || lower.includes('banner') || lower.includes('actie')) return CTA;`);
+  }
+  if (importedNames.has('ProductGrid')) {
+    conditions.push(`if (lower.includes('product') || lower.includes('shop') || lower.includes('dienst') || lower.includes('feature') || lower.includes('services')) return ProductGrid;`);
+  }
+
+  const mappingLogic = conditions.length > 0
+    ? conditions.join('\n      ')
+    : '// No special mappings — using GenericSection for all';
 
   // Component Return Logic
   const componentReturn = `
@@ -86,10 +96,9 @@ export function generateSectionComponent(blueprint, editorStrategy = 'docked') {
   const engine = new TransformationEngine();
   
   // Inject variables
-  engine.setVariable('IMPORTS', imports + '\n' + footerImport);
+  engine.setVariable('IMPORTS', imports);
   engine.setVariable('MAPPING_LOGIC', mappingLogic);
   engine.setVariable('COMPONENT_RETURN', componentReturn);
-  engine.setVariable('FOOTER', footerComponent);
   engine.setVariable('FEATURES', features);
 
   // Transform

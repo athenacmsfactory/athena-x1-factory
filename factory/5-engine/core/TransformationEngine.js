@@ -77,6 +77,17 @@ export class TransformationEngine {
         });
 
         let result = recast.print(ast).code;
+        
+        // Final Pass: Replace variables in the entire generated code (catches comments)
+        Object.entries(this.variables).forEach(([k, v]) => {
+            // First: replace variables that are wrapped in comments /* {{VAR}} */ or {/* {{VAR}} */}
+            const commentedVar = new RegExp(`{\\/\\*\\s*{{${k}}}\\s*\\*\\/}|\\/\\*\\s*{{${k}}}\\s*\\*\\/`, 'g');
+            result = result.replace(commentedVar, v);
+            
+            // Second: replace standard variables {{VAR}}
+            result = result.replace(new RegExp(`{{${k}}}`, 'g'), v);
+        });
+
         // Apply regex for conditional blocks (still the most reliable for multiline removal)
         result = this.transformConditionalBlocks(result);
 

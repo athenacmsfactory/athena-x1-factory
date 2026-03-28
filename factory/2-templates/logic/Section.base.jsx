@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
+import GenericSection from './GenericSection';
 /* {{IMPORTS}} */
-import { useCart } from './CartContext'; 
 
 const Section = ({ data }) => {
   const sectionOrder = data.section_order || [];
@@ -14,7 +14,6 @@ const Section = ({ data }) => {
 
   const getComponent = (sectionName) => {
       const lower = sectionName.toLowerCase();
-      const layout = layoutSettings[sectionName] || 'list';
 
       /* {{MAPPING_LOGIC}} */
       
@@ -30,7 +29,6 @@ const Section = ({ data }) => {
         /* {{COMPONENT_RETURN}} */
       })}
     </div>
-    /* {{FOOTER}} */
   );
 };
 
