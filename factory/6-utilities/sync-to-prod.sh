@@ -2,7 +2,7 @@
 # 🚀 Athena CMS - Sync to Production (v8.8)
 # Gebruik: ./sync-to-prod.sh [--dry-run]
 
-SOURCE="/home/kareltestspecial/0-IT/3-DEV/myAgent/athena-y"
+SOURCE="/home/kareltestspecial/0-IT/3-DEV/y1/y/factory"
 TARGET="/home/kareltestspecial/0-IT/2-Productie/athena"
 DRY_RUN=$([ "$1" == "--dry-run" ] && echo "--dry-run" || echo "")
 

@@ -53,15 +53,15 @@ if [ ! -z "$TAG" ]; then
 fi
 
 # 4. Force Push naar Dev
-echo "📤 Force pushing naar athena-y (dev)..."
+echo "📤 Force pushing naar y1-factory (dev)..."
 git push origin main --force --tags
 
 # 5. Synchronisatie naar Productie
 if [ -d "../athena" ]; then
   echo "🚀 Synchroniseren naar Productie monorepo (athena)..."
   cd ../athena
-  git fetch athena-y-local
-  git checkout -B main athena-y-local/main
+  git fetch y1-factory-local
+  git checkout -B main y1-factory-local/main
   if [ ! -z "$TAG" ]; then
     git tag -f "$TAG"
   fi

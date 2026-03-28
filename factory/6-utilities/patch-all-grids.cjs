@@ -2,7 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const SITES_DIR = '/home/kareltestspecial/0-IT/3-DEV/myAgent/athena-y/sites';
+const SITES_DIR = '/home/kareltestspecial/0-IT/3-DEV/y1/y/werkplaats';
 
 function patchFile(filePath) {
     if (!fs.existsSync(filePath)) return;

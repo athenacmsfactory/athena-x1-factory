@@ -1,0 +1,38 @@
+[
+  {
+    "projectName": "bakkerij-artisan-v1",
+    "type": "urban-brew-bite-ath",
+    "layout": "bento",
+    "style": "dark-rustic",
+    "theme": {
+      "primary": "#3E2723",
+      "accent": "#FFAB40",
+      "typography": "Outfit"
+    },
+    "description": "Donker en rustiek thema met grote foto's van ambachtelijk zuurdesem brood. Gebaseerd op het 'urban-brew-bite' type."
+  },
+  {
+    "projectName": "bakkerij-pastry-v2",
+    "type": "chocolade-shop-type",
+    "layout": "split",
+    "style": "pastel-elegant",
+    "theme": {
+      "primary": "#FCE4EC",
+      "accent": "#EC407A",
+      "typography": "Playfair Display"
+    },
+    "description": "Licht en elegant thema voor een luxe banketbakkerij. Gebaseerd op het 'chocolade-shop' type."
+  },
+  {
+    "projectName": "bakkerij-daily-v3",
+    "type": "athena-showcase",
+    "layout": "grid",
+    "style": "minimalist-fresh",
+    "theme": {
+      "primary": "#FFFFFF",
+      "accent": "#4CAF50",
+      "typography": "Inter"
+    },
+    "description": "Schoon en minimalistisch voor een dagverse warme bakker. Gebaseerd op de 'athena-showcase' blueprint."
+  }
+]

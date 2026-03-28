@@ -1,0 +1,11 @@
+{
+    "id": "corporate",
+    "name": "Corporate Gold Standard",
+    "description": "Een volledige zakelijke landingpage met hero, features en contact.",
+    "layout": {
+        "header": "modern",
+        "hero": "image",
+        "sections": ["about", "features", "testimonials", "contact"],
+        "footer": "standard"
+    }
+}

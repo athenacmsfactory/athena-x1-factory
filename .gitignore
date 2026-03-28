@@ -39,3 +39,4 @@ factory/test-reports/
 .gemini/tmp/
 tmp/
 temp/
+.env

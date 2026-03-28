@@ -5,7 +5,7 @@ description: Beheer van de Athena Vault (Cold Storage) voor het veilig parkeren 
 
 # Vault Manager
 
-Deze skill zorgt voor het veilige transport van sites tussen de actieve Factory (`athena-y/sites/`) en de kluis (`../athena-vault-v8-1/`).
+Deze skill zorgt voor het veilige transport van sites tussen de actieve Factory (`y/werkplaats/`) en de kluis (`../athena-vault-v8-1/`).
 
 ## Belangrijke Regels (Architectural Mandate)
 1. **Vault = Cold Storage**: De Vault is bevroren. Geen `node_modules`, geen actieve servers.

@@ -12,6 +12,10 @@ export class TransformationEngine {
         this.flags = options.flags || {};
     }
 
+    setVariable(key, value) {
+        this.variables[key] = value;
+    }
+
     transform(content, fileName) {
         if (fileName.endsWith('.jsx') || fileName.endsWith('.js')) {
             try {
@@ -125,7 +129,9 @@ export class TransformationEngine {
 
             // If no specifiers left, remove the whole declaration (unless it's a side-effect import)
             if (node.specifiers.length === 0 && !node.source.value.endsWith('.css')) {
-                path.remove();
+                // Use prune() or replace() depending on recast version
+                if (path.prune) path.prune();
+                else if (path.replace) path.replace();
             }
         });
 

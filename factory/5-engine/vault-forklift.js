@@ -13,7 +13,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Configuration
 const ROOT = path.resolve(__dirname, '../../..'); 
-const FACTORY_SITES = path.join(ROOT, 'athena-y/sites');
+const FACTORY_SITES = path.join(ROOT, 'sites');
 const VAULT_ROOT = path.join(ROOT, 'athena-vault-v8-1');
 const VAULT_SITES = path.join(VAULT_ROOT, 'sites');
 

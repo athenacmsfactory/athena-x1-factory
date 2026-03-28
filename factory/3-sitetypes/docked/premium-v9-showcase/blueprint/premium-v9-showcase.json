@@ -1,0 +1,63 @@
+{
+    "blueprint_name": "premium-v9-showcase",
+    "track": "docked",
+    "data_structure": [
+        {
+            "table_name": "site_settings",
+            "columns": [
+                { "name": "site_name", "description": "Name of the site" },
+                { "name": "tagline", "description": "Hero tagline" },
+                { "name": "site_logo_image", "description": "Logo URL" },
+                { "name": "header_cta_label", "description": "CTA Button Label" },
+                { "name": "header_cta_url", "description": "CTA Button URL" }
+            ]
+        },
+        {
+            "table_name": "navigation",
+            "columns": [
+                { "name": "label", "description": "Menu item text" },
+                { "name": "url", "description": "Menu item link" }
+            ]
+        },
+        {
+            "table_name": "hero_v9",
+            "columns": [
+                { "name": "badge", "description": "Small badge text above title" },
+                { "name": "titel", "description": "Main heading" },
+                { "name": "tagline", "description": "Supporting paragraph" },
+                { "name": "cta_text", "description": "Primary button label" },
+                { "name": "cta_link", "description": "Primary button URL" },
+                { "name": "secondary_cta_text", "description": "Secondary button label" },
+                { "name": "secondary_cta_link", "description": "Secondary button URL" },
+                { "name": "afbeelding", "description": "Main visual image" }
+            ]
+        },
+        {
+            "table_name": "bento_grid",
+            "columns": [
+                { "name": "titel", "description": "Grid heading" },
+                { "name": "tagline", "description": "Grid description" },
+                { "name": "items", "description": "Array of bento items (titel, beschrijving, afbeelding, icon, link_url)" }
+            ]
+        }
+    ],
+    "design_system": {
+        "colors": {
+            "primary": "#0f172a",
+            "accent": "#f59e0b",
+            "background": "#ffffff",
+            "text": "#1e293b"
+        },
+        "fonts": {
+            "heading": "'Outfit', sans-serif",
+            "body": "'Inter', sans-serif"
+        },
+        "radius": "1.5rem"
+    },
+    "sections": [
+        { "id": "hero_v9", "type": "HeroV9" },
+        { "id": "bento_grid", "type": "BentoGrid" }
+    ],
+    "recommended_layout": "premium",
+    "recommended_style": "glassmorphism"
+}

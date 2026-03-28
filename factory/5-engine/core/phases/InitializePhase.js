@@ -29,6 +29,17 @@ export class InitializePhase extends BasePhase {
         if (!ctx.blueprint.version || ctx.blueprint.version < '2.0') {
             this.log(`📦 Blueprint migrated to v2.0`);
             ctx.blueprint.version = '2.0';
+            
+            // Auto-generate sections from data_structure if missing
+            if (!ctx.blueprint.sections && ctx.blueprint.data_structure) {
+                this.log(`   - Auto-generating 'sections' from data_structure`);
+                ctx.blueprint.sections = ctx.blueprint.data_structure.map(tbl => ({
+                    id: tbl.table_name,
+                    label: tbl.table_name.charAt(0).toUpperCase() + tbl.table_name.slice(1).replace(/_/g, ' '),
+                    binding: tbl.table_name
+                }));
+            }
+
             if (!ctx.blueprint.design_system) {
                 ctx.blueprint.design_system = {
                     colors: { primary: '#0f172a', secondary: '#64748b', accent: '#3b82f6', background: '#ffffff', surface: '#f8fafc', text: '#1e293b' },

@@ -1,0 +1,11 @@
+{
+    "id": "portfolio",
+    "name": "Creative Portfolio",
+    "description": "Minimalistisch design voor creatievelingen.",
+    "layout": {
+        "header": "standard",
+        "hero": "standard",
+        "sections": ["features", "about"],
+        "footer": "standard"
+    }
+}

@@ -101,7 +101,7 @@ jobs:
           if [[ "${{ github.repository }}" == *"athena-x"* ]]; then
             TARGET_ORG="ath-x"
           else
-            TARGET_ORG="athena-y-factory"
+            TARGET_ORG="athena-y1-factory"
           fi
 
           if [ -d "sites/$SITE" ]; then

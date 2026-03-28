@@ -30,7 +30,7 @@ async function run() {
     });
 
     const outputPath = `2-Fabriek/athena/athena-y/input/${projectName}/project-settings/url-sheet.json`;
-    const siteOutputPath = `2-Fabriek/athena/athena-y/sites/${projectName}/project-settings/url-sheet.json`;
+    const siteOutputPath = `2-Fabriek/athena/y/werkplaats/${projectName}/project-settings/url-sheet.json`;
     
     fs.writeFileSync(outputPath, JSON.stringify(mapping, null, 2));
     console.log(`✅ Updated input url-sheet.json with ${Object.keys(mapping).length} tabs.`);
