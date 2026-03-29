@@ -17,7 +17,11 @@ export default class FinalizePhase extends BasePhase {
         const files = fs.readdirSync(dataDir).filter(f => f.endsWith('.json') && f !== 'all_data.json');
         files.forEach(file => {
             const key = file.replace('.json', '');
-            aggregated[key] = JSON.parse(fs.readFileSync(path.join(dataDir, file), 'utf8'));
+            try {
+                aggregated[key] = JSON.parse(fs.readFileSync(path.join(dataDir, file), 'utf8'));
+            } catch (e) {
+                this.log(`⚠️ Warning: Failed to parse ${file}: ${e.message}`);
+            }
         });
 
         fs.writeFileSync(path.join(dataDir, 'all_data.json'), JSON.stringify(aggregated, null, 2));
@@ -30,11 +34,11 @@ export default class FinalizePhase extends BasePhase {
             this.log('Copied athena-icon.svg to public/');
         }
         
-        // Dummy project package.json
+        // 🔱 v9.0 Modern Lego package.json (Tailwind v4 & React 19 Ready)
         const pkg = {
             name: ctx.safeName,
             private: true,
-            version: "0.0.0",
+            version: "1.0.0",
             type: "module",
             scripts: {
                 "dev": "vite",
@@ -42,17 +46,21 @@ export default class FinalizePhase extends BasePhase {
                 "preview": "vite preview"
             },
             dependencies: {
-                "react": "^18.2.0",
-                "react-dom": "^18.2.0",
-                "react-router-dom": "^6.14.2"
+                "react": "^19.0.0",
+                "react-dom": "^19.0.0",
+                "react-router-dom": "^7.0.0",
+                "lucide-react": "^0.475.0",
+                "@heroicons/react": "^2.2.0"
             },
             devDependencies: {
-                "@types/react": "^18.2.15",
-                "@types/react-dom": "^18.2.7",
-                "@vitejs/plugin-react": "^4.0.3",
-                "vite": "^6.4.1"
+                "vite": "^6.0.0",
+                "@vitejs/plugin-react": "^4.3.0",
+                "tailwindcss": "^4.0.0",
+                "@tailwindcss/vite": "^4.0.0",
+                "dotenv": "^17.3.1"
             }
         };
         fs.writeFileSync(path.join(ctx.projectDir, 'package.json'), JSON.stringify(pkg, null, 2));
+        this.log('Generated modern package.json with Tailwind v4 support.');
     }
 }
