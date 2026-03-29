@@ -4,7 +4,7 @@ function ImageHero({ data, sectionName = 'hero' }) {
   const content = data?.[0] || {
     titel: 'Bouw de Toekomst met Lego.',
     tekst: 'De meest modulaire workflow ooit voor professionele website ontwikkeling.',
-    image: '/api/assets/lego_factory_hero.png'
+    image: './lego_factory_hero.png'
   };
 
   return (

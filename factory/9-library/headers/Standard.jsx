@@ -10,7 +10,7 @@ function StandardHeader({ siteSettings, sectionName = '_site_settings' }) {
       <div className="max-w-7xl mx-auto w-full flex justify-between items-center">
         <Link to="/" className="flex items-center gap-3">
           <img 
-            src={logo.startsWith('http') ? logo : `/api/assets/${logo}`} 
+            src={logo.startsWith('http') ? logo : `./${logo}`} 
             alt="Logo" 
             className="w-10 h-10 object-contain"
             data-dock-bind={`${sectionName}.0.site_logo_image`}
