@@ -109,8 +109,16 @@ export class FinalizePhase extends BasePhase {
     }
 
     generateReadme(ctx) {
-        const ORG = ctx.configManager.get('github.org') || ctx.configManager.get('github.user') || "athena-cms";
-        fs.writeFileSync(path.join(ctx.projectDir, 'README.md'), `https://${ORG}.github.io/${ctx.safeName}`);
+        // Prioriteer actuele environment variabelen voor dynamische deployment allocaties
+        let ORG = process.env.GITHUB_ORG || process.env.GITHUB_USER;
+        if (!ORG) {
+            ORG = ctx.configManager.get('github.org') || ctx.configManager.get('github.user') || "athena-cms";
+        }
+
+        const deployUrl = `https://${ORG}.github.io/${ctx.safeName}/`;
+        const readmeContent = `# ${ctx.safeName}\n\n🚀 **Live Site:** [${deployUrl}](${deployUrl})\n\n---\nBuilt with **Athena CMS Factory**.`;
+
+        fs.writeFileSync(path.join(ctx.projectDir, 'README.md'), readmeContent);
     }
 
     setupGit(ctx) {
