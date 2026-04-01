@@ -283,6 +283,8 @@ app.post('/api/sites/:id/pull-to-temp', async (req, res) => res.json(await siteC
 app.post('/api/sites/:id/sync-to-sheet', async (req, res) => res.json(await siteCtrl.syncToSheet(req.params.id)));
 app.post('/api/sites/:id/safe-pull', async (req, res) => res.json(await siteCtrl.safePullFromGitHub(req.params.id)));
 app.get('/api/sites/:id/compare-sources', async (req, res) => res.json(await siteCtrl.compareSiteSources(req.params.id)));
+app.post('/api/sites/:id/park', async (req, res) => res.json(await siteCtrl.park(req.params.id)));
+app.post('/api/sites/:id/unpark', async (req, res) => res.json(await siteCtrl.unpark(req.params.id)));
 app.post('/api/system/pull', async (req, res) => res.json(await siteCtrl.safePullFromGitHub(req.params.id)));
 
 app.get('/api/system/automation/status', (req, res) => res.json(autoCtrl.getStatus()));

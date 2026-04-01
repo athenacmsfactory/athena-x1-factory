@@ -577,4 +577,59 @@ export class SiteController {
     async autoProvision(id) {
         return this.execService.runEngineScript('auto-sheet-provisioner.js', [id]);
     }
+
+    /**
+     * Move a site from Werkplaats to Vault
+     */
+    async park(id) {
+        const source = path.join(this.sitesDir, id);
+        const target = path.join(this.sitesExternalDir, id);
+
+        if (!fs.existsSync(source)) throw new Error(`Site '${id}' niet gevonden in Werkplaats.`);
+        
+        // Ensure vault exists
+        if (!fs.existsSync(this.sitesExternalDir)) {
+            fs.mkdirSync(this.sitesExternalDir, { recursive: true });
+        }
+
+        if (fs.existsSync(target)) {
+            // Backup existing if duplicate
+            const backup = path.join(this.sitesExternalDir, `${id}_backup_${Date.now()}`);
+            console.log(`⚠️  Target already exists in Vault. Backing up existing to: ${backup}`);
+            fs.renameSync(target, backup);
+        }
+
+        console.log(`📦 Parking ${id} to Vault...`);
+        fs.renameSync(source, target);
+        
+        // Update registry
+        await this.execService.runEngineScript('sync-sites-registry.js', []);
+        return { success: true, message: `Site '${id}' succesvol geparkeerd in de Vault.` };
+    }
+
+    /**
+     * Move a site from Vault to Werkplaats
+     */
+    async unpark(id) {
+        const source = path.join(this.sitesExternalDir, id);
+        const target = path.join(this.sitesDir, id);
+
+        if (!fs.existsSync(source)) throw new Error(`Site '${id}' niet gevonden in Vault.`);
+        
+        // Ensure sitesDir exists
+        if (!fs.existsSync(this.sitesDir)) {
+            fs.mkdirSync(this.sitesDir, { recursive: true });
+        }
+
+        if (fs.existsSync(target)) {
+            throw new Error(`Site '${id}' bestaat al in de Werkplaats. Verwijder deze eerst of hernoem hem.`);
+        }
+
+        console.log(`🛠️  Unparking ${id} to Werkplaats...`);
+        fs.renameSync(source, target);
+
+        // Update registry
+        await this.execService.runEngineScript('sync-sites-registry.js', []);
+        return { success: true, message: `Site '${id}' is weer actief in de Werkplaats.` };
+    }
 }

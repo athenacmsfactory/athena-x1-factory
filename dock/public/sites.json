@@ -17,11 +17,11 @@
     "siteType": "urban-brew-bite-ath",
     "generatedAt": "2026-03-28T19:05:44.449Z",
     "governance_mode": "dev-mode",
-    "repoUrl": null,
-    "liveUrl": null,
+    "repoUrl": "https://github.com/athenasitesx/auto-bakery-final",
+    "liveUrl": "https://athenasitesx.github.io/auto-bakery-final",
     "localUrl": "http://localhost:5100/auto-bakery-final/",
     "port": 5100,
-    "status": "local"
+    "status": "live"
   },
   {
     "id": "karel-it-service",
@@ -29,11 +29,11 @@
     "siteType": "unknown",
     "generatedAt": null,
     "governance_mode": "dev-mode",
-    "repoUrl": null,
-    "liveUrl": null,
+    "repoUrl": "https://github.com/athenasitesx/karel-webdesign",
+    "liveUrl": "https://athenasitesx.github.io/karel-webdesign",
     "localUrl": "http://localhost:5101/karel-it-service/",
     "port": 5101,
-    "status": "local"
+    "status": "live"
   },
   {
     "id": "test-v9-portfolio",
