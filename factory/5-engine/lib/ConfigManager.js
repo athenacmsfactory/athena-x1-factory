@@ -14,7 +14,7 @@ const __dirname = path.dirname(__filename);
 
 export class AthenaConfigManager {
     constructor(root) {
-        this.root = root || path.resolve(__dirname, '../../../..');
+        this.root = root || path.resolve(__dirname, '../../..'); // Points to x-v9/athena
         this.config = this._loadConfig();
     }
 
@@ -33,10 +33,10 @@ export class AthenaConfigManager {
             paths: {
                 root: this.root,
                 factory: this.root,
-                sites: path.join(this.root, '../../werkplaats'),
-                sitesExternal: path.join(this.root, '../sites-external'),
-                vault: path.join(this.root, '../../../../athena-vault-v8-1/sites'),
-                input: path.join(this.root, '../input'),
+                sites: path.join(this.root, 'sites'),
+                sitesExternal: path.join(this.root, '../vault'),
+                vault: path.join(this.root, '../vault'),
+                input: path.join(this.root, 'input'),
                 logs: path.join(this.root, 'output/logs'),
                 config: path.join(this.root, 'config'),
                 templates: path.join(this.root, '2-templates'),

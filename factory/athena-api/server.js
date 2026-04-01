@@ -45,7 +45,7 @@ import { generateWithAI } from '../5-engine/core/ai-engine.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const root = path.resolve(__dirname, '..');
+const root = path.resolve(__dirname, '../..'); // Points to x-v9/athena
 
 // --- INITIALIZATION ---
 const configManager = new AthenaConfigManager(root);

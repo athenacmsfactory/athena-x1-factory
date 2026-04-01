@@ -1,0 +1,17 @@
+[
+  {
+    "site_name": "Bakkerij Artisan",
+    "tagline": "Ambachtelijk Brood & Patisserie",
+    "theme": "dark",
+    "dark_primary_color": "#2d241e",
+    "dark_title_color": "#fefae0",
+    "dark_heading_color": "#bc6c25",
+    "dark_accent_color": "#606c38",
+    "dark_button_color": "#8b4513",
+    "dark_card_color": "#3e322b",
+    "dark_bg_color": "#2d241e",
+    "dark_text_color": "#fefae0",
+    "hero_overlay_opacity": "0.6",
+    "site_logo_image": "site-logo.svg"
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "projectName": "test-v9-portfolio",
+  "siteType": "v9-portfolio",
+  "layoutName": "standard",
+  "styleName": "modern",
+  "siteModel": "SPA",
+  "autoSheet": false,
+  "blueprintFile": "v9-portfolio.json",
+  "safeName": "test-v9-portfolio",
+  "generatedAt": "2026-04-01T15:54:44.244Z"
+}

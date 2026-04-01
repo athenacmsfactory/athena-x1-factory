@@ -1,0 +1,122 @@
+{
+  "blueprint_name": "v9-portfolio",
+  "description": "Modern Portfolio v9.2 Evolution - High resolution, Lego-ready, and Docked.",
+  "data_structure": [
+    {
+      "table_name": "basis",
+      "columns": [
+        {
+          "name": "naam",
+          "description": "Naam van de professional",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "functie",
+          "description": "Huidige rol of expertise",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "bio",
+          "description": "Korte bio",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "profielfoto",
+          "description": "URL naar profielfoto",
+          "type": "url",
+          "required": false
+        }
+      ]
+    },
+    {
+      "table_name": "portfolio",
+      "columns": [
+        {
+          "name": "project_naam",
+          "description": "Naam van het project",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "categorie",
+          "description": "Type werk",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "beschrijving",
+          "description": "Details over het werk",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "afbeelding",
+          "description": "Project cover afbeelding",
+          "type": "url",
+          "required": true
+        }
+      ]
+    },
+    {
+      "table_name": "testimonials",
+      "columns": [
+        {
+          "name": "naam",
+          "description": "Naam van de klant",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "rol",
+          "description": "Functie van de klant",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "tekst",
+          "description": "De testimonial tekst",
+          "type": "textarea",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "design_system": {
+    "colors": {
+      "primary": "#0f172a",
+      "accent": "#3b82f6",
+      "background": "#ffffff"
+    },
+    "radius": "1.5rem"
+  },
+  "page_structure": {
+    "home": [
+      "hero",
+      "about",
+      "portfolio",
+      "testimonials",
+      "contact"
+    ]
+  },
+  "version": "2.0",
+  "sections": [
+    {
+      "id": "basis",
+      "label": "Basis",
+      "binding": "basis"
+    },
+    {
+      "id": "portfolio",
+      "label": "Portfolio",
+      "binding": "portfolio"
+    },
+    {
+      "id": "testimonials",
+      "label": "Testimonials",
+      "binding": "testimonials"
+    }
+  ]
+}

@@ -10,7 +10,7 @@ import path from 'path';
 export class AthenaLogManager {
     constructor(root) {
         this.root = root;
-        this.logDir = path.join(root, 'factory/output/logs');
+        this.logDir = path.join(root, 'output/logs');
         this.maxFilesPerType = 5; // Keep only last 5 logs per type/site
         this.maxTotalSizeMB = 100; // Limit total log directory size
     }

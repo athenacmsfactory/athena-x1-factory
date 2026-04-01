@@ -1,0 +1,20 @@
+[
+  {
+    "title": "Klassiek Zuurdesem",
+    "description": "Luchtig brood met een complexe smaak, knapperige korst en een zachte binnenkant. Onze zuurdesemstarter is al meer dan 20 jaar oud.",
+    "image": "assortiment_zuurdesem_1774725678582.png",
+    "icon": "bread-slice"
+  },
+  {
+    "title": "Natuurlijke Patisserie",
+    "description": "Fijne gebakjes met verse hoeveboter en seizoensvruchten van de lokale boer. Dagelijks vers gebakken, nooit ingevroren.",
+    "image": "assortiment_patisserie_1774725699123.png",
+    "icon": "cookie"
+  },
+  {
+    "title": "Verse Koffie & Ontbijt",
+    "description": "Begin je dag goed met onze huisgebrande koffie en warme croissants. Elke ochtend klaarstaan voor jou.",
+    "image": "assortiment_koffie_ontbijt_1774725662498.png",
+    "icon": "coffee"
+  }
+]

@@ -1,0 +1,270 @@
+{
+  "about_us": [
+    {
+      "title": "Onze Passie voor Traditie",
+      "text": "Bij Bakkerij Artisan kneden we ons brood nog met de hand. Onze meesterbakkers werken uitsluitend met biologisch graan van de lokale molen en geven elk brood 24 uur de tijd om te rijzen. Dat proef je in elke kraakverse korst.",
+      "image": "https://images.unsplash.com/photo-1555507036-ab1f4038808a?q=80&w=2026&auto=format&fit=crop"
+    }
+  ],
+  "contact": [
+    {
+      "title": "Bezoek Onze Winkel",
+      "email": "hallo@bakkerij-artisan.be",
+      "phone": "09 123 45 67",
+      "address": "Veldstraat 42, 9000 Gent"
+    }
+  ],
+  "display_config": {
+    "site_name": "Bakkerij Artisan",
+    "tagline": "Ambachtelijk Brood & Patisserie",
+    "display_socials": true
+  },
+  "gallery": [
+    {
+      "title": "Vers uit de oven",
+      "image": "https://images.unsplash.com/photo-1549931319-a545dcf3bc73?q=80&w=2070&auto=format&fit=crop",
+      "alt": "Vers gebakken brood"
+    },
+    {
+      "title": "Ambachtelijk bakproces",
+      "image": "https://images.unsplash.com/photo-1589367920969-ab5b4b0b6b15?q=80&w=2070&auto=format&fit=crop",
+      "alt": "Bakker aan het werk"
+    },
+    {
+      "title": "Onze patisserie",
+      "image": "https://images.unsplash.com/photo-1486427944299-d1955d23e34d?q=80&w=2070&auto=format&fit=crop",
+      "alt": "Patisserie selectie"
+    },
+    {
+      "title": "Zuurdesem collectie",
+      "image": "https://images.unsplash.com/photo-1604882737210-1a57fa74d7f8?q=80&w=2070&auto=format&fit=crop",
+      "alt": "Zuurdesem broden"
+    }
+  ],
+  "hero": [
+    {
+      "title": "Ambachtelijk Brood, Elke Dag Vers",
+      "subtitle": "Wij geloven in de kracht van tijd, traditie en natuurlijke ingrediënten voor het perfecte zuurdesembrood.",
+      "image": "https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=2072&auto=format&fit=crop",
+      "button_text": "Bekijk Ons Assortiment",
+      "link": "#services"
+    }
+  ],
+  "layout_settings": {
+    "hero": "list",
+    "about_us": "split",
+    "services": "grid",
+    "gallery": "grid",
+    "contact": "list"
+  },
+  "schema": {
+    "blueprint_name": "urban-brew-bite-ath",
+    "track": "docked",
+    "data_structure": [
+      {
+        "table_name": "hero",
+        "columns": [
+          {
+            "name": "title",
+            "description": "Auto-generated field: title"
+          },
+          {
+            "name": "subtitle",
+            "description": "Auto-generated field: subtitle"
+          },
+          {
+            "name": "image",
+            "description": "Auto-generated field: image"
+          },
+          {
+            "name": "button_text",
+            "description": "Auto-generated field: button_text"
+          }
+        ]
+      },
+      {
+        "table_name": "about_us",
+        "columns": [
+          {
+            "name": "title",
+            "description": "Auto-generated field: title"
+          },
+          {
+            "name": "text",
+            "description": "Auto-generated field: text"
+          },
+          {
+            "name": "image",
+            "description": "Auto-generated field: image"
+          }
+        ]
+      },
+      {
+        "table_name": "services",
+        "columns": [
+          {
+            "name": "title",
+            "description": "Auto-generated field: title"
+          },
+          {
+            "name": "description",
+            "description": "Auto-generated field: description"
+          },
+          {
+            "name": "icon",
+            "description": "Auto-generated field: icon"
+          }
+        ]
+      },
+      {
+        "table_name": "gallery",
+        "columns": [
+          {
+            "name": "image",
+            "description": "Auto-generated field: image"
+          }
+        ]
+      },
+      {
+        "table_name": "contact",
+        "columns": [
+          {
+            "name": "title",
+            "description": "Auto-generated field: title"
+          },
+          {
+            "name": "email",
+            "description": "Auto-generated field: email"
+          },
+          {
+            "name": "phone",
+            "description": "Auto-generated field: phone"
+          },
+          {
+            "name": "address",
+            "description": "Auto-generated field: address"
+          }
+        ]
+      }
+    ],
+    "version": "2.0",
+    "sections": [
+      {
+        "id": "hero",
+        "label": "Hero",
+        "binding": "hero"
+      },
+      {
+        "id": "about_us",
+        "label": "About us",
+        "binding": "about_us"
+      },
+      {
+        "id": "services",
+        "label": "Services",
+        "binding": "services"
+      },
+      {
+        "id": "gallery",
+        "label": "Gallery",
+        "binding": "gallery"
+      },
+      {
+        "id": "contact",
+        "label": "Contact",
+        "binding": "contact"
+      }
+    ],
+    "design_system": {
+      "colors": {
+        "primary": "#0f172a",
+        "secondary": "#64748b",
+        "accent": "#3b82f6",
+        "background": "#ffffff",
+        "surface": "#f8fafc",
+        "text": "#1e293b"
+      },
+      "font_sans": "'Inter', ui-sans-serif, system-ui, sans-serif",
+      "font_serif": "'Playfair Display', ui-serif, Georgia, serif",
+      "radius": "1rem"
+    }
+  },
+  "section_order": [
+    "hero",
+    "about_us",
+    "services",
+    "gallery",
+    "contact"
+  ],
+  "section_settings": {
+    "site_name": "auto-bakery-final",
+    "tagline": ""
+  },
+  "services": [
+    {
+      "title": "Klassiek Zuurdesem",
+      "description": "Luchtig brood met een complexe smaak, knapperige korst en een zachte binnenkant. Onze zuurdesemstarter is al meer dan 20 jaar oud.",
+      "image": "https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=2072&auto=format&fit=crop",
+      "icon": "bread-slice"
+    },
+    {
+      "title": "Natuurlijke Patisserie",
+      "description": "Fijne gebakjes met verse hoeveboter en seizoensvruchten van de lokale boer. Dagelijks vers gebakken, nooit ingevroren.",
+      "image": "https://images.unsplash.com/photo-1555507036-ab1f4038808a?q=80&w=2026&auto=format&fit=crop",
+      "icon": "cookie"
+    },
+    {
+      "title": "Verse Koffie & Ontbijt",
+      "description": "Begin je dag goed met onze huisgebrande koffie en warme croissants. Elke ochtend klaarstaan voor jou.",
+      "image": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=2070&auto=format&fit=crop",
+      "icon": "coffee"
+    }
+  ],
+  "site_settings": [
+    {
+      "site_name": "Bakkerij Artisan",
+      "tagline": "Ambachtelijk Brood & Patisserie",
+      "theme": "dark",
+      "dark_primary_color": "#2d241e",
+      "dark_title_color": "#fefae0",
+      "dark_heading_color": "#bc6c25",
+      "dark_accent_color": "#606c38",
+      "dark_button_color": "#8b4513",
+      "dark_card_color": "#3e322b",
+      "dark_bg_color": "#2d241e",
+      "dark_text_color": "#fefae0",
+      "hero_overlay_opacity": "0.6",
+      "site_logo_image": "site-logo.svg"
+    }
+  ],
+  "style_bindings": {
+    "site_name": "auto-bakery-final",
+    "tagline": ""
+  },
+  "style_config": {
+    "--color-primary": "#2d241e",
+    "--color-secondary": "#d4a373",
+    "--color-accent": "#bc6c25",
+    "--color-button-bg": "#bc6c25",
+    "--color-card-bg": "#ffffff",
+    "--color-header-bg": "rgba(254, 250, 224, 0.8)",
+    "--color-background": "#fefae0",
+    "--color-surface": "#faedcd",
+    "--color-text": "#283618",
+    "--color-heading": "#2d241e",
+    "--color-title": "#2d241e",
+    "--font-sans": "'Inter', ui-sans-serif, system-ui, sans-serif",
+    "--font-serif": "'Playfair Display', ui-serif, Georgia, serif",
+    "--radius-custom": "0.5rem",
+    "--shadow-main": "0 4px 15px -3px rgba(45, 36, 30, 0.1)",
+    "--color-primary-rgb": "45 36 30",
+    "--color-secondary-rgb": "212 163 115",
+    "--color-accent-rgb": "188 108 37",
+    "--color-background-rgb": "254 250 224",
+    "--color-surface-rgb": "250 237 205",
+    "--color-text-rgb": "40 54 24",
+    "--color-heading-rgb": "45 36 30",
+    "--color-title-rgb": "45 36 30",
+    "--color-button-bg-rgb": "188 108 37"
+  }
+}

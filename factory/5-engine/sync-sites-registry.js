@@ -12,10 +12,10 @@ const __dirname = path.dirname(__filename);
 
 const FACTORY_ROOT = path.resolve(__dirname, '../..');
 const SITES_DIR = path.join(FACTORY_ROOT, 'sites');
-const VAULT_ROOT = path.resolve(FACTORY_ROOT, '../athena-vault-v8-1');
-const VAULT_SITES = path.join(VAULT_ROOT, 'sites');
+const VAULT_ROOT = path.join(FACTORY_ROOT, '../../vault');
+const VAULT_SITES = VAULT_ROOT;
 const OUTPUT_FILE = path.join(FACTORY_ROOT, 'dock/public/sites.json');
-const PORTS_FILE = path.join(FACTORY_ROOT, 'factory/config/site-ports.json');
+const PORTS_FILE = path.join(FACTORY_ROOT, 'config/site-ports.json');
 
 async function syncRegistry() {
     console.log("🔍 Scanning Factory & Vault for sites...");

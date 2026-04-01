@@ -1,0 +1,132 @@
+{
+  "blueprint_name": "urban-brew-bite-ath",
+  "track": "docked",
+  "data_structure": [
+    {
+      "table_name": "hero",
+      "columns": [
+        {
+          "name": "title",
+          "description": "Auto-generated field: title"
+        },
+        {
+          "name": "subtitle",
+          "description": "Auto-generated field: subtitle"
+        },
+        {
+          "name": "image",
+          "description": "Auto-generated field: image"
+        },
+        {
+          "name": "button_text",
+          "description": "Auto-generated field: button_text"
+        }
+      ]
+    },
+    {
+      "table_name": "about_us",
+      "columns": [
+        {
+          "name": "title",
+          "description": "Auto-generated field: title"
+        },
+        {
+          "name": "text",
+          "description": "Auto-generated field: text"
+        },
+        {
+          "name": "image",
+          "description": "Auto-generated field: image"
+        }
+      ]
+    },
+    {
+      "table_name": "services",
+      "columns": [
+        {
+          "name": "title",
+          "description": "Auto-generated field: title"
+        },
+        {
+          "name": "description",
+          "description": "Auto-generated field: description"
+        },
+        {
+          "name": "icon",
+          "description": "Auto-generated field: icon"
+        }
+      ]
+    },
+    {
+      "table_name": "gallery",
+      "columns": [
+        {
+          "name": "image",
+          "description": "Auto-generated field: image"
+        }
+      ]
+    },
+    {
+      "table_name": "contact",
+      "columns": [
+        {
+          "name": "title",
+          "description": "Auto-generated field: title"
+        },
+        {
+          "name": "email",
+          "description": "Auto-generated field: email"
+        },
+        {
+          "name": "phone",
+          "description": "Auto-generated field: phone"
+        },
+        {
+          "name": "address",
+          "description": "Auto-generated field: address"
+        }
+      ]
+    }
+  ],
+  "version": "2.0",
+  "sections": [
+    {
+      "id": "hero",
+      "label": "Hero",
+      "binding": "hero"
+    },
+    {
+      "id": "about_us",
+      "label": "About us",
+      "binding": "about_us"
+    },
+    {
+      "id": "services",
+      "label": "Services",
+      "binding": "services"
+    },
+    {
+      "id": "gallery",
+      "label": "Gallery",
+      "binding": "gallery"
+    },
+    {
+      "id": "contact",
+      "label": "Contact",
+      "binding": "contact"
+    }
+  ],
+  "design_system": {
+    "colors": {
+      "primary": "#0f172a",
+      "secondary": "#64748b",
+      "accent": "#3b82f6",
+      "background": "#ffffff",
+      "surface": "#f8fafc",
+      "text": "#1e293b"
+    },
+    "font_sans": "'Inter', ui-sans-serif, system-ui, sans-serif",
+    "font_serif": "'Playfair Display', ui-serif, Georgia, serif",
+    "radius": "1rem"
+  }
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "titel": "Starter",
+    "beschrijving": "Snel online met een professionele one-page website. Ideaal voor startende zelfstandigen en freelancers.",
+    "prijs": 750,
+    "kenmerken": "Responsive design (mobiel + desktop), Tot 5 secties (hero/diensten/contact/...), Google Sheets CMS — zelf content beheren, Gratis hosting (geen maandelijkse kosten), Basis SEO-setup, Handleiding in het Nederlands, Levertijd: 24-48 uur",
+    "recommended": false,
+    "order": 1
+  },
+  {
+    "titel": "Professional",
+    "beschrijving": "Compleet & professioneel. De populairste keuze voor gevestigde KMO's, kappers, restaurants en aannemers.",
+    "prijs": 1495,
+    "kenmerken": "Alles uit Starter, Tot 10 secties met team/reviews/prijslijst/FAQ, Visuele editor — klik en wijzig zelf, Professionele stockfoto's, Contactformulier + WhatsApp button, Google Maps integratie, Social media koppeling, 2 revisierondes, Levertijd: 2-3 werkdagen",
+    "recommended": true,
+    "order": 2
+  },
+  {
+    "titel": "Business",
+    "beschrijving": "Alles wat je nodig hebt. Voor winkels, webshops en bedrijven die online willen verkopen.",
+    "prijs": 2495,
+    "kenmerken": "Alles uit Professional, Onbeperkte secties, Productcatalogus met prijzen, Betalingen via Mollie (Bancontact/iDEAL/creditcard), Meertalig (NL/FR/EN), Google Analytics + cookie banner (GDPR), Custom domein setup, 30 dagen gratis support, 3 revisierondes, Levertijd: 3-5 werkdagen",
+    "recommended": false,
+    "order": 3
+  }
+]

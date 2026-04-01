@@ -1,0 +1,94 @@
+[
+  {
+    "Key": "site_name",
+    "Value": "athena-hub"
+  },
+  {
+    "Key": "hero:0:image",
+    "Value": {
+      "bold": false,
+      "italic": false,
+      "fontSize": "16px",
+      "textAlign": "left",
+      "fontFamily": "sans-serif",
+      "textShadow": false
+    }
+  },
+  {
+    "Key": "hero:0:title",
+    "Value": {
+      "bold": false,
+      "italic": false,
+      "fontSize": "16px",
+      "textAlign": "left",
+      "fontFamily": "sans-serif",
+      "textShadow": false
+    }
+  },
+  {
+    "Key": "intro:0:title",
+    "Value": {
+      "bold": false,
+      "italic": false,
+      "fontSize": "16px",
+      "textAlign": "left",
+      "fontFamily": "sans-serif",
+      "textShadow": false
+    }
+  },
+  {
+    "Key": "hero:0:subtitle",
+    "Value": {
+      "bold": false,
+      "italic": false,
+      "fontSize": "16px",
+      "textAlign": "left",
+      "fontFamily": "sans-serif",
+      "textShadow": false
+    }
+  },
+  {
+    "Key": "site_settings:0:site_name",
+    "Value": {
+      "bold": false,
+      "italic": false,
+      "fontSize": "16px",
+      "textAlign": "left",
+      "fontFamily": "sans-serif",
+      "textShadow": false
+    }
+  },
+  {
+    "Key": "showcase:1:link",
+    "Value": {
+      "bold": false,
+      "italic": false,
+      "fontSize": "16px",
+      "textAlign": "left",
+      "fontFamily": "sans-serif",
+      "textShadow": false
+    }
+  },
+  {
+    "Key": "showcase:0:link",
+    "Value": {
+      "bold": false,
+      "italic": false,
+      "fontSize": "16px",
+      "textAlign": "left",
+      "fontFamily": "sans-serif",
+      "textShadow": false
+    }
+  },
+  {
+    "Key": "contact:0:email",
+    "Value": {
+      "bold": false,
+      "italic": false,
+      "fontSize": "16px",
+      "textAlign": "left",
+      "fontFamily": "sans-serif",
+      "textShadow": false
+    }
+  }
+]

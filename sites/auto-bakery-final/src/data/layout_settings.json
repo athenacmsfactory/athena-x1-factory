@@ -1,0 +1,7 @@
+{
+  "hero": "list",
+  "about_us": "split",
+  "services": "grid",
+  "gallery": "grid",
+  "contact": "list"
+}

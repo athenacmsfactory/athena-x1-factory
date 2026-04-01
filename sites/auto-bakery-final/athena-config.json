@@ -1,0 +1,10 @@
+{
+  "projectName": "auto-bakery-final",
+  "blueprintFile": "urban-brew-bite-ath/blueprint/urban-brew-bite-ath.json",
+  "siteType": "urban-brew-bite-ath",
+  "layoutName": "standard",
+  "styleName": "modern.css",
+  "siteModel": "SPA",
+  "safeName": "auto-bakery-final",
+  "generatedAt": "2026-03-28T19:05:44.449Z"
+}

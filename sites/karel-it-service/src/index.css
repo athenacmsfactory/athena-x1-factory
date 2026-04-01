@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #3b82f6;
+  --accent: #10b981;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.sections-wrapper {
+  padding-top: 80px; /* Space for fixed header */
+}

@@ -149,9 +149,9 @@ export class SiteController {
                 isDataEmpty,
                 isV9, // <--- New flag for Evolution v9 sites
                 isInstalled, // <--- Added for hydratation status
-                deployUrl: deployData?.url || null,
+                deployData: deployData,
                 sheetUrl: sheetData?.url || null,
-                lastUpdate: deployData?.timestamp || null
+                lastUpdate: deployData?.timestamp || deployData?.deployedAt || null
             };
         });
     }

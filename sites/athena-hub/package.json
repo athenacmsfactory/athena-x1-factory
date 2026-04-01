@@ -1,0 +1,25 @@
+{
+  "name": "athena-hub",
+  "type": "module",
+  "scripts": {
+    "sync-data": "node scripts/sync-data.cjs",
+    "fetch-data": "node fetch-data.js",
+    "dev": "node scripts/sync-data.cjs --watch & vite",
+    "build": "npm run sync-data && vite build"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^6.20.0",
+    "csvtojson": "^2.0.10",
+    "@heroicons/react": "^2.2.0",
+    "lucide-react": "^0.300.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.0",
+    "tailwindcss": "^4.0.0",
+    "vite": "^6.0.0",
+    "@vitejs/plugin-react": "^4.0.0",
+    "dotenv": "^17.2.3"
+  }
+}

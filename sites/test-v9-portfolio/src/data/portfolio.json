@@ -1,0 +1,20 @@
+[
+  {
+    "title": "Nike Air Evolution",
+    "description": "A high-performance e-commerce experience built for global scale.",
+    "category": "E-Commerce",
+    "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=2070"
+  },
+  {
+    "title": "Tesla Dash V2",
+    "description": "Modern dashboard interface with real-time data visualization.",
+    "category": "UI/UX Design",
+    "image": "https://images.unsplash.com/photo-1555624187-c825a01bc112?auto=format&fit=crop&q=80&w=2070"
+  },
+  {
+    "title": "Spotify Workspace",
+    "description": "Collaborative social platform for creators and listeners.",
+    "category": "Branding",
+    "image": "https://images.unsplash.com/photo-1614680376593-902f74cf0d41?auto=format&fit=crop&q=80&w=2070"
+  }
+]
