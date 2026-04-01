@@ -1,50 +1,14 @@
 [
   {
-    "id": "athena-hub",
-    "name": "athena-hub",
-    "siteType": "professional-service-provider",
-    "generatedAt": "2026-02-04T15:55:23.382Z",
-    "governance_mode": "dev-mode",
-    "repoUrl": "https://github.com/athena-cms-factory/athena-hub",
-    "liveUrl": "https://athena-cms-factory.github.io/athena-hub",
-    "localUrl": "http://localhost:5000/athena-hub/",
-    "port": 5000,
-    "status": "live"
-  },
-  {
-    "id": "auto-bakery-final",
-    "name": "auto-bakery-final",
-    "siteType": "urban-brew-bite-ath",
-    "generatedAt": "2026-03-28T19:05:44.449Z",
-    "governance_mode": "dev-mode",
-    "repoUrl": "https://github.com/athenasitesx/auto-bakery-final",
-    "liveUrl": "https://athenasitesx.github.io/auto-bakery-final",
-    "localUrl": "http://localhost:5100/auto-bakery-final/",
-    "port": 5100,
-    "status": "live"
-  },
-  {
-    "id": "karel-it-service",
-    "name": "karel-it-service",
+    "id": "test-v9-portfolio",
+    "name": "test-v9-portfolio",
     "siteType": "unknown",
     "generatedAt": null,
     "governance_mode": "dev-mode",
-    "repoUrl": "https://github.com/athenasitesx/karel-webdesign",
-    "liveUrl": "https://athenasitesx.github.io/karel-webdesign",
-    "localUrl": "http://localhost:5101/karel-it-service/",
-    "port": 5101,
-    "status": "live"
-  },
-  {
-    "id": "test-v9-portfolio",
-    "name": "test-v9-portfolio",
-    "siteType": "v9-portfolio",
-    "generatedAt": "2026-04-01T15:54:44.244Z",
-    "governance_mode": "dev-mode",
-    "repoUrl": null,
-    "liveUrl": null,
+    "repoUrl": "https://github.com/athenasitesx/test-v9-portfolio",
+    "liveUrl": "https://athenasitesx.github.io/test-v9-portfolio",
     "localUrl": "http://localhost:5000/test-v9-portfolio/",
     "port": 5000,
-    "status": "local"
+    "status": "live"
   }
 ]

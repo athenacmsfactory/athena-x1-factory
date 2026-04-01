@@ -1,3 +1,0 @@
-User-agent: *
-Allow: /
-Sitemap: https://test-v9-portfolio.netlify.app/sitemap.xml
