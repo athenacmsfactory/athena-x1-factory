@@ -1,0 +1,58 @@
+{
+  "companyName": "Gentse Dakwerken",
+  "tagline": "Uw dak, onze passie. Specialist in renovatie & zonnepanelen.",
+  "theme": {
+    "variant": "modern",
+    "primary": "#6366f1",
+    "secondary": "#1e293b",
+    "text": "#f8fafc",
+    "bg": "#020024"
+  },
+  "hero": {
+    "tekst_titel": "Hoogwaardige Dakwerken in Gent & Omstreken",
+    "tekst_subtitel": "Van kleine herstellingen tot complete dakrenovaties en zonnepaneel-installaties.",
+    "tekst_knop": "Vraag Uw Gratis Offerte",
+    "link_knop": "#offerte",
+    "afbeelding_bg": "hero-bg.webp"
+  },
+  "benefits": {
+    "tekst_sectie_titel": "Our Features",
+    "items": [
+      {
+        "id": "1",
+        "tekst_titel": "Dakrenovatie",
+        "tekst_beschrijving": "Volledige vernieuwing van hellende en platte daken met 10 jaar garantie.",
+        "icoon_type": "roof",
+        "afbeelding_thumbnail": "roof.webp"
+      },
+      {
+        "id": "2",
+        "tekst_titel": "Zonnepanelen",
+        "tekst_beschrijving": "Maximaliseer uw rendement met onze hoogefficiënte zonnepaneel-oplossingen.",
+        "icoon_type": "solar",
+        "afbeelding_thumbnail": "solar.webp"
+      },
+      {
+        "id": "3",
+        "tekst_titel": "Snelle Herstellingen",
+        "tekst_beschrijving": "Stormschade of lekken? Ons team staat 24/7 klaar voor spoedinterventies.",
+        "icoon_type": "repair",
+        "afbeelding_thumbnail": "repair.webp"
+      }
+    ]
+  },
+  "about": {
+    "tekst_sectie_titel": "Over Gentse Dakwerken",
+    "tekst_inhoud": "Met meer dan 15 jaar ervaring is Gentse Dakwerken een gevestigde waarde in de regio. Wij combineren vakmanschap met de modernste technieken voor een duurzaam resultaat."
+  },
+  "contact": {
+    "tekst_email": "info@gentsedakwerken.be",
+    "tekst_telefoon": "+32 470 00 00 00",
+    "tekst_adres": "Industrieweg 12, 9000 Gent"
+  },
+  "openingHours": [
+    { "tekst_dag": "Maandag - Vrijdag", "tekst_uren": "08:00 - 18:00" },
+    { "tekst_dag": "Zaterdag", "tekst_uren": "09:00 - 13:00" },
+    { "tekst_dag": "Zondag", "tekst_uren": "Gesloten" }
+  ]
+}

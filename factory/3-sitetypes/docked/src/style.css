@@ -1,0 +1,37 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Inter:wght@400;600;700;800&display=swap');
+
+:root {
+  --primary: #6366f1;
+  --secondary: #1e293b;
+  --text: #f8fafc;
+  --bg: #020024;
+}
+
+@theme {
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-text-main: var(--text);
+  --color-midnight: #020024;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-sans: 'Inter', sans-serif;
+}
+
+body {
+  font-family: var(--font-mono);
+  color: var(--text);
+  background-color: var(--bg);
+  margin: 0;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-mono);
+  letter-spacing: -0.02em;
+}
+
+/* Specifieke override voor knoppen om de sans-serif font te gebruiken */
+button, .btn-sans {
+  font-family: var(--font-sans) !important;
+  letter-spacing: normal !important;
+}

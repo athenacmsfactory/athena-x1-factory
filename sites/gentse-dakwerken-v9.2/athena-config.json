@@ -1,0 +1,10 @@
+{
+  "projectName": "gentse-dakwerken-v9.2",
+  "safeName": "gentse-dakwerken-v9-2",
+  "siteType": "docked",
+  "version": "9.2.0",
+  "engine": "athena-v9",
+  "framework": "react-19",
+  "styling": "tailwind-v4",
+  "generatedAt": "2026-04-02T17:12:03Z"
+}
