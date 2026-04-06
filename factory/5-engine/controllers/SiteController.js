@@ -78,9 +78,15 @@ export class SiteController {
             console.log(`⚠️  Directory does not exist: ${dir}`);
             return [];
         }
-        const sites = fs.readdirSync(dir).filter(f => 
-            fs.statSync(path.join(dir, f)).isDirectory() && !f.startsWith('.') && f !== 'athena-cms'
-        );
+        const sites = fs.readdirSync(dir).filter(f => {
+            try {
+                const fullPath = path.join(dir, f);
+                return fs.statSync(fullPath).isDirectory() && !f.startsWith('.') && f !== 'athena-cms';
+            } catch (e) {
+                console.warn(`⚠️ Skipping invalid entry in site directory: ${f} (${e.message})`);
+                return false;
+            }
+        });
 
         return sites.map(site => {
             const sitePath = path.join(dir, site);
@@ -583,33 +589,40 @@ export class SiteController {
     }
 
     /**
-     * Archive a site from Werkplaats to Vault (COPY instead of Move)
+     * Archive a site from Werkplaats to Vault (FORKLIFT integration)
      */
     async park(id) {
-        const source = path.join(this.sitesDir, id);
-        const target = path.join(this.sitesExternalDir, id);
+        const playgroundPath = path.join(this.sitesDir, id);
+        if (!fs.existsSync(playgroundPath)) throw new Error(`Site '${id}' niet gevonden in Werkplaats.`);
 
-        if (!fs.existsSync(source)) throw new Error(`Site '${id}' niet gevonden in Werkplaats.`);
+        const scriptPath = path.resolve(this.root, '../control/forklift/push.sh');
         
-        // Ensure vault exists
-        if (!fs.existsSync(this.sitesExternalDir)) {
-            fs.mkdirSync(this.sitesExternalDir, { recursive: true });
-        }
-
-        if (fs.existsSync(target)) {
-            // Backup existing if duplicate
-            const backup = path.join(this.sitesExternalDir, `${id}_backup_${Date.now()}`);
-            console.log(`⚠️  Archive specimen already exists in Vault. Backing up existing to: ${backup}`);
-            fs.renameSync(target, backup);
-        }
-
-        console.log(`📦 Archiving ${id} to Vault (Copying)...`);
-        // We use cp -r for cross-volume/cross-directory safety
-        execSync(`cp -r "${source}" "${target}"`);
+        console.log(`🚜 Running Forklift Push for ${id}...`);
         
-        // Update registry
-        await this.execService.runEngineScript('sync-sites-registry.js', []);
-        return { success: true, message: `Site '${id}' succesvol gearchiveerd in de Vault.` };
+        try {
+            // Run the push script with -y (auto-confirm) to allow UI integration
+            // We use runSync from execService for unified logging
+            const result = this.execService.runSync(`bash "${scriptPath}" ${id} -y`, {
+                label: `Forklift Push: ${id}`,
+                cwd: path.dirname(scriptPath)
+            });
+
+            if (!result.success) {
+                throw new Error(`Forklift Push failed: ${result.error}`);
+            }
+
+            // Update registry (sync-sites-registry.js might be needed to reflect new external site)
+            await this.execService.runEngineScript('sync-sites-registry.js', []);
+            
+            return { 
+                success: true, 
+                message: `Site '${id}' succesvol gearchiveerd in de Vault (via Forklift).`,
+                output: result.output 
+            };
+        } catch (e) {
+            console.error(`❌ Forklift Error for ${id}:`, e.message);
+            throw e;
+        }
     }
 
     /**
@@ -626,6 +639,22 @@ export class SiteController {
         // Update registry
         await this.execService.runEngineScript('sync-sites-registry.js', []);
         return { success: true, message: `Site '${id}' is verwijderd uit de actieve Werkplaats.` };
+    }
+
+    /**
+     * Delete a site physically from Vault
+     */
+    async deleteFromVault(id) {
+        const source = path.join(this.sitesExternalDir, id);
+
+        if (!fs.existsSync(source)) throw new Error(`Archief '${id}' niet gevonden in de Vault.`);
+
+        console.log(`🗑️  Deleting archive ${id} from Vault...`);
+        fs.rmSync(source, { recursive: true, force: true });
+
+        // Update registry
+        await this.execService.runEngineScript('sync-sites-registry.js', []);
+        return { success: true, message: `Archief '${id}' is verwijderd uit de Vault.` };
     }
 
     /**

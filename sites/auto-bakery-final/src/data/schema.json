@@ -54,6 +54,10 @@
         {
           "name": "icon",
           "description": "Auto-generated field: icon"
+        },
+        {
+          "name": "prijs",
+          "description": "Product pricing info"
         }
       ]
     },

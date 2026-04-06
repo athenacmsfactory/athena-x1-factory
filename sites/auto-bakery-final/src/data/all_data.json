@@ -113,6 +113,10 @@
           {
             "name": "icon",
             "description": "Auto-generated field: icon"
+          },
+          {
+            "name": "prijs",
+            "description": "Product pricing information"
           }
         ]
       },
@@ -205,19 +209,22 @@
       "title": "Klassiek Zuurdesem",
       "description": "Luchtig brood met een complexe smaak, knapperige korst en een zachte binnenkant. Onze zuurdesemstarter is al meer dan 20 jaar oud.",
       "image": "https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=2072&auto=format&fit=crop",
-      "icon": "bread-slice"
+      "icon": "bread-slice",
+      "prijs": "€5.50"
     },
     {
       "title": "Natuurlijke Patisserie",
       "description": "Fijne gebakjes met verse hoeveboter en seizoensvruchten van de lokale boer. Dagelijks vers gebakken, nooit ingevroren.",
       "image": "https://images.unsplash.com/photo-1555507036-ab1f4038808a?q=80&w=2026&auto=format&fit=crop",
-      "icon": "cookie"
+      "icon": "cookie",
+      "prijs": "€4.25"
     },
     {
       "title": "Verse Koffie & Ontbijt",
       "description": "Begin je dag goed met onze huisgebrande koffie en warme croissants. Elke ochtend klaarstaan voor jou.",
       "image": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=2070&auto=format&fit=crop",
-      "icon": "coffee"
+      "icon": "coffee",
+      "prijs": "€11.95"
     }
   ],
   "site_settings": [

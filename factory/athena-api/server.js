@@ -285,6 +285,7 @@ app.post('/api/sites/:id/safe-pull', async (req, res) => res.json(await siteCtrl
 app.get('/api/sites/:id/compare-sources', async (req, res) => res.json(await siteCtrl.compareSiteSources(req.params.id)));
 app.post('/api/sites/:id/park', async (req, res) => res.json(await siteCtrl.park(req.params.id)));
 app.post('/api/sites/:id/unpark', async (req, res) => res.json(await siteCtrl.unpark(req.params.id)));
+app.post('/api/sites/:id/vault-delete', async (req, res) => res.json(await siteCtrl.deleteFromVault(req.params.id)));
 app.post('/api/sites/:id/delete', async (req, res) => res.json(await siteCtrl.deleteSite(req.params.id)));
 app.post('/api/system/pull', async (req, res) => res.json(await siteCtrl.safePullFromGitHub(req.params.id)));
 

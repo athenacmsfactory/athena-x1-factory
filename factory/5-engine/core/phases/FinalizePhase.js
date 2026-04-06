@@ -75,7 +75,7 @@ export class FinalizePhase extends BasePhase {
         if (!port) {
             do {
                 port = 5001 + Math.floor(Math.random() * 1499);
-            } while (port === 6000 || Object.values(portMap).includes(port));
+            } while (port === 6000 || port === 5060 || Object.values(portMap).includes(port));
             portMap[ctx.safeName] = port;
             try { fs.writeFileSync(registryPath, JSON.stringify(portMap, null, 4)); } catch (e) { }
         }

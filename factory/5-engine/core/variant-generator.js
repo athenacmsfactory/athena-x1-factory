@@ -148,7 +148,7 @@ function allocatePort(siteName) {
     const usedPorts = new Set(Object.values(portMap));
     do {
         port = 5001 + Math.floor(Math.random() * 1499);
-    } while (port === 6000 || usedPorts.has(port));
+    } while (port === 6000 || port === 5060 || usedPorts.has(port));
 
     portMap[siteName] = port;
     try {

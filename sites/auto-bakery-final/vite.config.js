@@ -35,7 +35,7 @@ export default defineConfig(async ({ command }) => {
     ].filter(Boolean),
     server: {
       host: true,
-      port: 5060,
+      port: 5160,
       watch: {
         // src/data wordt niet genegeerd voor HMR
       }
