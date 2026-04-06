@@ -49,8 +49,8 @@ const ProductSection = ({ sectionName, items, sectionStyle, setSelectedPackage, 
           </div>
         </div>
 
-        {/* Pricing/Service Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Pricing/Service Cards - Flexible and Centered */}
+        <div className="flex flex-wrap justify-center gap-8">
           {items.map((item, index) => {
             const isRecommended = item.recommended === true || String(item.recommended).toLowerCase() === 'true';
             const isSelected = selectedPackage === item.titel;
@@ -61,7 +61,7 @@ const ProductSection = ({ sectionName, items, sectionStyle, setSelectedPackage, 
             return (
               <div 
                 key={index} 
-                className={`flex flex-col relative bg-white rounded-[2.5rem] p-10 transition-all duration-500 hover:-translate-y-3 group ${
+                className={`flex flex-col relative bg-white rounded-[2.5rem] p-10 transition-all duration-500 hover:-translate-y-3 group w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1.5rem)] max-w-sm ${
                   isSelected
                   ? 'shadow-[0_20px_60px_-15px_rgba(245,158,11,0.3)] border-4 border-accent ring-8 ring-accent/5 scale-105 z-30'
                   : (isRecommended 
@@ -125,8 +125,25 @@ const ProductSection = ({ sectionName, items, sectionStyle, setSelectedPackage, 
           })}
         </div>
 
+        {/* Domain Info Warning/Notice */}
+        {sectionSettings.domain_info && (
+          <div className="mt-16 max-w-4xl mx-auto">
+            <div className="bg-primary/5 border border-primary/10 rounded-3xl p-8 flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
+              <div className="w-16 h-16 rounded-2xl bg-white shadow-sm flex items-center justify-center flex-shrink-0">
+                <i className="fa-solid fa-globe text-2xl text-accent"></i>
+              </div>
+              <div>
+                <h4 className="text-lg font-bold text-primary mb-2">Over Hosting & Domeinnaam</h4>
+                <p className="text-slate-500 text-sm leading-relaxed" data-dock-type="text" data-dock-bind="section_settings.diensten.domain_info">
+                  {sectionSettings.domain_info}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Footer info/Guarantees */}
-        <div className="mt-20 pt-16 border-t border-slate-100 flex flex-wrap justify-center gap-x-12 gap-y-6">
+        <div className="mt-20 pt-16 border-t border-slate-100 flex flex-wrap justify-center gap-x-12 gap-y-6 text-center">
            <div className="flex items-center gap-3 text-slate-400">
               <i className="fa-solid fa-shield-halved text-accent"></i>
               <span className="text-xs font-bold uppercase tracking-widest">Snel Online (24-48u)</span>

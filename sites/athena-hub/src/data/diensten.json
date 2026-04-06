@@ -1,5 +1,13 @@
 [
   {
+    "titel": "Basis",
+    "beschrijving": "De meest voordelige start. Wij zetten je online, jij focust op je zaak.",
+    "prijs": 495,
+    "kenmerken": "Responsive design (mobiel + desktop), Tot 3 secties (hero/diensten/contact), Geen CMS — tekstaanpassingen door ons (tegen betaling), Gratis hosting (geen maandelijkse kosten), Basis SEO-setup, Levertijd: 24h",
+    "recommended": false,
+    "order": 0
+  },
+  {
     "titel": "Starter",
     "beschrijving": "Snel online met een professionele one-page website. Ideaal voor startende zelfstandigen en freelancers.",
     "prijs": 750,

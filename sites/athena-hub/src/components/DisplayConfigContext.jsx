@@ -33,7 +33,7 @@ export const DisplayConfigProvider = ({ children, data }) => {
   };
 
   return (
-    <DisplayConfigContext.Provider value={{ config, isFieldVisible, isSectionVisible }}>
+    <DisplayConfigContext.Provider value={{ config, isFieldVisible, isSectionVisible, section_settings: data.section_settings, allData: data }}>
       {children}
     </DisplayConfigContext.Provider>
   );

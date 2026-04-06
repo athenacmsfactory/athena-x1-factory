@@ -23,6 +23,14 @@
   ],
   "diensten": [
     {
+      "titel": "Basis",
+      "beschrijving": "De meest voordelige start. Wij zetten je online, jij focust op je zaak.",
+      "prijs": 495,
+      "kenmerken": "Responsive design (mobiel + desktop), Tot 3 secties (hero/diensten/contact), Geen CMS — tekstaanpassingen door ons (tegen betaling), Gratis hosting (geen maandelijkse kosten), Basis SEO-setup, Levertijd: 24h",
+      "recommended": false,
+      "order": 0
+    },
+    {
       "titel": "Starter",
       "beschrijving": "Snel online met een professionele one-page website. Ideaal voor startende zelfstandigen en freelancers.",
       "prijs": 750,
@@ -356,7 +364,8 @@
     "site_name": "athena-hub",
     "diensten": {
       "title": "Diensten",
-      "subtitle": "Heldere pakketten voor een eerlijke prijs."
+      "subtitle": "Heldere pakketten voor een eerlijke prijs.",
+      "domain_info": "Aangezien we werken op het krachtige GitHub platform, is hosting gratis. Je betaalt enkel voor je eigen domeinnaam (bijv. .be of .com), wat meestal tussen de €15 en €30 per jaar kost. Wij begeleiden je bij de aankoop en de koppeling is inbegrepen in elk pakket."
     }
   },
   "showcase": [
