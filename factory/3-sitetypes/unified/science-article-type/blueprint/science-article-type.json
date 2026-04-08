@@ -7,37 +7,129 @@
   },
   "data_structure": [
     {
-      "table_name": "basis",
+      "table_name": "header",
       "columns": [
-        { "name": "titel", "description": "De titel van de website" },
-        { "name": "ondertitel", "description": "Een korte beschrijving van de missie" },
-        { "name": "introductie", "description": "Hoofdtekst voor de homepage" }
+        {
+          "name": "site_name",
+          "description": "Naam van de website."
+        },
+        {
+          "name": "site_logo",
+          "description": "URL naar het logo."
+        },
+        {
+          "name": "nav_links",
+          "description": "JSON array van navigatie links."
+        }
+      ]
+    },
+    {
+      "table_name": "hero",
+      "columns": [
+        {
+          "name": "hero_header",
+          "description": "Hoofdtitel van de website."
+        },
+        {
+          "name": "hero_tagline",
+          "description": "Ondertitel of introductietekst."
+        },
+        {
+          "name": "hero_image",
+          "description": "Achtergrondafbeelding van de hero."
+        },
+        {
+          "name": "cta_text",
+          "description": "Tekst op de actieknop."
+        },
+        {
+          "name": "cta_url",
+          "description": "Bestemming van de actieknop."
+        }
+      ]
+    },
+    {
+      "table_name": "footer",
+      "columns": [
+        {
+          "name": "footer_info",
+          "description": "Korte tekst over het bedrijf."
+        },
+        {
+          "name": "contact_email",
+          "description": "E-mailadres voor contact."
+        },
+        {
+          "name": "contact_locatie",
+          "description": "Adres of locatie."
+        },
+        {
+          "name": "customer_service_links",
+          "description": "Links naar klantenservice pagina's."
+        },
+        {
+          "name": "social_links",
+          "description": "Links naar sociale media profielen."
+        }
       ]
     },
     {
       "table_name": "evolutie_kaak",
       "columns": [
-        { "name": "titel", "description": "Titel van het artikel over kaakevolutie" },
-        { "name": "inhoud", "description": "De volledige tekst over de invloed van voeding op kaakgroei" },
-        { "name": "onderzoeker", "description": "Naam van de hoofdonderzoeker (bv. Corruccini of Ehrlich)" },
-        { "name": "afbeelding", "description": "Relevante afbeelding of grafiek" }
+        {
+          "name": "titel",
+          "description": "Titel van het artikel over kaakevolutie"
+        },
+        {
+          "name": "inhoud",
+          "description": "De volledige tekst over de invloed van voeding op kaakgroei"
+        },
+        {
+          "name": "onderzoeker",
+          "description": "Naam van de hoofdonderzoeker (bv. Corruccini of Ehrlich)"
+        },
+        {
+          "name": "afbeelding",
+          "description": "Relevante afbeelding of grafiek"
+        }
       ]
     },
     {
       "table_name": "regeneratie_techniek",
       "columns": [
-        { "name": "onderwerp", "description": "Naam van de techniek of medicijn (bv. TRG-035 of Tideglusib)" },
-        { "name": "beschrijving", "description": "Uitleg over hoe de regeneratie werkt" },
-        { "name": "status", "description": "Huidige fase van het onderzoek (bv. Fase I klinische tests)" },
-        { "name": "tijdlijn", "description": "Verwachte beschikbaarheid" }
+        {
+          "name": "onderwerp",
+          "description": "Naam van de techniek of medicijn (bv. TRG-035 of Tideglusib)"
+        },
+        {
+          "name": "beschrijving",
+          "description": "Uitleg over hoe de regeneratie werkt"
+        },
+        {
+          "name": "status",
+          "description": "Huidige fase van het onderzoek (bv. Fase I klinische tests)"
+        },
+        {
+          "name": "tijdlijn",
+          "description": "Verwachte beschikbaarheid"
+        }
       ]
     },
     {
       "table_name": "experts",
       "columns": [
-        { "name": "naam", "description": "Naam van de wetenschapper" },
-        { "name": "instituut", "description": "Universiteit of ziekenhuis" },
-        { "name": "expertise", "description": "Specifiek vakgebied" }
+        {
+          "name": "naam",
+          "description": "Naam van de wetenschapper"
+        },
+        {
+          "name": "instituut",
+          "description": "Universiteit of ziekenhuis"
+        },
+        {
+          "name": "expertise",
+          "description": "Specifiek vakgebied"
+        }
       ]
     }
   ],

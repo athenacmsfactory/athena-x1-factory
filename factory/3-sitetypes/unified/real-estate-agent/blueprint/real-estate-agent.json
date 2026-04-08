@@ -8,24 +8,110 @@
   },
   "data_structure": [
     {
-      "table_name": "basis",
-      "columns": ["bedrijfsnaam", "titel", "ondertitel", "hero_foto"]
+      "table_name": "header",
+      "columns": [
+        {
+          "name": "site_name",
+          "description": "Naam van de website."
+        },
+        {
+          "name": "site_logo",
+          "description": "URL naar het logo."
+        },
+        {
+          "name": "nav_links",
+          "description": "JSON array van navigatie links."
+        }
+      ]
+    },
+    {
+      "table_name": "hero",
+      "columns": [
+        {
+          "name": "hero_header",
+          "description": "Hoofdtitel van de website."
+        },
+        {
+          "name": "hero_tagline",
+          "description": "Ondertitel of introductietekst."
+        },
+        {
+          "name": "hero_image",
+          "description": "Achtergrondafbeelding van de hero."
+        },
+        {
+          "name": "cta_text",
+          "description": "Tekst op de actieknop."
+        },
+        {
+          "name": "cta_url",
+          "description": "Bestemming van de actieknop."
+        }
+      ]
+    },
+    {
+      "table_name": "footer",
+      "columns": [
+        {
+          "name": "footer_info",
+          "description": "Korte tekst over het bedrijf."
+        },
+        {
+          "name": "contact_email",
+          "description": "E-mailadres voor contact."
+        },
+        {
+          "name": "contact_locatie",
+          "description": "Adres of locatie."
+        },
+        {
+          "name": "customer_service_links",
+          "description": "Links naar klantenservice pagina's."
+        },
+        {
+          "name": "social_links",
+          "description": "Links naar sociale media profielen."
+        }
+      ]
     },
     {
       "table_name": "aanbod",
-      "columns": ["titel", "prijs", "locatie", "slaapkamers", "oppervlakte", "foto", "status"]
+      "columns": [
+        "titel",
+        "prijs",
+        "locatie",
+        "slaapkamers",
+        "oppervlakte",
+        "foto",
+        "status"
+      ]
     },
     {
       "table_name": "agenten",
-      "columns": ["naam", "functie", "telefoon", "email", "foto"]
+      "columns": [
+        "naam",
+        "functie",
+        "telefoon",
+        "email",
+        "foto"
+      ]
     },
     {
       "table_name": "reviews",
-      "columns": ["klant", "quote", "datum"]
+      "columns": [
+        "klant",
+        "quote",
+        "datum"
+      ]
     },
     {
       "table_name": "contact",
-      "columns": ["adres", "telefoon", "email", "maps_url"]
+      "columns": [
+        "adres",
+        "telefoon",
+        "email",
+        "maps_url"
+      ]
     }
   ]
 }

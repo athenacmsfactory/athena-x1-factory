@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useCart } from './CartContext';
 import { Link } from 'react-router-dom';
+import { db } from '../lib/firebase';
+import { collection, addDoc, serverTimestamp, doc, setDoc } from 'firebase/firestore';
 
 const Checkout = () => {
     const { cart, cartTotal, clearCart } = useCart();
@@ -27,30 +29,46 @@ const Checkout = () => {
         setIsProcessing(true);
 
         try {
+            // 1. Create or Update Customer Record (keyed by email)
+            const customerRef = doc(db, "customers", formData.email);
+            await setDoc(customerRef, {
+                naam: formData.naam,
+                email: formData.email,
+                telefoon: formData.telefoon,
+                adres: formData.adres,
+                lastOrderAt: serverTimestamp(),
+                updatedAt: serverTimestamp()
+            }, { merge: true });
+
+            // 2. Save the order to Firestore
+            const orderData = {
+                customerId: formData.email,
+                customer: formData,
+                items: cart.map(item => ({
+                    id: item.id,
+                    title: item.title || item.name,
+                    price: item.price,
+                    quantity: item.quantity
+                })),
+                total: cartTotal,
+                gateway: gateway,
+                status: 'pending',
+                createdAt: serverTimestamp()
+            };
+
+            const docRef = await addDoc(collection(db, "orders"), orderData);
+            console.log("Order saved to Firestore with ID:", docRef.id);
+
+            // Then handle specific payment gateways (simulated for now)
             if (gateway === 'stripe') {
-                console.log("Stripe payment initiated with key:", stripeKey);
-                // Stripe integration logic would go here
-                // For demo/static purposes, we simulate success
+                console.log("Stripe payment logic here...");
                 setTimeout(() => {
                     setPaymentStatus('success');
                     clearCart();
-                }, 2000);
-            } else if (gateway === 'mollie') {
-                console.log("Mollie payment initiated...");
-                // Mollie redirection logic
-                setTimeout(() => {
-                    setPaymentStatus('success');
-                    clearCart();
-                }, 2000);
+                }, 1000);
             } else {
-                // Default: Email order
-                const productLijst = cart.map(item => `- ${item.title || item.name} (x${item.quantity}): €${(item.price * item.quantity).toFixed(2)}`).join('\n');
-                console.log("Email order sent:", productLijst);
-                
-                setTimeout(() => {
-                    setPaymentStatus('success');
-                    clearCart();
-                }, 1500);
+                setPaymentStatus('success');
+                clearCart();
             }
         } catch (error) {
             console.error("Payment failed:", error);

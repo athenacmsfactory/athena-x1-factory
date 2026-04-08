@@ -88,6 +88,13 @@ De blueprint-definities. Bevat per branche specifieke data-structuren, parsers e
 ### `5-engine/`
 De magie. Verantwoordelijk voor het hydrateren van een skeleton met data van een sitetype en het toevoegen van de juiste Lego-bricks.
 
+### 4. 1-1-1 Hybrid Data Standard
+De Athena Factory hanteert een strikte scheiding van data voor maximale bewerkbaarheid door eindgebruikers (via Google Sheets):
+
+*   **1-1-1 Regel**: Één visuele sectie (bijv. Header, Hero, Footer, Producten) = Één JSON-bestand in `src/data/` = Één tabblad in de gekoppelde Google Sheet.
+*   **Hybride Aggregatie**: Voor optimale runtime performance worden alle losse JSON's gecombineerd tot `all_data.json`.
+*   **Automatisering**: In de `vite.config.js` van elke site zorgt de `athenaAggregatorPlugin` ervoor dat `all_data.json` onmiddellijk wordt herberekend bij elke wijziging in de bronbestanden. Dit garandeert dat de "Gouden Bron" (de losse bestanden) en de "Snelle Bron" (het geaggregeerde bestand) altijd synchroon zijn.
+
 ---
-*Status: V10 Definitive Unified Architecture - April 2026*
+*Status: V10.1 Definitive Unified Architecture - April 2026*
 *Author: Antigravity AI*

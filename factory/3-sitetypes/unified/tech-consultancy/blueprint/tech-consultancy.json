@@ -1,118 +1,160 @@
 {
-    "blueprint_name": "tech-consultancy",
-    "track": "docked",
-    "data_structure": [
+  "blueprint_name": "tech-consultancy",
+  "track": "docked",
+  "data_structure": [
+    {
+      "table_name": "header",
+      "columns": [
         {
-            "table_name": "basis",
-            "columns": [
-                {
-                    "name": "name",
-                    "description": "Naam van het bureau"
-                },
-                {
-                    "name": "tagline",
-                    "description": "Slogan"
-                },
-                {
-                    "name": "address",
-                    "description": "Kantooradres"
-                },
-                {
-                    "name": "phone",
-                    "description": "Telefoon"
-                },
-                {
-                    "name": "email",
-                    "description": "Contact e-mail"
-                }
-            ]
+          "name": "site_name",
+          "description": "Naam van de website."
         },
         {
-            "table_name": "expertise",
-            "columns": [
-                {
-                    "name": "title",
-                    "description": "Expertisedomein"
-                },
-                {
-                    "name": "description",
-                    "description": "Uitleg over de expertise"
-                },
-                {
-                    "name": "icon",
-                    "description": "FontAwesome icoon naam"
-                }
-            ]
+          "name": "site_logo",
+          "description": "URL naar het logo."
         },
         {
-            "table_name": "projects",
-            "columns": [
-                {
-                    "name": "client_name",
-                    "description": "Naam van de klant"
-                },
-                {
-                    "name": "project_title",
-                    "description": "Titel van de case study"
-                },
-                {
-                    "name": "summary",
-                    "description": "Korte samenvatting van het project"
-                },
-                {
-                    "name": "result",
-                    "description": "Resultaat of impact"
-                },
-                {
-                    "name": "image_url",
-                    "description": "Project afbeelding"
-                }
-            ]
-        },
-        {
-            "table_name": "packages",
-            "columns": [
-                {
-                    "name": "package_name",
-                    "description": "Naam van het pakket"
-                },
-                {
-                    "name": "features",
-                    "description": "Lijst van features (komma-gescheiden)"
-                },
-                {
-                    "name": "price",
-                    "description": "Prijs per maand of per project"
-                }
-            ]
+          "name": "nav_links",
+          "description": "JSON array van navigatie links."
         }
-    ],
-    "design_system": {
-        "colors": {
-            "primary": "#1e293b",
-            "secondary": "#64748b",
-            "accent": "#3b82f6",
-            "background": "#ffffff",
-            "surface": "#f8fafc"
-        },
-        "radius": "0.5rem",
-        "font_sans": "'Inter', sans-serif",
-        "font_serif": "'Roboto Mono', monospace"
+      ]
     },
-    "sections": [
+    {
+      "table_name": "hero",
+      "columns": [
         {
-            "id": "basis"
+          "name": "hero_header",
+          "description": "Hoofdtitel van de website."
         },
         {
-            "id": "expertise"
+          "name": "hero_tagline",
+          "description": "Ondertitel of introductietekst."
         },
         {
-            "id": "projects"
+          "name": "hero_image",
+          "description": "Achtergrondafbeelding van de hero."
         },
         {
-            "id": "packages"
+          "name": "cta_text",
+          "description": "Tekst op de actieknop."
+        },
+        {
+          "name": "cta_url",
+          "description": "Bestemming van de actieknop."
         }
-    ],
-    "recommended_layout": "standard",
-    "recommended_style": "corporate"
+      ]
+    },
+    {
+      "table_name": "footer",
+      "columns": [
+        {
+          "name": "footer_info",
+          "description": "Korte tekst over het bedrijf."
+        },
+        {
+          "name": "contact_email",
+          "description": "E-mailadres voor contact."
+        },
+        {
+          "name": "contact_locatie",
+          "description": "Adres of locatie."
+        },
+        {
+          "name": "customer_service_links",
+          "description": "Links naar klantenservice pagina's."
+        },
+        {
+          "name": "social_links",
+          "description": "Links naar sociale media profielen."
+        }
+      ]
+    },
+    {
+      "table_name": "expertise",
+      "columns": [
+        {
+          "name": "title",
+          "description": "Expertisedomein"
+        },
+        {
+          "name": "description",
+          "description": "Uitleg over de expertise"
+        },
+        {
+          "name": "icon",
+          "description": "FontAwesome icoon naam"
+        }
+      ]
+    },
+    {
+      "table_name": "projects",
+      "columns": [
+        {
+          "name": "client_name",
+          "description": "Naam van de klant"
+        },
+        {
+          "name": "project_title",
+          "description": "Titel van de case study"
+        },
+        {
+          "name": "summary",
+          "description": "Korte samenvatting van het project"
+        },
+        {
+          "name": "result",
+          "description": "Resultaat of impact"
+        },
+        {
+          "name": "image_url",
+          "description": "Project afbeelding"
+        }
+      ]
+    },
+    {
+      "table_name": "packages",
+      "columns": [
+        {
+          "name": "package_name",
+          "description": "Naam van het pakket"
+        },
+        {
+          "name": "features",
+          "description": "Lijst van features (komma-gescheiden)"
+        },
+        {
+          "name": "price",
+          "description": "Prijs per maand of per project"
+        }
+      ]
+    }
+  ],
+  "design_system": {
+    "colors": {
+      "primary": "#1e293b",
+      "secondary": "#64748b",
+      "accent": "#3b82f6",
+      "background": "#ffffff",
+      "surface": "#f8fafc"
+    },
+    "radius": "0.5rem",
+    "font_sans": "'Inter', sans-serif",
+    "font_serif": "'Roboto Mono', monospace"
+  },
+  "sections": [
+    {
+      "id": "basis"
+    },
+    {
+      "id": "expertise"
+    },
+    {
+      "id": "projects"
+    },
+    {
+      "id": "packages"
+    }
+  ],
+  "recommended_layout": "standard",
+  "recommended_style": "corporate"
 }

@@ -1,0 +1,16 @@
+{
+  "footer_info": "Gespecialiseerd in premium hardware en IT-oplossingen voor veeleisende gebruikers.",
+  "contact_email": "support@kdc.be",
+  "contact_locatie": "Veldstraat 12, Gent",
+  "btw_nummer": "BE 0123.456.789",
+  "customer_service_links": [
+    { "label": "Verzending & Levering", "url": "#" },
+    { "label": "Retourbeleid", "url": "#" },
+    { "label": "Veelgestelde Vragen (FAQ)", "url": "#" },
+    { "label": "Garantie & Reparatie", "url": "#" }
+  ],
+  "social_links": [
+    { "platform": "x-twitter", "url": "#" },
+    { "platform": "instagram", "url": "#" }
+  ]
+}

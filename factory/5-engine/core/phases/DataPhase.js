@@ -38,27 +38,58 @@ export class DataPhase extends BasePhase {
                 if (!fs.existsSync(p)) {
                     let initialData = [];
                     
-                    // Special behavior for 'basis' table: Always ensure 1 default row
+                    // --- v10.1: 1-1-1 Standard Initialization ---
+
+                    // 1. Header Initialization
+                    if (t.table_name.toLowerCase() === 'header') {
+                        initialData = [{
+                            site_name: ctx.discovery?.meta?.company_name || ctx.config.projectName,
+                            site_logo: ctx.logoFile || "athena-icon.svg",
+                            nav_links: [
+                                { label: "Home", url: "/" },
+                                { label: "Producten", url: "#producten" }
+                            ]
+                        }];
+                    }
+                    
+                    // 2. Hero Initialization
+                    if (t.table_name.toLowerCase() === 'hero') {
+                        initialData = [{
+                            hero_header: ctx.discovery?.strategy?.tagline || `Welkom bij ${ctx.config.projectName}`,
+                            hero_tagline: "Wij leveren kwalitatieve oplossingen voor uw dagelijkse uitdagingen.",
+                            hero_image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1600&q=80",
+                            cta_text: "Ontdek Meer",
+                            cta_url: "#producten"
+                        }];
+                    }
+
+                    // 3. Footer Initialization
+                    if (t.table_name.toLowerCase() === 'footer') {
+                        initialData = [{
+                            footer_info: "Gespecialiseerd in maatwerk oplossingen en persoonlijke service.",
+                            contact_email: "info@example.com",
+                            contact_locatie: "België",
+                            customer_service_links: [
+                                { label: "Verzending", url: "#" },
+                                { label: "Privacy Policy", url: "#" }
+                            ],
+                            social_links: [
+                                { platform: "x-twitter", url: "#" },
+                                { platform: "instagram", url: "#" }
+                            ]
+                        }];
+                    }
+
+                    // 4. Legacy Basis handling (for non-migrated types)
                     if (t.table_name.toLowerCase() === 'basis' || t.table_name.toLowerCase() === 'instellingen') {
                         const defaultRow = {};
                         t.columns.forEach(col => {
                             const name = typeof col === 'object' ? col.name : col;
-                            defaultRow[name] = ""; // Default empty
+                            defaultRow[name] = "";
                         });
-
-                        // Standard fallbacks for basis
                         defaultRow.config_id = "1";
                         defaultRow.site_naam = ctx.discovery?.meta?.company_name || ctx.config.projectName;
                         defaultRow.hero_header = ctx.discovery?.strategy?.tagline || `Welkom bij ${defaultRow.site_naam}`;
-                        
-                        // Payment Key Injection
-                        if (defaultRow.hasOwnProperty('stripe_publishable_key')) {
-                            defaultRow.stripe_publishable_key = process.env.VITE_STRIPE_PUBLISHABLE_KEY || "";
-                        }
-                        if (defaultRow.hasOwnProperty('mollie_api_key')) {
-                            defaultRow.mollie_api_key = process.env.VITE_MOLLIE_API_KEY || "";
-                        }
-
                         initialData.push(defaultRow);
                     }
                     
@@ -91,6 +122,15 @@ export class DataPhase extends BasePhase {
 
         // 7. Input Sync
         this.syncInputData(ctx);
+
+        // 8. Final Hybrid Aggregation (Build all_data.json)
+        try {
+            const { DataAggregator } = await import('../../logic/data-aggregator.js');
+            DataAggregator.aggregate(ctx.projectDir);
+            this.log('✅ 1-1-1 Aggregator: Generated all_data.json');
+        } catch (e) {
+            this.log(`⚠️ Aggregator failed: ${e.message}`);
+        }
     }
 
     syncInputData(ctx) {

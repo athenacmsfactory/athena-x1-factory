@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useCart } from './CartContext';
 
-function Header({ data = {} }) {
+export default function Header({ data = {} }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const siteSettings = data.site_settings || {};
-  const settings = Array.isArray(siteSettings) ? (siteSettings[0] || {}) : (siteSettings || {});
-  const siteName = settings.site_name || '{{PROJECT_NAME}}';
-  const logoChar = (settings.logo_text || siteName).charAt(0).toUpperCase();
+  const headerData = data?.header || {};
+  const settings = data?.site_settings || {};
+  const { cartCount, setIsCartOpen } = useCart();
+  const navigate = useNavigate();
 
-  // Use a reliable default logo if site_logo_image is missing
-  const displayLogo = settings.site_logo_image || "athena-icon.svg";
+  const siteName = headerData.site_name || settings.site_name || "Karel's Store";
+  const displayLogo = headerData.site_logo || settings.site_logo_image || "athena-icon.svg";
+  const navLinks = headerData.nav_links || [
+    { label: "Home", url: "/" },
+    { label: "Producten", url: "#producten" }
+  ];
 
   const handleScroll = (e) => {
     const url = settings.header_cta_url || "#contact";
@@ -39,14 +44,14 @@ function Header({ data = {} }) {
 
             {settings.header_show_logo !== false && (
               <div className="relative w-12 h-12 overflow-hidden transition-transform duration-500">
-                <img src={displayLogo} className="w-full h-full object-contain" data-dock-type="media" data-dock-bind="site_settings.0.site_logo_image" />
+                <img src={displayLogo} className="w-full h-full object-contain" data-dock-type="media" data-dock-bind="header.site_logo" />
               </div>
             )}
 
             <div className="flex flex-col">
               {settings.header_show_title !== false && (
-                <span className="text-2xl font-serif font-black tracking-tight text-primary leading-none mb-1">
-                  <span data-dock-type="text" data-dock-bind="site_settings.0.site_name">{siteName}</span>
+                <span className="text-2xl font-serif font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary to-accent leading-none mb-1">
+                  <span data-dock-type="text" data-dock-bind="header.site_name">{siteName}</span>
                 </span>
               )}
               {settings.header_show_tagline !== false && settings.tagline && (
@@ -58,34 +63,61 @@ function Header({ data = {} }) {
           </Link>
         )}
 
-        {/* Desktop Action Menu */}
-        <div className="hidden md:flex items-center gap-8">
-          {settings.header_show_button !== false && (
-            <button onClick={(e) => { 
-                if (e.shiftKey) return; 
-                const target = document.getElementById("contact");
-                if (target) { e.preventDefault(); target.scrollIntoView({ behavior: "smooth" }); }
-            }} data-dock-type="link" data-dock-bind="site_settings.0.header_cta_text">Contact</button>
-          )}
-        </div>
+        {/* Actions & Tools */}
+        <div className="flex items-center gap-4 md:gap-8">
+          {/* Cart Icon */}
+          <button 
+            onClick={() => setIsCartOpen(true)}
+            className="relative p-2 text-primary hover:text-accent transition-all duration-300 hover:scale-110 active:scale-95"
+            aria-label="Open cart"
+          >
+            <i className="fa-solid fa-bag-shopping text-2xl"></i>
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-accent text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-lg animate-in zoom-in duration-300">
+                {cartCount}
+              </span>
+            )}
+          </button>
 
-        {/* Mobile Toggle */}
-        <button
-          className="md:hidden text-2xl text-primary p-2"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          aria-label="Toggle menu"
-        >
-          <i className={`fa-solid ${isMenuOpen ? 'fa-xmark' : 'fa-bars'}`}></i>
-        </button>
+          {/* Desktop Action Menu */}
+          <div className="hidden md:flex items-center">
+            {settings.header_show_button !== false && (
+              <button 
+                className="bg-primary text-white px-6 py-2.5 rounded-full font-bold text-sm hover:bg-accent transition-all duration-300 shadow-lg shadow-primary/10"
+                onClick={(e) => { 
+                  if (e.shiftKey) return; 
+                  const target = document.getElementById("contact");
+                  if (target) { e.preventDefault(); target.scrollIntoView({ behavior: "smooth" }); }
+              }} data-dock-type="link" data-dock-bind="site_settings.0.header_cta_text">Contact</button>
+            )}
+          </div>
+
+          {/* Mobile Toggle */}
+          <button
+            className="md:hidden text-2xl text-primary p-2"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            <i className={`fa-solid ${isMenuOpen ? 'fa-xmark' : 'fa-bars'}`}></i>
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu Overlay */}
       <div className={`fixed inset-x-0 top-[var(--header-height,80px)] bg-white border-b border-gray-100 shadow-xl md:hidden transition-all duration-300 ease-in-out origin-top ${isMenuOpen ? 'scale-y-100 opacity-100' : 'scale-y-0 opacity-0'}`}>
         <div className="p-6 flex flex-col gap-4">
-          <Link to="/" className="text-lg font-bold text-primary py-2 border-b border-slate-50" onClick={() => setIsMenuOpen(false)}>
-            Home
-          </Link>
-          {/* Placeholder for dynamic links if available later */}
+          {navLinks.map((link, idx) => (
+            <a 
+              key={idx} 
+              href={link.url} 
+              className="text-lg font-bold text-primary py-2 border-b border-slate-50" 
+              onClick={() => setIsMenuOpen(false)}
+              data-dock-type="link"
+              data-dock-bind={`header.nav_links.${idx}`}
+            >
+              {link.label}
+            </a>
+          ))}
 
           {settings.header_show_button !== false && (
             <button onClick={(e) => { 

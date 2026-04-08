@@ -1,25 +1,100 @@
 {
-  "basis": [
-    {
-      "config_id": "1",
-      "site_naam": "kdc-test-shop",
-      "hero_header": "Welkom bij kdc-test-shop",
-      "stripe_publishable_key": "",
-      "valuta_code": ""
-    }
-  ],
   "bestellingen": [],
   "categorieen": [],
   "display_config": {
     "site_name": "kdc-test-shop",
     "tagline": ""
   },
+  "footer": {
+    "footer_info": "Gespecialiseerd in premium hardware en IT-oplossingen voor veeleisende gebruikers.",
+    "contact_email": "support@kdc.be",
+    "contact_locatie": "Veldstraat 12, Gent",
+    "btw_nummer": "BE 0123.456.789",
+    "customer_service_links": [
+      {
+        "label": "Verzending & Levering",
+        "url": "#"
+      },
+      {
+        "label": "Retourbeleid",
+        "url": "#"
+      },
+      {
+        "label": "Veelgestelde Vragen (FAQ)",
+        "url": "#"
+      },
+      {
+        "label": "Garantie & Reparatie",
+        "url": "#"
+      }
+    ],
+    "social_links": [
+      {
+        "platform": "x-twitter",
+        "url": "#"
+      },
+      {
+        "platform": "instagram",
+        "url": "#"
+      }
+    ]
+  },
+  "header": {
+    "site_name": "KDC Test Shop",
+    "site_logo": "athena-icon.svg",
+    "nav_links": [
+      {
+        "label": "Producten",
+        "url": "#producten"
+      },
+      {
+        "label": "Over Ons",
+        "url": "#about"
+      },
+      {
+        "label": "Contact",
+        "url": "#footer"
+      }
+    ]
+  },
+  "hero": {
+    "hero_header": "High-Tech Hardware voor Professionals",
+    "hero_tagline": "De nieuwste componenten en randapparatuur, direct leverbaar vanuit onze test-omgeving.",
+    "hero_image": "https://images.unsplash.com/photo-1593305841991-05c297ba326b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
+    "cta_text": "Bekijk Aanbiedingen",
+    "cta_url": "#producten"
+  },
   "klanten": [],
   "layout_settings": {
     "site_name": "kdc-test-shop",
     "tagline": ""
   },
-  "producten": [],
+  "producten": [
+    {
+      "id": 1,
+      "title": "High-End Gaming Laptop",
+      "description": "Intel i9, 32GB RAM, RTX 4080. Krachtpatser voor elke gamer.",
+      "price": 2499.99,
+      "image": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&q=80&w=1000",
+      "category": "Laptops"
+    },
+    {
+      "id": 2,
+      "title": "Ultra-Wide Monitor 49\"",
+      "description": "4K resolutie, 144Hz verversingssnelheid. Perfect voor multitaskers.",
+      "price": 1299.5,
+      "image": "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&q=80&w=1000",
+      "category": "Monitoren"
+    },
+    {
+      "id": 3,
+      "title": "Mechanisch Toetsenbord RGB",
+      "description": "Cherry MX Blue switches voor die heerlijke clicky feedback.",
+      "price": 159,
+      "image": "https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?auto=format&fit=crop&q=80&w=1000",
+      "category": "Accessoires"
+    }
+  ],
   "schema": {
     "blueprint_name": "webshop-stripe",
     "track": "unified",
@@ -201,11 +276,6 @@
   "section_settings": {
     "site_name": "kdc-test-shop",
     "tagline": ""
-  },
-  "site_settings": {
-    "site_name": "kdc-test-shop",
-    "tagline": "",
-    "site_logo_image": "site-logo.svg"
   },
   "style_bindings": {
     "site_name": "kdc-test-shop",

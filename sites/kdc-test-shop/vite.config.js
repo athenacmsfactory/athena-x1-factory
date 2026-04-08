@@ -10,28 +10,35 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export default defineConfig(async ({ command }) => {
   const isDev = command === 'serve';
   let athenaEditorPlugin = null;
+  let athenaAggregatorPlugin = null;
 
-  // De editor plugin is alleen nodig (en beschikbaar) tijdens lokale development
   if (isDev) {
-    const pluginPath = path.resolve(__dirname, '../../factory/5-engine/lib/vite-plugin-athena-editor.js');
-    if (fs.existsSync(pluginPath)) {
+    const editorPluginPath = path.resolve(__dirname, '../../factory/5-engine/lib/vite-plugin-athena-editor.js');
+    const aggPluginPath = path.resolve(__dirname, '../../factory/5-engine/lib/vite-plugin-athena-aggregator.js');
+    
+    if (fs.existsSync(editorPluginPath)) {
       try {
-        // Gebruik een variabele voor de import om statische analyse door esbuild in CI te voorkomen
-        const pluginModule = await import(`file://${pluginPath}`);
-        athenaEditorPlugin = pluginModule.default;
-      } catch (e) {
-        console.warn('⚠️ Athena Editor plugin kon niet worden geladen:', e.message);
-      }
+        const mod = await import(`file://${editorPluginPath}`);
+        athenaEditorPlugin = mod.default;
+      } catch (e) { }
+    }
+
+    // 🔄 v10.1 Auto-Aggregator
+    if (fs.existsSync(aggPluginPath)) {
+      try {
+        const mod = await import(`file://${aggPluginPath}`);
+        athenaAggregatorPlugin = mod.default;
+      } catch (e) { }
     }
   }
 
   return {
-    // Gebruik de projectnaam als base in dev mode voor dashboard compatibiliteit
     base: isDev ? `/${path.basename(__dirname)}/` : './',
     plugins: [
       react(),
       tailwindcss(),
-      athenaEditorPlugin ? athenaEditorPlugin() : null
+      athenaEditorPlugin ? athenaEditorPlugin() : null,
+      athenaAggregatorPlugin ? athenaAggregatorPlugin() : null
     ].filter(Boolean),
     server: {
       host: true,

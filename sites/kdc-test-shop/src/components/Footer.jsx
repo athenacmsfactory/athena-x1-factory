@@ -1,15 +1,15 @@
 import React from 'react';
 
 export default function Footer({ data }) {
-  const settingsSource = data?.site_settings || {};
-  const settings = Array.isArray(settingsSource) ? (settingsSource[0] || {}) : settingsSource;
-  const contactInfo = data?.contact?.[0] || {};
+  const footerData = data?.footer || {};
+  const settings = data?.header || data?.site_settings || {};
   
   const naam = settings.site_name || '{{PROJECT_NAME}}';
-  const email = contactInfo.email || settings.email || '';
-  const locatie = contactInfo.location || '';
-  const btw = contactInfo.btw_nummer || contactInfo.btw || '';
-  const linkedin = contactInfo.linkedin_url || contactInfo.linkedin || '';
+  const email = footerData.contact_email || '';
+  const locatie = footerData.contact_locatie || '';
+  const info = footerData.footer_info || '';
+  const customerLinks = footerData.customer_service_links || [];
+  const socialLinks = footerData.social_links || [];
 
   return (
     <footer className="py-24 bg-slate-900 text-slate-400 border-t border-slate-800 relative overflow-hidden">
@@ -19,56 +19,57 @@ export default function Footer({ data }) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-20 mb-20">
           
           {/* Brand Identity */}
-          <div className="space-y-6">
-            <h3 className="text-3xl font-serif font-bold text-white">
-              <span data-dock-type="text" data-dock-bind="site_settings.0.site_name">{naam}</span>
+          <div className="space-y-8">
+            <h3 className="text-4xl font-serif font-black text-transparent bg-clip-text bg-gradient-to-br from-white to-slate-500 tracking-tighter">
+              <span data-dock-type="text" data-dock-bind="header.site_name">{naam}</span>
             </h3>
-            {settings.tagline && (
-              <p className="text-lg leading-relaxed font-light">
-                <span data-dock-type="text" data-dock-bind="site_settings.0.tagline">{settings.tagline}</span>
+            {info && (
+              <p className="text-lg leading-relaxed font-light text-slate-400">
+                <span data-dock-type="text" data-dock-bind="footer.footer_info">{info}</span>
               </p>
             )}
+            <div className="flex gap-4">
+              {socialLinks.map((link, idx) => (
+                <a key={idx} href={link.url} className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-accent hover:text-white transition-colors cursor-pointer" data-dock-type="link" data-dock-bind={`footer.social_links.${idx}`}>
+                  <i className={`fa-brands fa-${link.platform}`}></i>
+                </a>
+              ))}
+            </div>
           </div>
 
-          {/* Contact Details */}
-          <div className="space-y-6">
-            <h4 className="text-sm font-bold uppercase tracking-[0.2em] text-accent">Contact</h4>
-            <ul className="space-y-4">
-              {email && (
-                <li className="flex items-center gap-4">
-                  <i className="fa-solid fa-envelope text-accent w-5"></i>
-                  <span data-dock-type="text" data-dock-bind="contact.0.email">{email}</span>
+          {/* Quick Links / Customer Service */}
+          <div className="space-y-8">
+            <h4 className="text-sm font-bold uppercase tracking-[0.2em] text-accent">Klantenservice</h4>
+            <ul className="space-y-4 text-slate-400 font-medium">
+              {customerLinks.map((link, idx) => (
+                <li key={idx}>
+                  <a href={link.url} className="hover:text-white transition-colors" data-dock-type="link" data-dock-bind={`footer.customer_service_links.${idx}`}>
+                    {link.label}
+                  </a>
                 </li>
-              )}
-              {locatie && (
-                <li className="flex items-center gap-4">
-                  <i className="fa-solid fa-location-dot text-accent w-5"></i>
-                  <span data-dock-type="text" data-dock-bind="contact.0.location">{locatie}</span>
-                </li>
-              )}
-              {linkedin && (
-                <li className="flex items-center gap-4">
-                  <i className="fa-brands fa-linkedin text-accent w-5"></i>
-                  <a href={"#"} data-dock-type="link" data-dock-bind="contact.0.linkedin_url">LinkedIn</a>
-                </li>
-              )}
+              ))}
             </ul>
           </div>
 
-          {/* Legal / Company Info */}
-          <div className="space-y-6">
-            <h4 className="text-sm font-bold uppercase tracking-[0.2em] text-accent">Bedrijfsgegevens</h4>
-            <div className="space-y-4">
-              {btw && (
-                <p className="flex items-center gap-2">
-                  <span className="text-slate-500">BTW:</span> 
-                  <span data-dock-type="text" data-dock-bind="contact.0.btw_nummer">{btw}</span>
-                </p>
-              )}
-              <p className="text-sm font-light leading-relaxed">
-                <span data-dock-type="text" data-dock-bind="site_settings.0.footer_text">{settings.footer_text || 'Professionele website geleverd door Athena CMS Factory.'}</span>
-              </p>
-            </div>
+          {/* Contact Details */}
+          <div className="space-y-8">
+            <h4 className="text-sm font-bold uppercase tracking-[0.2em] text-accent">Contact & Support</h4>
+            <ul className="space-y-5">
+              <li className="flex items-start gap-4">
+                <i className="fa-solid fa-envelope text-accent mt-1"></i>
+                <div className="flex flex-col">
+                   <span className="text-xs font-bold uppercase opacity-40">E-mail ons</span>
+                   <span className="text-white" data-dock-type="text" data-dock-bind="footer.contact_email">{email || 'support@kdc.be'}</span>
+                </div>
+              </li>
+              <li className="flex items-start gap-4">
+                <i className="fa-solid fa-location-dot text-accent mt-1"></i>
+                <div className="flex flex-col">
+                   <span className="text-xs font-bold uppercase opacity-40">Bezoek ons</span>
+                   <span className="text-white" data-dock-type="text" data-dock-bind="footer.contact_locatie">{locatie || 'Veldstraat 12, Gent'}</span>
+                </div>
+              </li>
+            </ul>
           </div>
 
         </div>

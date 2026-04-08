@@ -3,35 +3,69 @@
   "track": "docked",
   "data_structure": [
     {
-      "table_name": "basis",
+      "table_name": "header",
       "columns": [
         {
-          "name": "bedrijfsnaam",
-          "description": "De officiële naam van de zaak ('De Salon')."
+          "name": "site_name",
+          "description": "Naam van de website."
         },
         {
-          "name": "missie_kern",
-          "description": "De korte kern van de missie ('We care about your hair')."
+          "name": "site_logo",
+          "description": "URL naar het logo."
         },
         {
-          "name": "missie_uitgebreid",
-          "description": "Het combineren van schoonheid, milieubewustheid en welzijn."
+          "name": "nav_links",
+          "description": "JSON array van navigatie links."
+        }
+      ]
+    },
+    {
+      "table_name": "hero",
+      "columns": [
+        {
+          "name": "hero_header",
+          "description": "Hoofdtitel van de website."
         },
         {
-          "name": "telefoonnummer",
-          "description": "Het algemene telefoonnummer voor contact en afspraken."
+          "name": "hero_tagline",
+          "description": "Ondertitel of introductietekst."
         },
         {
-          "name": "copyright_tekst",
-          "description": "De copyright vermelding (incl. jaar)."
+          "name": "hero_image",
+          "description": "Achtergrondafbeelding van de hero."
         },
         {
-          "name": "privacy_beleid_link",
-          "description": "Link naar de Privacybeleid pagina."
+          "name": "cta_text",
+          "description": "Tekst op de actieknop."
         },
         {
-          "name": "cookies_beleid_link",
-          "description": "Link naar de Cookies pagina."
+          "name": "cta_url",
+          "description": "Bestemming van de actieknop."
+        }
+      ]
+    },
+    {
+      "table_name": "footer",
+      "columns": [
+        {
+          "name": "footer_info",
+          "description": "Korte tekst over het bedrijf."
+        },
+        {
+          "name": "contact_email",
+          "description": "E-mailadres voor contact."
+        },
+        {
+          "name": "contact_locatie",
+          "description": "Adres of locatie."
+        },
+        {
+          "name": "customer_service_links",
+          "description": "Links naar klantenservice pagina's."
+        },
+        {
+          "name": "social_links",
+          "description": "Links naar sociale media profielen."
         }
       ]
     },

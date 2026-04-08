@@ -15,6 +15,9 @@ async function init() {
         return key ? dataModules[key].default : null;
     };
     data['section_order'] = getData('section_order') || [];
+    data['header'] = getData('header') || {};
+    data['hero'] = getData('hero') || {};
+    data['footer'] = getData('footer') || {};
     data['site_settings'] = getData('site_settings') || {};
     data['display_config'] = getData('display_config') || { sections: {} };
     data['layout_settings'] = getData('layout_settings') || {};

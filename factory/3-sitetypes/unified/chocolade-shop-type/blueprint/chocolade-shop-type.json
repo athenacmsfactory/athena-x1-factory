@@ -3,27 +3,69 @@
   "track": "docked",
   "data_structure": [
     {
-      "table_name": "basis",
+      "table_name": "header",
       "columns": [
         {
-          "name": "config_id",
-          "description": "Primaire sleutel."
+          "name": "site_name",
+          "description": "Naam van de website."
         },
         {
-          "name": "site_naam",
-          "description": "De naam van de webshop."
+          "name": "site_logo",
+          "description": "URL naar het logo."
         },
+        {
+          "name": "nav_links",
+          "description": "JSON array van navigatie links."
+        }
+      ]
+    },
+    {
+      "table_name": "hero",
+      "columns": [
         {
           "name": "hero_header",
-          "description": "De hoofdtekst van de hero sectie."
+          "description": "Hoofdtitel van de website."
         },
         {
-          "name": "order_email",
-          "description": "Het e-mailadres waar bestellingen naar verzonden worden."
+          "name": "hero_tagline",
+          "description": "Ondertitel of introductietekst."
         },
         {
-          "name": "valuta_code",
-          "description": "Standaard valuta (EURO)."
+          "name": "hero_image",
+          "description": "Achtergrondafbeelding van de hero."
+        },
+        {
+          "name": "cta_text",
+          "description": "Tekst op de actieknop."
+        },
+        {
+          "name": "cta_url",
+          "description": "Bestemming van de actieknop."
+        }
+      ]
+    },
+    {
+      "table_name": "footer",
+      "columns": [
+        {
+          "name": "footer_info",
+          "description": "Korte tekst over het bedrijf."
+        },
+        {
+          "name": "contact_email",
+          "description": "E-mailadres voor contact."
+        },
+        {
+          "name": "contact_locatie",
+          "description": "Adres of locatie."
+        },
+        {
+          "name": "customer_service_links",
+          "description": "Links naar klantenservice pagina's."
+        },
+        {
+          "name": "social_links",
+          "description": "Links naar sociale media profielen."
         }
       ]
     },

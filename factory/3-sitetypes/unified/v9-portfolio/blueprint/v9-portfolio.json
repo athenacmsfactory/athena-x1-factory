@@ -3,29 +3,122 @@
   "description": "Modern Portfolio v9.2 Evolution - High resolution, Lego-ready, and Docked.",
   "data_structure": [
     {
-      "table_name": "basis",
+      "table_name": "header",
       "columns": [
-        {"name": "naam", "description": "Naam van de professional", "type": "text", "required": true},
-        {"name": "functie", "description": "Huidige rol of expertise", "type": "text", "required": true},
-        {"name": "bio", "description": "Korte bio", "type": "textarea", "required": true},
-        {"name": "profielfoto", "description": "URL naar profielfoto", "type": "url", "required": false}
+        {
+          "name": "site_name",
+          "description": "Naam van de website."
+        },
+        {
+          "name": "site_logo",
+          "description": "URL naar het logo."
+        },
+        {
+          "name": "nav_links",
+          "description": "JSON array van navigatie links."
+        }
+      ]
+    },
+    {
+      "table_name": "hero",
+      "columns": [
+        {
+          "name": "hero_header",
+          "description": "Hoofdtitel van de website."
+        },
+        {
+          "name": "hero_tagline",
+          "description": "Ondertitel of introductietekst."
+        },
+        {
+          "name": "hero_image",
+          "description": "Achtergrondafbeelding van de hero."
+        },
+        {
+          "name": "cta_text",
+          "description": "Tekst op de actieknop."
+        },
+        {
+          "name": "cta_url",
+          "description": "Bestemming van de actieknop."
+        }
+      ]
+    },
+    {
+      "table_name": "footer",
+      "columns": [
+        {
+          "name": "footer_info",
+          "description": "Korte tekst over het bedrijf."
+        },
+        {
+          "name": "contact_email",
+          "description": "E-mailadres voor contact."
+        },
+        {
+          "name": "contact_locatie",
+          "description": "Adres of locatie."
+        },
+        {
+          "name": "customer_service_links",
+          "description": "Links naar klantenservice pagina's."
+        },
+        {
+          "name": "social_links",
+          "description": "Links naar sociale media profielen."
+        }
       ]
     },
     {
       "table_name": "portfolio",
       "columns": [
-        {"name": "project_naam", "description": "Naam van het project", "type": "text", "required": true},
-        {"name": "categorie", "description": "Type werk", "type": "text", "required": true},
-        {"name": "beschrijving", "description": "Details over het werk", "type": "textarea", "required": true},
-        {"name": "afbeelding", "description": "Project cover afbeelding", "type": "url", "required": true}
+        {
+          "name": "project_naam",
+          "description": "Naam van het project",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "categorie",
+          "description": "Type werk",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "beschrijving",
+          "description": "Details over het werk",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "afbeelding",
+          "description": "Project cover afbeelding",
+          "type": "url",
+          "required": true
+        }
       ]
     },
     {
       "table_name": "testimonials",
       "columns": [
-        {"name": "naam", "description": "Naam van de klant", "type": "text", "required": true},
-        {"name": "rol", "description": "Functie van de klant", "type": "text", "required": true},
-        {"name": "tekst", "description": "De testimonial tekst", "type": "textarea", "required": true}
+        {
+          "name": "naam",
+          "description": "Naam van de klant",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "rol",
+          "description": "Functie van de klant",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "tekst",
+          "description": "De testimonial tekst",
+          "type": "textarea",
+          "required": true
+        }
       ]
     }
   ],
@@ -38,6 +131,12 @@
     "radius": "1.5rem"
   },
   "page_structure": {
-    "home": ["hero", "about", "portfolio", "testimonials", "contact"]
+    "home": [
+      "hero",
+      "about",
+      "portfolio",
+      "testimonials",
+      "contact"
+    ]
   }
 }

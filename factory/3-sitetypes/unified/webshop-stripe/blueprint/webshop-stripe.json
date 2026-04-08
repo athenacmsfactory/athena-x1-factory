@@ -8,52 +8,166 @@
   },
   "data_structure": [
     {
-      "table_name": "basis",
+      "table_name": "header",
       "columns": [
-        { "name": "config_id", "description": "Primaire sleutel." },
-        { "name": "site_naam", "description": "De naam van de webshop." },
-        { "name": "hero_header", "description": "De hoofdtekst van de hero sectie." },
-        { "name": "stripe_publishable_key", "description": "Je Stripe Publishable Key (pk_test_...)." },
-        { "name": "valuta_code", "description": "Standaard valuta (EUR)." }
+        {
+          "name": "site_name",
+          "description": "Naam van de website."
+        },
+        {
+          "name": "site_logo",
+          "description": "URL naar het logo."
+        },
+        {
+          "name": "nav_links",
+          "description": "JSON array van navigatie links."
+        }
+      ]
+    },
+    {
+      "table_name": "hero",
+      "columns": [
+        {
+          "name": "hero_header",
+          "description": "Hoofdtitel van de website."
+        },
+        {
+          "name": "hero_tagline",
+          "description": "Ondertitel of introductietekst."
+        },
+        {
+          "name": "hero_image",
+          "description": "Achtergrondafbeelding van de hero."
+        },
+        {
+          "name": "cta_text",
+          "description": "Tekst op de actieknop."
+        },
+        {
+          "name": "cta_url",
+          "description": "Bestemming van de actieknop."
+        }
+      ]
+    },
+    {
+      "table_name": "footer",
+      "columns": [
+        {
+          "name": "footer_info",
+          "description": "Korte tekst over het bedrijf."
+        },
+        {
+          "name": "contact_email",
+          "description": "E-mailadres voor contact."
+        },
+        {
+          "name": "contact_locatie",
+          "description": "Adres of locatie."
+        },
+        {
+          "name": "customer_service_links",
+          "description": "Links naar klantenservice pagina's."
+        },
+        {
+          "name": "social_links",
+          "description": "Links naar sociale media profielen."
+        }
       ]
     },
     {
       "table_name": "klanten",
       "columns": [
-        { "name": "klant_id", "description": "Unieke Firebase UID." },
-        { "name": "voornaam", "description": "Voornaam van de klant." },
-        { "name": "achternaam", "description": "Achternaam van de klant." },
-        { "name": "email", "description": "E-mailadres (tevens login)." },
-        { "name": "telefoon", "description": "Telefoonnummer." },
-        { "name": "laatste_order_id", "description": "Referentie naar de laatste bestelling." }
+        {
+          "name": "klant_id",
+          "description": "Unieke Firebase UID."
+        },
+        {
+          "name": "voornaam",
+          "description": "Voornaam van de klant."
+        },
+        {
+          "name": "achternaam",
+          "description": "Achternaam van de klant."
+        },
+        {
+          "name": "email",
+          "description": "E-mailadres (tevens login)."
+        },
+        {
+          "name": "telefoon",
+          "description": "Telefoonnummer."
+        },
+        {
+          "name": "laatste_order_id",
+          "description": "Referentie naar de laatste bestelling."
+        }
       ]
     },
     {
       "table_name": "bestellingen",
       "columns": [
-        { "name": "order_id", "description": "Unieke order ID." },
-        { "name": "klant_id", "description": "Referentie naar de klant." },
-        { "name": "totaal_bedrag", "description": "Totaalbedrag in EUR." },
-        { "name": "status", "description": "Status (pending, paid, cancelled)." },
-        { "name": "datum", "description": "Besteldatum." }
+        {
+          "name": "order_id",
+          "description": "Unieke order ID."
+        },
+        {
+          "name": "klant_id",
+          "description": "Referentie naar de klant."
+        },
+        {
+          "name": "totaal_bedrag",
+          "description": "Totaalbedrag in EUR."
+        },
+        {
+          "name": "status",
+          "description": "Status (pending, paid, cancelled)."
+        },
+        {
+          "name": "datum",
+          "description": "Besteldatum."
+        }
       ]
     },
     {
       "table_name": "categorieen",
       "columns": [
-        { "name": "categorie_id", "description": "Primaire sleutel." },
-        { "name": "naam", "description": "Naam van de categorie." },
-        { "name": "slug", "description": "SEO-vriendelijke URL slug." }
+        {
+          "name": "categorie_id",
+          "description": "Primaire sleutel."
+        },
+        {
+          "name": "naam",
+          "description": "Naam van de categorie."
+        },
+        {
+          "name": "slug",
+          "description": "SEO-vriendelijke URL slug."
+        }
       ]
     },
     {
       "table_name": "producten",
       "columns": [
-        { "name": "product_id", "description": "Primaire sleutel." },
-        { "name": "naam", "description": "De naam van het product." },
-        { "name": "categorie_id", "description": "Relatie naar categorie." },
-        { "name": "prijs", "description": "Prijs in euro's." },
-        { "name": "product_foto_url", "description": "URL naar productafbeelding." }
+        {
+          "name": "product_id",
+          "description": "Primaire sleutel."
+        },
+        {
+          "name": "naam",
+          "description": "De naam van het product."
+        },
+        {
+          "name": "categorie_id",
+          "description": "Relatie naar categorie."
+        },
+        {
+          "name": "prijs",
+          "description": "Prijs in euro's."
+        },
+        {
+          "name": "product_foto_url",
+          "description": "URL naar productafbeelding."
+        }
       ]
     }
   ],

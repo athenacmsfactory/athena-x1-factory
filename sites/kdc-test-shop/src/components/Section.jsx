@@ -39,7 +39,43 @@ const Section = ({ data }) => {
 
   return (
     <div className="flex flex-col">
-      {sectionOrder.filter(name => name !== 'site_settings').map((sectionName, idx) => {
+      {/* 1. Hero Section (Explicitly rendered or at the start) */}
+      {data.hero && Object.keys(data.hero).length > 0 && (
+        <section
+          id="hero"
+          data-dock-section="hero"
+          className="relative w-full h-auto min-h-[var(--hero-height,85vh)] max-h-[var(--hero-max-height,150vh)] aspect-[var(--hero-aspect-ratio,16/9)] flex items-center justify-center overflow-hidden bg-[var(--color-hero-bg)] pt-24"
+        >
+          <div className="absolute inset-0 z-0">
+            <img src={getImageUrl(data.hero.hero_image)} className="w-full h-full object-cover object-top" data-dock-type="media" data-dock-bind="hero.hero_image" />
+            <div className="absolute inset-0 z-20 pointer-events-none" style={{
+              backgroundImage: 'linear-gradient(to bottom, var(--hero-overlay-start, rgba(0,0,0,0.6)), var(--hero-overlay-end, rgba(0,0,0,0.6)))'
+            }}></div>
+          </div>
+          <div className="relative z-10 text-center px-6 max-w-5xl">
+            <h1 className="text-5xl md:text-8xl font-serif font-bold text-white mb-8 leading-tight drop-shadow-2xl">
+              <span data-dock-type="text" data-dock-bind="hero.hero_header">{data.hero.hero_header}</span>
+            </h1>
+            <div className="flex flex-col items-center gap-12">
+              <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed drop-shadow-lg font-light italic">
+                <span data-dock-type="text" data-dock-bind="hero.hero_tagline">{data.hero.hero_tagline}</span>
+              </p>
+              <div className="flex flex-wrap justify-center gap-4">
+                <a 
+                  href={data.hero.cta_url || "#producten"} 
+                  className="bg-accent text-white px-10 py-5 rounded-full font-bold text-lg hover:bg-white hover:text-primary transition-all duration-300 shadow-2xl shadow-accent/20"
+                  data-dock-type="link" 
+                  data-dock-bind="hero.cta_text"
+                >
+                  {data.hero.cta_text || "Bekijk Collectie"}
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {sectionOrder.filter(name => !['site_settings', 'basis', 'header', 'footer', 'hero'].includes(name)).map((sectionName, idx) => {
         const items = data[sectionName] || [];
         if (items.length === 0) return null;
 
@@ -47,49 +83,6 @@ const Section = ({ data }) => {
         const sectionBgColor = currentSettings.backgroundColor || null;
         const sectionStyle = sectionBgColor ? { backgroundColor: sectionBgColor } : {};
         const currentLayout = layoutSettings[sectionName] || 'list';
-
-        // --- 1. HERO SECTION ---
-        if (sectionName === 'basis' || sectionName === 'basis' || sectionName === 'hero') {
-          const hero = items[0];
-          const heroTitle = hero.title || hero.titel || hero.hero_header || hero.site_naam;
-          const heroSubtitle = hero.subtitle || hero.ondertitel || hero.introductie;
-          const imgKey = Object.keys(hero).find(k => /foto|afbeelding|url|image|img/i.test(k)) || 'image';
-
-          return (
-            <section
-              key={idx}
-              id="hero"
-              data-dock-section={sectionName}
-              className="relative w-full h-auto min-h-[var(--hero-height,85vh)] max-h-[var(--hero-max-height,150vh)] aspect-[var(--hero-aspect-ratio,16/9)] flex items-center justify-center overflow-hidden bg-[var(--color-hero-bg)] pt-24"
-              style={sectionStyle}
-            >
-              <div className="absolute inset-0 z-0">
-                <img src={getImageUrl(hero[imgKey])} className="w-full h-full object-cover object-top" data-dock-type="media" data-dock-bind={`${sectionName}.0.${imgKey}`} />
-                <div className="absolute inset-0 z-20 pointer-events-none" style={{
-                  backgroundImage: 'linear-gradient(to bottom, var(--hero-overlay-start, rgba(0,0,0,0.6)), var(--hero-overlay-end, rgba(0,0,0,0.6)))'
-                }}></div>
-              </div>
-              <div className="relative z-10 text-center px-6 max-w-5xl">
-                {!hero[imgKey] && <div className="h-2 w-32 bg-accent mx-auto mb-10 rounded-full shadow-lg shadow-accent/50"></div>}
-                <h1 className="text-5xl md:text-8xl font-serif font-bold text-white mb-8 leading-tight drop-shadow-2xl">
-                  <span data-dock-type="text" data-dock-bind={`${sectionName}.0.${Object.keys(hero).find(k => /naam|titel|header|title/i.test(k)) || 'title'}`}>{heroTitle}</span>
-                </h1>
-                <div className="flex flex-col items-center gap-12">
-                  <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto leading-relaxed drop-shadow-lg font-light italic">
-                    <span data-dock-type="text" data-dock-bind={`${sectionName}.0.${Object.keys(hero).find(k => /subtitle|ondertitel|introductie/i.test(k)) || 'subtitle'}`}>{heroSubtitle}</span>
-                  </p>
-                  <div className="flex flex-wrap justify-center gap-4">
-                    <button onClick={(e) => { 
-                if (e.shiftKey) return; 
-                const target = document.getElementById("contact");
-                if (target) { e.preventDefault(); target.scrollIntoView({ behavior: "smooth" }); }
-            }} data-dock-type="link" data-dock-bind="site_settings.0.header_cta_text">Contact</button>
-                  </div>
-                </div>
-              </div>
-            </section>
-          );
-        }
 
         // --- 3. PRODUCTEN SECTION ---
         if (sectionName === 'producten') {
