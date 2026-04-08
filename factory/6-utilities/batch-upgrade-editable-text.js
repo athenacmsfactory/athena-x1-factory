@@ -50,15 +50,7 @@ let upgradedCount = 0;
 let skippedCount = 0;
 
 filesToUpdate.forEach(file => {
-    const parentDir = path.dirname(file);
-    const isAutonomous = fs.existsSync(path.join(parentDir, 'ui/VisualEditor.jsx')) || fs.existsSync(path.join(parentDir, 'VisualEditor.jsx'));
-
-    if (isAutonomous) {
-        console.log('⚠️  Skipping (Autonomous Component): ' + file);
-        skippedCount++;
-        return;
-    }
-
+    // In V10 Unified architecture, we upgrade all components uniformly.
     try {
         fs.writeFileSync(file, NEW_CONTENT);
         console.log('✅ Upgraded: ' + path.relative(process.cwd(), file));

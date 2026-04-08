@@ -1,0 +1,11 @@
+{
+  "projectName": "kdc-test-shop",
+  "siteType": "webshop-stripe",
+  "blueprintFile": "webshop-stripe/blueprint/webshop-stripe.json",
+  "layoutName": "standard",
+  "styleName": "modern.css",
+  "siteModel": "SPA",
+  "autoSheet": false,
+  "safeName": "kdc-test-shop",
+  "generatedAt": "2026-04-08T09:32:34.099Z"
+}

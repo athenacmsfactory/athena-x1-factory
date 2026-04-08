@@ -149,11 +149,6 @@ async function performQuickWrap(name, sections, html, sitePath) {
         if (result && result.transformations) {
             console.log(`🧠 AI suggested ${result.transformations.length} transformations.`);
             
-            // For now, we simulate the injection for the POC or use a simple replacement
-            // In a real scenario, we'd use a DOM library like JSDOM here.
-            // Since we want to keep it light for 4GB RAM, we'll do a basic implementation later
-            // or save the transformation map for reference.
-            
             const mapPath = path.join(sitePath, 'dock-map.json');
             fs.writeFileSync(mapPath, JSON.stringify(result.transformations, null, 4));
             console.log(`📍 Transformation map saved to ${mapPath}`);
@@ -168,9 +163,16 @@ async function performQuickWrap(name, sections, html, sitePath) {
 
 function applyDockMap(sitePath, transformations) {
     const indexPath = path.join(sitePath, 'index.html');
-    const outputPath = path.join(sitePath, 'index.docked.html');
-    
     if (!fs.existsSync(indexPath)) return;
+
+    // Backup the original index if it's the first time
+    const backupPath = path.join(sitePath, 'index.original.html');
+    if (!fs.existsSync(backupPath)) {
+        fs.copyFileSync(indexPath, backupPath);
+        console.log(`📦 Original backup created: ${backupPath}`);
+    }
+
+    const outputPath = path.join(sitePath, 'index.html');
 
     console.log("🛠️  Applying transformations to HTML...");
     const html = fs.readFileSync(indexPath, 'utf8');

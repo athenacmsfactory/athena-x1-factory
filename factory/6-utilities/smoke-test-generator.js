@@ -9,7 +9,7 @@ import {
     generateDataStructureAPI,
     generateDesignSuggestionAPI,
     generateCompleteSiteType
-} from '../dashboard/sitetype-api.js';
+} from '../athena-api/sitetype-api.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,7 +19,7 @@ const projectRoot = path.resolve(__dirname, '../../');
 
 // --- CONFIGURATIE ---
 const NICHES = [
-    { id: 'cleanup-test', niche: 'Test Bedrijf voor Cleanup Verificatie', model: 'SPA', track: 'autonomous' }
+    { id: 'cleanup-test', niche: 'Test Bedrijf voor Cleanup Verificatie', model: 'SPA' }
 ];
 
 async function runAutomatedShowcase() {
@@ -55,16 +55,17 @@ async function runAutomatedShowcase() {
 
             // 3. Sitetype aanmaken via Dashboard Logic
             const siteTypeName = `${safeProjectName}-type`;
-            const siteTypeDir = path.resolve(factoryRoot, '3-sitetypes', item.track, siteTypeName);
+            const track = 'unified';
+            const siteTypeDir = path.resolve(factoryRoot, '3-sitetypes', track, siteTypeName);
             
             // CLEANUP: Verwijder oude sitetype indien aanwezig (anders crasht de API)
             if (await fs.access(siteTypeDir).then(() => true).catch(() => false)) {
-                console.log(`🧹 Oude sitetype "${siteTypeName}" opruimen in track ${item.track}...`);
+                console.log(`🧹 Oude sitetype "${siteTypeName}" opruimen in track ${track}...`);
                 await fs.rm(siteTypeDir, { recursive: true, force: true });
             }
 
-            console.log(`🏗️  Sitetype "${siteTypeName}" aanmaken in track ${item.track}...`);
-            await generateCompleteSiteType(siteTypeName, biz.description, dataStructure, designSystem, item.track);
+            console.log(`🏗️  Sitetype "${siteTypeName}" aanmaken in track ${track}...`);
+            await generateCompleteSiteType(siteTypeName, biz.description, dataStructure, designSystem);
 
             // 4. Project Aanmaken (Factory)
             console.log(`🏭 Project genereren...`);

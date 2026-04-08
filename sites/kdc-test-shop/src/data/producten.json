@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "title": "High-End Gaming Laptop",
+    "description": "Intel i9, 32GB RAM, RTX 4080. Krachtpatser voor elke gamer.",
+    "price": 2499.99,
+    "image": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&q=80&w=1000",
+    "category": "Laptops"
+  },
+  {
+    "id": 2,
+    "title": "Ultra-Wide Monitor 49\"",
+    "description": "4K resolutie, 144Hz verversingssnelheid. Perfect voor multitaskers.",
+    "price": 1299.50,
+    "image": "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&q=80&w=1000",
+    "category": "Monitoren"
+  },
+  {
+    "id": 3,
+    "title": "Mechanisch Toetsenbord RGB",
+    "description": "Cherry MX Blue switches voor die heerlijke clicky feedback.",
+    "price": 159.00,
+    "image": "https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?auto=format&fit=crop&q=80&w=1000",
+    "category": "Accessoires"
+  }
+]

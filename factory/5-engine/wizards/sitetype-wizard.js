@@ -12,6 +12,11 @@ import { rl, ask } from '../cli-interface.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const factoryRoot = path.resolve(__dirname, '..');
+
+const { AthenaConfigManager } = await import('../lib/ConfigManager.js');
+const config = new AthenaConfigManager(factoryRoot);
+const sitetypesDir = config.get('paths.sitetypes');
 
 // --- HELPER FUNCTIE VOOR OPMAAK ---
 function formatInColumns(items) {
@@ -193,16 +198,15 @@ async function generateFiles(config, root) {
     const primaryFieldName = primaryTable.columns[0].name;
     console.log(`   🧠 Analyse compleet: Primaire tabel is "${primaryTableName}", primair veld is "${primaryFieldName}".`);
 
-    // Paden definiëren op basis van track
-    const track = config.track || 'unified';
-    const siteTypeDir = path.join(root, '3-sitetypes', track, config.siteTypeName);
-    const blueprintDir = path.join(siteTypeDir, 'blueprint');
-    const toolsDir = path.join(siteTypeDir, 'parser');
-    const webDir = path.join(siteTypeDir, 'web', 'standard');
+    // Paden definiëren op basis van track (V10 Unified standaard)
+    const sitetypePath = path.join(sitetypesDir, config.siteTypeName);
+    const blueprintDir = path.join(sitetypePath, 'blueprint');
+    const toolsDir = path.join(sitetypePath, 'parser');
+    const webDir = path.join(sitetypePath, 'web', 'standard');
     const componentsDir = path.join(webDir, 'components');
     
-    // Boilerplate bron bepalen (nu gebaseerd op de track!)
-    const boilerplateDir = path.join(root, '2-templates', 'boilerplate', track === 'autonomous' ? 'autonomous' : 'unified');
+    // Boilerplate bron bepalen (nu gebaseerd op de V10 Unified standaard)
+    const boilerplateDir = path.join(root, '2-templates', 'skeletons', 'SPA');
     const boilerplateComponentsDir = path.join(boilerplateDir, 'components');
 
     // Mappen aanmaken
@@ -225,15 +229,14 @@ async function generateFiles(config, root) {
     // Boilerplate templates inlezen
     const templates = {};
     try {
-        templates['parser.js'] = await fs.readFile(path.join(root, '2-templates', 'boilerplate', 'SPA', 'parser.js'), 'utf8'); // Parser template is vaak generiek SPA
+        templates['parser.js'] = await fs.readFile(path.join(boilerplateDir, 'parser.js'), 'utf8');
         templates['App.jsx'] = await fs.readFile(path.join(boilerplateDir, 'App.jsx'), 'utf8');
         templates['Header.jsx'] = await fs.readFile(path.join(boilerplateComponentsDir, 'Header.jsx'), 'utf8');
         templates['Section.jsx'] = await fs.readFile(path.join(boilerplateComponentsDir, 'Section.jsx'), 'utf8');
         templates['index.css'] = await fs.readFile(path.join(boilerplateDir, 'index.css'), 'utf8');
         templates['main.jsx'] = await fs.readFile(path.join(boilerplateDir, 'main.jsx'), 'utf8');
     } catch (e) {
-        console.warn(`   ⚠️  Sommige boilerplate bestanden ontbreken in ${boilerplateDir}. We proberen fallback naar SPA template.`);
-        const spaDir = path.join(root, '2-templates', 'boilerplate', 'SPA');
+        console.warn(`   ⚠️  Sommige boilerplate bestanden ontbreken in ${boilerplateDir}.`);
         templates['App.jsx'] = templates['App.jsx'] || await fs.readFile(path.join(spaDir, 'App.jsx'), 'utf8');
         templates['main.jsx'] = templates['main.jsx'] || await fs.readFile(path.join(spaDir, 'main.jsx'), 'utf8');
         // Voeg andere fallbacks toe indien nodig
@@ -303,18 +306,14 @@ async function createSiteTypeWizard() {
     console.log("Deze tool helpt je een nieuw site-type te definiëren.\n");
 
     const config = {};
-    const root = path.resolve(__dirname, '..');
+    const root = path.resolve(__dirname, '../..');
 
-    // --- STAP 0: KIES TRACK ---
-    console.log("Kies de track voor dit sitetype:");
-    console.log("[1] Docked (Minimale code, beheer via Athena Dock)");
-    console.log("[2] Autonomous (Zelfstandige editor-suite)");
-    const trackChoice = await ask("Keuze (1/2): ");
-    config.track = trackChoice === '2' ? 'autonomous' : 'unified';
-    console.log(`✅ Track ingesteld op: ${config.track}\n`);
+    // --- STAP 0: SET TRACK (Unified V10 Force) ---
+    config.track = 'unified';
+    console.log(`✅ Track ingesteld op: ${config.track} (Unified V10)\n`);
 
     // --- STAP 0.5: TOON BESTAANDE SITE TYPES ---
-    const siteTypesDir = path.join(root, '3-sitetypes', config.track);
+    const dir = sitetypesDir;
     try {
         const existing = await fs.readdir(siteTypesDir);
         const stats = await Promise.all(existing.map(file => fs.stat(path.join(siteTypesDir, file))));
@@ -340,7 +339,7 @@ async function createSiteTypeWizard() {
             continue;
         }
 
-        const siteTypePath = path.join(root, '3-sitetypes', config.track, safeName);
+        const siteTypePath = path.join(sitetypesDir, safeName);
         if ((await fs.stat(siteTypePath).catch(() => null))?.isDirectory()) {
             console.log(`❌ Site-type "${safeName}" bestaat al in track "${config.track}".`);
             continue;

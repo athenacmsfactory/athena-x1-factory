@@ -56,8 +56,27 @@ export class FinalizePhase extends BasePhase {
         // 5. SEO
         await this.generateSEO(ctx);
 
-        // 6. Quality Check
+        // 6. Environment Configuration (.env)
+        this.setupEnvFile(ctx);
+
+        // 7. Quality Check
         QualityChecker.check(ctx.projectDir);
+    }
+
+    setupEnvFile(ctx) {
+        const envLines = [];
+        
+        // Collect all VITE_ prefixed variables from current process env
+        Object.keys(process.env).forEach(key => {
+            if (key.startsWith('VITE_')) {
+                envLines.push(`${key}=${process.env[key]}`);
+            }
+        });
+
+        if (envLines.length > 0) {
+            fs.writeFileSync(path.join(ctx.projectDir, '.env'), envLines.join('\n'));
+            this.log(`Generated .env for ${ctx.safeName} with ${envLines.length} variables.`);
+        }
     }
 
     setupViteConfig(ctx) {

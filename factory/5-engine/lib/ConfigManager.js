@@ -14,7 +14,9 @@ const __dirname = path.dirname(__filename);
 
 export class AthenaConfigManager {
     constructor(root) {
-        this.root = root || path.resolve(__dirname, '../../..'); // Points to x-v9/athena
+        // Standard V10.1 resolution: __dirname is athena/factory/5-engine/lib
+        // ../../.. goes to athena/
+        this.root = root || path.resolve(__dirname, '../../..'); 
         this.config = this._loadConfig();
     }
 
@@ -32,17 +34,17 @@ export class AthenaConfigManager {
             },
             paths: {
                 root: this.root,
-                factory: this.root,
+                factory: path.join(this.root, 'factory'),
                 sites: path.join(this.root, 'sites'),
                 sitesExternal: path.join(this.root, '../vault'),
                 vault: path.join(this.root, '../vault'),
                 input: path.join(this.root, 'input'),
                 logs: path.join(this.root, 'output/logs'),
-                config: path.join(this.root, 'config'),
-                templates: path.join(this.root, '2-templates'),
-                sitetypes: path.join(this.root, '3-sitetypes'),
-                engine: path.join(this.root, '5-engine'),
-                skills: path.join(this.root, 'SKILLS')
+                config: path.join(this.root, 'factory/config'),
+                templates: path.join(this.root, 'factory/2-templates'),
+                sitetypes: path.join(this.root, 'factory/3-sitetypes/unified'),
+                engine: path.join(this.root, 'factory/5-engine'),
+                skills: path.join(this.root, 'factory/skills')
             },
             github: {
                 user: env.GITHUB_USER || '',

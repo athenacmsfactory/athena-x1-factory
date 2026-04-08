@@ -35,7 +35,35 @@ export class DataPhase extends BasePhase {
         if (ctx.blueprint.data_structure) {
             ctx.blueprint.data_structure.forEach(t => {
                 const p = path.join(dataDir, `${t.table_name.toLowerCase()}.json`);
-                if (!fs.existsSync(p)) fs.writeFileSync(p, JSON.stringify([], null, 2));
+                if (!fs.existsSync(p)) {
+                    let initialData = [];
+                    
+                    // Special behavior for 'basis' table: Always ensure 1 default row
+                    if (t.table_name.toLowerCase() === 'basis' || t.table_name.toLowerCase() === 'instellingen') {
+                        const defaultRow = {};
+                        t.columns.forEach(col => {
+                            const name = typeof col === 'object' ? col.name : col;
+                            defaultRow[name] = ""; // Default empty
+                        });
+
+                        // Standard fallbacks for basis
+                        defaultRow.config_id = "1";
+                        defaultRow.site_naam = ctx.discovery?.meta?.company_name || ctx.config.projectName;
+                        defaultRow.hero_header = ctx.discovery?.strategy?.tagline || `Welkom bij ${defaultRow.site_naam}`;
+                        
+                        // Payment Key Injection
+                        if (defaultRow.hasOwnProperty('stripe_publishable_key')) {
+                            defaultRow.stripe_publishable_key = process.env.VITE_STRIPE_PUBLISHABLE_KEY || "";
+                        }
+                        if (defaultRow.hasOwnProperty('mollie_api_key')) {
+                            defaultRow.mollie_api_key = process.env.VITE_MOLLIE_API_KEY || "";
+                        }
+
+                        initialData.push(defaultRow);
+                    }
+                    
+                    fs.writeFileSync(p, JSON.stringify(initialData, null, 2));
+                }
             });
             fs.writeFileSync(path.join(dataDir, 'section_order.json'), JSON.stringify(ctx.blueprint.data_structure.map(t => t.table_name.toLowerCase()), null, 2));
         }

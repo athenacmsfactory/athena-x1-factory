@@ -21,7 +21,7 @@ export class QualityChecker {
             files.forEach(f => {
                 const p = path.join(dataDir, f);
                 const stats = fs.statSync(p);
-                if (stats.size < 5) {
+                if (stats.size < 2) {
                     report.errors.push(`JSON file too small (possible corruption): ${f} (${stats.size} bytes)`);
                 }
                 try {

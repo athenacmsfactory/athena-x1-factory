@@ -51,10 +51,10 @@ const root = factoryRoot; // Alias for backward compatibility
 
 
 // --- INITIALIZATION ---
-const configManager = new AthenaConfigManager(root);
-const pm = new AthenaProcessManager(root);
-const lm = new AthenaLogManager(root);
-const sm = new AthenaSecretManager(root);
+const configManager = new AthenaConfigManager(monorepoRoot);
+const pm = new AthenaProcessManager(monorepoRoot);
+const lm = new AthenaLogManager(monorepoRoot);
+const sm = new AthenaSecretManager(monorepoRoot);
 const execService = new ExecutionService(configManager, lm);
 
 const projectCtrl = new ProjectController(configManager, execService);
@@ -410,7 +410,8 @@ app.get('/api/roadmaps', (req, res) => {
 // --- BLUEPRINT API ---
 app.get('/api/blueprints/:name', (req, res) => {
     const { name } = req.params;
-    const blueprintPath = path.join(factoryRoot, '3-sitetypes', name, 'blueprint', `${name}.json`);
+    const sitetypesDir = configManager.get('paths.sitetypes');
+    const blueprintPath = path.join(sitetypesDir, name, 'blueprint', `${name}.json`);
     if (fs.existsSync(blueprintPath)) {
         res.json(JSON.parse(fs.readFileSync(blueprintPath, 'utf8')));
     } else {
@@ -420,7 +421,8 @@ app.get('/api/blueprints/:name', (req, res) => {
 
 app.post('/api/blueprints/:name', (req, res) => {
     const { name } = req.params;
-    const blueprintPath = path.join(factoryRoot, '3-sitetypes', name, 'blueprint', `${name}.json`);
+    const sitetypesDir = configManager.get('paths.sitetypes');
+    const blueprintPath = path.join(sitetypesDir, name, 'blueprint', `${name}.json`);
     try {
         fs.writeFileSync(blueprintPath, JSON.stringify(req.body, null, 2));
         res.json({ success: true, message: "Blueprint succesvol opgeslagen." });

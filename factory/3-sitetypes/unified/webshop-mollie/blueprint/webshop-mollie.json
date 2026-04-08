@@ -1,0 +1,71 @@
+{
+  "blueprint_name": "webshop-mollie",
+  "track": "unified",
+  "features": {
+    "ecommerce": true,
+    "payment_gateway": "mollie",
+    "customer_db": "firebase"
+  },
+  "data_structure": [
+    {
+      "table_name": "basis",
+      "columns": [
+        { "name": "config_id", "description": "Primaire sleutel." },
+        { "name": "site_naam", "description": "De naam van de webshop." },
+        { "name": "hero_header", "description": "De hoofdtekst van de hero sectie." },
+        { "name": "mollie_api_key", "description": "Je Mollie API sleutel (live_ of test_)." },
+        { "name": "valuta_code", "description": "Standaard valuta (EUR)." }
+      ]
+    },
+    {
+      "table_name": "klanten",
+      "columns": [
+        { "name": "klant_id", "description": "Unieke Firebase UID." },
+        { "name": "voornaam", "description": "Voornaam van de klant." },
+        { "name": "achternaam", "description": "Achternaam van de klant." },
+        { "name": "email", "description": "E-mailadres (tevens login)." },
+        { "name": "telefoon", "description": "Telefoonnummer." },
+        { "name": "laatste_order_id", "description": "Referentie naar de laatste bestelling." }
+      ]
+    },
+    {
+      "table_name": "bestellingen",
+      "columns": [
+        { "name": "order_id", "description": "Unieke order ID." },
+        { "name": "klant_id", "description": "Referentie naar de klant." },
+        { "name": "totaal_bedrag", "description": "Totaalbedrag in EUR." },
+        { "name": "status", "description": "Status (pending, paid, cancelled)." },
+        { "name": "datum", "description": "Besteldatum." }
+      ]
+    },
+    {
+      "table_name": "categorieen",
+      "columns": [
+        { "name": "categorie_id", "description": "Primaire sleutel." },
+        { "name": "naam", "description": "Naam van de categorie." },
+        { "name": "slug", "description": "SEO-vriendelijke URL slug." }
+      ]
+    },
+    {
+      "table_name": "producten",
+      "columns": [
+        { "name": "product_id", "description": "Primaire sleutel." },
+        { "name": "naam", "description": "De naam van het product." },
+        { "name": "categorie_id", "description": "Relatie naar categorie." },
+        { "name": "prijs", "description": "Prijs in euro's." },
+        { "name": "product_foto_url", "description": "URL naar productafbeelding." }
+      ]
+    }
+  ],
+  "design_system": {
+    "colors": {
+      "primary": "#FF5C00",
+      "secondary": "#2D2D2D",
+      "accent": "#00C896",
+      "background": "#FFFFFF",
+      "surface": "#F9F9F9"
+    },
+    "radius": "12px",
+    "font_sans": "Outfit, sans-serif"
+  }
+}

@@ -13,6 +13,11 @@ import { generateWithAI } from './ai-engine.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const factoryRoot = path.resolve(__dirname, '../..');
+
+const { AthenaConfigManager } = await import('../lib/ConfigManager.js');
+const config = new AthenaConfigManager(factoryRoot);
+const sitetypesDir = config.get('paths.sitetypes');
 
 // Ensure .env is loaded (if needed, ai-engine also does this)
 await loadEnv(path.join(__dirname, '../../.env'));
@@ -38,30 +43,12 @@ export async function runParser(blueprintFile, customPrompt) {
     const root = path.resolve(__dirname, '../..');
     const siteTypeName = blueprintFile.replace('.json', '');
 
-    // Zoek de blueprint in autonomous of docked
-    let blueprintPath = path.join(root, '3-sitetypes', siteTypeName, 'blueprint', blueprintFile);
+    // Zoek de blueprint in unified (V10 standaard)
+    let blueprintPath = path.join(sitetypesDir, siteTypeName, 'blueprint', blueprintFile);
     console.log(`   🔍 Zoeken naar blueprint op: ${blueprintPath}`);
 
-    async function checkPath(p) {
-      try {
-        await fs.access(p);
-        return true;
-      } catch (e) {
-        return false;
-      }
-    }
-
-    if (!(await checkPath(blueprintPath))) {
-      const dockedPath = path.join(root, '3-sitetypes', 'unified', siteTypeName, 'blueprint', blueprintFile);
-      const autoPath = path.join(root, '3-sitetypes', 'autonomous', siteTypeName, 'blueprint', blueprintFile);
-
-      if (await checkPath(dockedPath)) {
-        blueprintPath = dockedPath;
-      } else if (await checkPath(autoPath)) {
-        blueprintPath = autoPath;
-      } else {
-        throw new Error(`Blueprint niet gevonden voor ${siteTypeName} in 3-sitetypes, autonomous of docked.`);
-      }
+    if (!(await fs.access(blueprintPath).then(() => true).catch(() => false))) {
+        throw new Error(`Blueprint niet gevonden voor ${siteTypeName} in 3-sitetypes/unified/`);
     }
 
     const inputPath = path.join(root, '../input', projectName, 'input', inputFile);

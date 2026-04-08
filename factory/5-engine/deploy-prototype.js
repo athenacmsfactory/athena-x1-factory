@@ -22,10 +22,10 @@ async function main() {
 
     const targetDir = path.join(SITES_DIR, `${siteName}-site`);
     const prototypeDir = path.join(INPUT_SITES_DIR, siteName);
-    const dockedHtmlPath = path.join(prototypeDir, 'index.docked.html');
+    const unifiedHtmlPath = path.join(prototypeDir, 'index.html');
 
-    if (!fs.existsSync(dockedHtmlPath)) {
-        console.error(`❌ Error: index.docked.html not found in ${prototypeDir}. Run athenafier.js first.`);
+    if (!fs.existsSync(unifiedHtmlPath)) {
+        console.error(`❌ Error: index.html not found in ${prototypeDir}. Run athenafier.js first.`);
         return;
     }
 
@@ -42,9 +42,9 @@ async function main() {
     console.log("📁 Copying static-wrapper boilerplate...");
     copyRecursiveSync(BOILERPLATE_DIR, targetDir);
 
-    // 3. Copy index.docked.html as index.html
-    console.log("📄 Injecting docked HTML and connector...");
-    let html = fs.readFileSync(dockedHtmlPath, 'utf8');
+    // 3. Copy index.html
+    console.log("📄 Injecting Unified HTML and connector...");
+    let html = fs.readFileSync(unifiedHtmlPath, 'utf8');
     
     // Inject the Dock Connector script tag
     if (!html.includes('dock-connector.js')) {

@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const spreadsheetId = '16ygVILHgFYZz2ORBshaXKbAWpvD2S-_n3n2R_4aHx3Y';
-const serviceAccountPath = '2-Fabriek/athena/athena-y/factory/service-account.json';
+const serviceAccountPath = path.resolve(__dirname, '../../service-account.json');
 const projectName = 'portfolio-kbm';
 
 async function run() {

@@ -35,13 +35,13 @@ For rapid generation and maintenance without the dashboard:
 
 ```bash
 # 1. Generate Sitetype
-node 6-utilities/generate-sitetype-from-input.js my-type docked ../input/my-data.txt
+node 6-utilities/generate-sitetype-from-input.js my-type ../input/my-data.txt
 
 # 2. Parse Data
-node 3-sitetypes/docked/my-type/parser/parser-my-type.js my-data-bron my-data.txt
+node 3-sitetypes/unified/my-type/parser/parser-my-type.js my-data-bron my-data.txt
 
 # 3. Generate Site
-node 6-utilities/generate-site.js my-site my-type docked
+node 6-utilities/generate-site.js my-site my-type
 
 # 4. Update All Sites
 node 6-utilities/update-all-sites.js
@@ -50,7 +50,7 @@ node 6-utilities/update-all-sites.js
 ## 6. Exporting Changes (Back to Sheets)
 After editing the site in the Dock:
 ```bash
-node 6-utilities/export-site-to-sheets.js my-site my-data-bron my-type docked
+node 6-utilities/export-site-to-sheets.js my-site my-data-bron my-type
 ```
 This utilizes `AthenaDataManager` to sync changes.
 

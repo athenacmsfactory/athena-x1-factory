@@ -11,7 +11,9 @@ import { FinalizePhase } from './phases/FinalizePhase.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const defaultCM = new AthenaConfigManager(path.resolve(__dirname, '../..'));
+// Standard V10.1 resolution: __dirname is athena/factory/5-engine/core
+// ../../.. goes up to athena/
+const defaultCM = new AthenaConfigManager(path.resolve(__dirname, '../../..'));
 
 export function validateProjectName(name) {
     return name.trim().toLowerCase()

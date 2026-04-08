@@ -1,17 +1,11 @@
 # Developer Manual - Athena CMS Factory (v7.9.2)
 
-## Two-Track Strategy (Docked vs Autonomous)
-Since v6.2, Athena has maintained a strict separation in the architecture of sitetypes and templates. This ensures maximum flexibility when choosing between centralized management or complete independence.
+## V10 Unified Architecture
+Since v10.1, Athena has shifted to a **100% Unified Architecture**. The historical separation between 'Docked' and 'Autonomous' tracks has been abolished.
 
-### 1. Docked Track (`3-sitetypes/docked/`)
-The 'Docked' track is designed for sites managed via the **Athena Dock**.
-- **Characteristics:** Extremely lightweight code. Contains no internal editor interface.
-- **Data flow:** Edits move from Dock -> Site Plugin -> Local JSON.
-
-### 2. Autonomous Track (`3-sitetypes/autonomous/`)
-The 'Autonomous' track is designed for sites that must operate completely independently.
-- **Characteristics:** Includes built-in editor tools directly within the site code.
-- **Data flow:** Local Editor -> Local JSON.
+- **Unified Logic:** All site-types and blueprints are now stored in `3-sitetypes/unified/`.
+- **Standardization:** Every site is natively compatible with the external Athena Dock while remaining a lightweight, high-performance standalone project.
+- **Data Flow:** All sites use the same bidirectional sync logic (Local JSON <-> Athena Dock/Google Sheets).
 
 ---
 
@@ -196,9 +190,8 @@ Managed by `sync-sheet-to-json.js` via `AthenaDataManager`.
 - **Action**: Fetches raw data from Google Sheets and overwrites `src/data/`.
 - **Safety**: Automatically creates a timestamped backup in `sites/[project]/backups/` before overwriting.
 
-### 🔍 Media Auditor
 To safely manage project images without breaking the site, use the **Media Auditor**:
-`node factory/6-utilities/audit-media.js <project-name>`
+`node 6-utilities/audit-media.js <project-name>`
 
 ### 🛡️ Safe Ingress (GitHub Sync)
 When opening a site in the Dock, the system automatically checks if it is connected to a GitHub repository.
@@ -267,8 +260,6 @@ To prevent clients from seeing "JSON code" in their Google Sheet, data and form 
 
 The Athena Dashboard (Port 5001) has been enhanced to support new operational needs.
 
-### 1. Storage & Health Tab
-A new dedicated tab provides visibility into the **Hydration Management System**.
 *   **Disk Usage**: Real-time visualization of `node_modules` vs project data.
 *   **Actions**:
     *   **pnpm Prune**: Cleans the global pnpm store.

@@ -1,0 +1,171 @@
+{
+  "blueprint_name": "webshop-stripe",
+  "track": "unified",
+  "features": {
+    "ecommerce": true,
+    "payment_gateway": "stripe",
+    "customer_db": "firebase"
+  },
+  "data_structure": [
+    {
+      "table_name": "basis",
+      "columns": [
+        {
+          "name": "config_id",
+          "description": "Primaire sleutel."
+        },
+        {
+          "name": "site_naam",
+          "description": "De naam van de webshop."
+        },
+        {
+          "name": "hero_header",
+          "description": "De hoofdtekst van de hero sectie."
+        },
+        {
+          "name": "stripe_publishable_key",
+          "description": "Je Stripe Publishable Key (pk_test_...)."
+        },
+        {
+          "name": "valuta_code",
+          "description": "Standaard valuta (EUR)."
+        }
+      ]
+    },
+    {
+      "table_name": "klanten",
+      "columns": [
+        {
+          "name": "klant_id",
+          "description": "Unieke Firebase UID."
+        },
+        {
+          "name": "voornaam",
+          "description": "Voornaam van de klant."
+        },
+        {
+          "name": "achternaam",
+          "description": "Achternaam van de klant."
+        },
+        {
+          "name": "email",
+          "description": "E-mailadres (tevens login)."
+        },
+        {
+          "name": "telefoon",
+          "description": "Telefoonnummer."
+        },
+        {
+          "name": "laatste_order_id",
+          "description": "Referentie naar de laatste bestelling."
+        }
+      ]
+    },
+    {
+      "table_name": "bestellingen",
+      "columns": [
+        {
+          "name": "order_id",
+          "description": "Unieke order ID."
+        },
+        {
+          "name": "klant_id",
+          "description": "Referentie naar de klant."
+        },
+        {
+          "name": "totaal_bedrag",
+          "description": "Totaalbedrag in EUR."
+        },
+        {
+          "name": "status",
+          "description": "Status (pending, paid, cancelled)."
+        },
+        {
+          "name": "datum",
+          "description": "Besteldatum."
+        }
+      ]
+    },
+    {
+      "table_name": "categorieen",
+      "columns": [
+        {
+          "name": "categorie_id",
+          "description": "Primaire sleutel."
+        },
+        {
+          "name": "naam",
+          "description": "Naam van de categorie."
+        },
+        {
+          "name": "slug",
+          "description": "SEO-vriendelijke URL slug."
+        }
+      ]
+    },
+    {
+      "table_name": "producten",
+      "columns": [
+        {
+          "name": "product_id",
+          "description": "Primaire sleutel."
+        },
+        {
+          "name": "naam",
+          "description": "De naam van het product."
+        },
+        {
+          "name": "categorie_id",
+          "description": "Relatie naar categorie."
+        },
+        {
+          "name": "prijs",
+          "description": "Prijs in euro's."
+        },
+        {
+          "name": "product_foto_url",
+          "description": "URL naar productafbeelding."
+        }
+      ]
+    }
+  ],
+  "design_system": {
+    "colors": {
+      "primary": "#6366F1",
+      "secondary": "#1E293B",
+      "accent": "#10B981",
+      "background": "#F8FAFC",
+      "surface": "#FFFFFF"
+    },
+    "radius": "8px",
+    "font_sans": "Inter, sans-serif"
+  },
+  "version": "2.0",
+  "sections": [
+    {
+      "id": "basis",
+      "label": "Basis",
+      "binding": "basis"
+    },
+    {
+      "id": "klanten",
+      "label": "Klanten",
+      "binding": "klanten"
+    },
+    {
+      "id": "bestellingen",
+      "label": "Bestellingen",
+      "binding": "bestellingen"
+    },
+    {
+      "id": "categorieen",
+      "label": "Categorieen",
+      "binding": "categorieen"
+    },
+    {
+      "id": "producten",
+      "label": "Producten",
+      "binding": "producten"
+    }
+  ]
+}

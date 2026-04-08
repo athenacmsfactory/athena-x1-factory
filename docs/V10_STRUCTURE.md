@@ -14,11 +14,12 @@ athena/factory/
 │   └── components/
 │       └── legos/         <-- Centralized "Zero-UI" Brick Library (V10 Standard)
 │
-├── 3-sitetypes/           <-- Pure Registry: 28 Site Blueprints (Flattened)
-│   ├── computer-shop/
-│   ├── medical/
-│   ├── portfolio-kbm/
-│   └── [25+ other types...]
+├── 3-sitetypes/           <-- Pure Registry: Blueprints & Configs
+│   └── unified/           <-- Centralized Track (Standard for all 28+ types)
+│       ├── computer-shop/
+│       ├── medical/
+│       ├── portfolio-kbm/
+│       └── [25+ other types...]
 │
 ├── 5-engine/              <-- V10 Site Generation Engine (Path-Aligned)
 │   ├── core/              (ProjectGenerator, Factory Orchestration)

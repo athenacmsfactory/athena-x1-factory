@@ -10,12 +10,16 @@ const __dirname = path.dirname(__filename);
 
 async function run() {
     const root = path.resolve(__dirname, '..');
+    const { AthenaConfigManager } = await import('../5-engine/lib/ConfigManager.js');
+    const config = new AthenaConfigManager(root);
+    const sitetypesDir = config.get('paths.sitetypes');
+
     await loadEnv(path.join(root, '.env'));
 
     // Argumenten: [naam] [track] [inputPath]
     const args = process.argv.slice(2);
     const siteTypeName = args[0] || 'nieuwe-site-type';
-    const track = args[1] || 'docked';
+    const track = 'unified';
     
     // Default pad constructie op basis van naam
     const baseName = siteTypeName.replace('-type', '');
@@ -26,7 +30,7 @@ async function run() {
     console.log(`🧙‍♂️ Athena Automated Site-Type Generator`);
     console.log("==================================================");
     console.log(`📝 Naam  : ${siteTypeName}`);
-    console.log(`🛤️  Track : ${track}`);
+    console.log(`🛤️  Track : unified (V10)`);
     console.log(`📄 Input : ${inputFilePath}`);
 
     // 1. Data inlezen
@@ -73,7 +77,7 @@ async function run() {
     `, { isJson: false, modelStack: process.env.AI_MODEL_SITETYPE_PROMPT_ENGINEER });
 
     // 5. Mappen en bestanden aanmaken
-    const siteTypeDir = path.join(root, '3-sitetypes', track, siteTypeName);
+    const siteTypeDir = path.join(sitetypesDir, siteTypeName);
     const blueprintDir = path.join(siteTypeDir, 'blueprint');
     const toolsDir = path.join(siteTypeDir, 'parser');
     const webDir = path.join(siteTypeDir, 'web', 'standard');

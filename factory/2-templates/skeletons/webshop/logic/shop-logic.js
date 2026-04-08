@@ -2,10 +2,12 @@ import { loadStripe } from '@stripe/stripe-js';
 import { db, auth } from '../services/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
-// Athena V9.2 Standard: Stripe Integration
+// Athena V10.1 Unified: Multi-Provider Payment Strategy
+const PAYMENT_PROVIDER = import.meta.env.VITE_PAYMENT_GATEWAY || 'stripe';
+
 let stripePromise;
 const getStripe = () => {
-  if (!stripePromise) {
+  if (PAYMENT_PROVIDER === 'stripe' && !stripePromise) {
     stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
   }
   return stripePromise;
@@ -13,52 +15,70 @@ const getStripe = () => {
 
 /**
  * createCheckoutSession
- * Redirects the user to a Stripe Checkout page.
- * Requires a backend endpoint (Cloud Function / Next.js API) to create the session.
+ * Unified entry point for Stripe and Mollie.
  */
 export async function createCheckoutSession(items) {
-  const stripe = await getStripe();
-  
-  // 1. Log the intent in Firestore (Pending Order)
-  const user = auth.currentUser;
-  const orderRef = await addDoc(collection(db, 'orders'), {
-    uid: user?.uid || 'guest',
-    items: items,
-    status: 'pending',
-    createdAt: serverTimestamp(),
-  });
+  try {
+    const user = auth.currentUser;
+    
+    // 1. Log the intent in Firestore (Standardized Order Data)
+    const orderData = {
+      uid: user?.uid || 'guest',
+      customer_email: user?.email || 'guest@example.com',
+      items,
+      total_amount: items.reduce((acc, item) => acc + (item.prijs * item.quantity), 0),
+      status: 'pending',
+      provider: PAYMENT_PROVIDER,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    };
 
-  // 2. Call backend to get Stripe Session ID
-  // Note: Replace with actual backend URL
-  const response = await fetch('/api/create-checkout-session', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ 
-      items, 
-      orderId: orderRef.id,
-      successUrl: `${window.location.origin}/success?id=${orderRef.id}`,
-      cancelUrl: `${window.location.origin}/cart`
-    }),
-  });
+    const orderRef = await addDoc(collection(db, 'orders'), orderData);
+    console.log(`🛒 [OrderCreated] ID: ${orderRef.id} (${PAYMENT_PROVIDER})`);
 
-  const session = await response.json();
+    // 2. Call backend to create session
+    const response = await fetch('/api/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        items, 
+        orderId: orderRef.id,
+        provider: PAYMENT_PROVIDER,
+        successUrl: `${window.location.origin}/success?order_id=${orderRef.id}`,
+        cancelUrl: `${window.location.origin}/cart`
+      }),
+    });
 
-  // 3. Redirect to Stripe
-  const result = await stripe.redirectToCheckout({
-    sessionId: session.id,
-  });
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `Failed to create ${PAYMENT_PROVIDER} session`);
+    }
 
-  if (result.error) {
-    console.error(result.error.message);
-    throw new Error('Stripe redirect failed');
+    const sessionData = await response.json();
+
+    // 3. Handle Provider-Specific Redirect
+    if (PAYMENT_PROVIDER === 'stripe') {
+      const stripe = await getStripe();
+      const result = await stripe.redirectToCheckout({
+        sessionId: sessionData.id,
+      });
+      if (result.error) throw new Error(result.error.message);
+    } else if (PAYMENT_PROVIDER === 'mollie') {
+      // Mollie provides a direct checkoutUrl from the backend
+      if (sessionData.checkoutUrl) {
+        window.location.href = sessionData.checkoutUrl;
+      } else {
+        throw new Error('Mollie checkout URL missing from response');
+      }
+    }
+    
+  } catch (err) {
+    console.error(`❌ [${PAYMENT_PROVIDER} CheckoutError]:`, err.message);
+    trackShopEvent('checkout_failed', { provider: PAYMENT_PROVIDER, error: err.message });
+    throw err;
   }
 }
 
-/**
- * trackShopEvent
- * Utility for shop-related analytics
- */
 export function trackShopEvent(eventName, data) {
   console.log(`[ShopAnalytics] ${eventName}:`, data);
-  // Integration with Firebase Analytics can be added here
 }

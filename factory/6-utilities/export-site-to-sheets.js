@@ -9,7 +9,7 @@ const args = process.argv.slice(2);
 const siteName = args[0] || 'de-salon-site';
 const projectName = args[1] || 'de-salon';
 const siteType = args[2] || 'de-salon-type';
-const track = args[3] || 'docked';
+const track = 'unified';
 
 console.log("==================================================");
 console.log("📤 Athena CMS - Full Export Pipeline (Site -> Sheets)");

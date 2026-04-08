@@ -1,11 +1,16 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { AthenaConfigManager } from '../5-engine/lib/ConfigManager.js';
 import { generateWithAI } from '../5-engine/core/ai-engine.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const root = path.resolve(__dirname, '../..');
+const factoryRoot = path.resolve(__dirname, '..');
+
+// Initialize ConfigManager
+const config = new AthenaConfigManager(factoryRoot);
+const sitetypesDir = config.get('paths.sitetypes');
 
 // --- AI FUNCTIE VOOR DATASTRUCTUUR GENERATIE ---
 async function generateDataStructure(businessDescription) {
@@ -167,7 +172,7 @@ export async function generateCompleteSiteType(name, description, dataStructure,
             design_system: designSystem
         };
 
-        await generateFiles(config, root);
+        await generateFiles(config, sitetypesDir);
         return { success: true, message: `Sitetype ${name} succesvol aangemaakt in de V10 Unified Architecture.` };
     } catch (error) {
         throw new Error(`Fout bij aanmaken sitetype: ${error.message}`);
@@ -175,7 +180,7 @@ export async function generateCompleteSiteType(name, description, dataStructure,
 }
 
 // --- GENERATIEFUNCTIE ---
-async function generateFiles(config, root) {
+async function generateFiles(config, sitetypesDir) {
     console.log("\n⚙️  Bezig met genereren...");
 
     // Stap 1: Analyseer de datastructuur
@@ -196,10 +201,10 @@ async function generateFiles(config, root) {
     }
     console.log("   🧩 Alle parser-instructies zijn klaar.");
 
-    // Pad naar de nieuwe sitetype map (V10 Flattened)
-    const sitetypePath = path.join(root, 'factory', '3-sitetypes', config.name);
+    // Pad naar de nieuwe sitetype map (V10 Unified)
+    const sitetypePath = path.join(sitetypesDir, config.name);
     if (fs.existsSync(sitetypePath)) {
-        throw new Error(`Map "${config.name}" bestaat al in factory/3-sitetypes/.`);
+        throw new Error(`Sitetype "${config.name}" bestaat al in ${sitetypesDir}.`);
     }
 
     // Stap 3: Genereer blueprint
@@ -232,8 +237,8 @@ async function generateFiles(config, root) {
     fs.writeFileSync(path.join(blueprintDir, `${config.name}.json`), JSON.stringify(blueprint, null, 2));
     console.log("   ✅ Blueprint opgeslagen.");
 
-    // Stap 4: Kopieer basis bestanden van agency-luxury template (bevindt zich nu in sitetypes root)
-    const templatePath = path.join(root, 'factory', '3-sitetypes', 'agency-luxury');
+    // Stap 4: Kopieer basis bestanden van agency-luxury template
+    const templatePath = path.join(sitetypesDir, 'agency-luxury');
     if (fs.existsSync(templatePath)) {
         console.log(`📁 Basisbestanden kopiëren van agency-luxury template...`);
         copyRecursiveSync(templatePath, sitetypePath, [
@@ -306,7 +311,7 @@ function toPascalCase(str) {
 // Bestaande sitetypes ophalen (V10 Flattened)
 export function getExistingSiteTypes() {
     const results = [];
-    const dir = path.join(root, 'factory', '3-sitetypes');
+    const dir = sitetypesDir;
 
     if (fs.existsSync(dir)) {
         const types = fs.readdirSync(dir).filter(f => {
