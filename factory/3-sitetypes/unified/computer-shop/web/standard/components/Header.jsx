@@ -1,50 +1,45 @@
 import React from 'react';
+import { useCart } from './CartContext';
 
-/**
- * Header (Docked Track)
- * Robust Hero section with support for Title Color and detached Header Image.
- */
-function Header({ primaryTable, tableName, siteSettings = {} }) {
-  const info = Array.isArray(primaryTable) ? (primaryTable[0] || {}) : (primaryTable || {});
-  
-  // Ensure siteSettings is treated as an object (might be array from JSON)
-  const settings = Array.isArray(siteSettings) ? (siteSettings[0] || {}) : siteSettings;
-  
-  // Look for fields in primary table for fallbacks
-  const keys = Object.keys(info);
-  const fallbackTitleKey = keys.find(k => /naam|titel|header|kop|bedrijfsnaam/i.test(k)) || keys[0];
-  const fallbackTaglineKey = keys.find(k => /slogan|tagline|ondertitel|subtitle/i.test(k));
-  
-  // Values: Site Settings > Primary Table > Default
-  const title = settings.title || info[fallbackTitleKey] || 'Welcome';
-  const tagline = settings.tagline || (fallbackTaglineKey ? info[fallbackTaglineKey] : '');
+export default function Header({ data }) {
+  const headerData = data.header || {};
+  const siteSettings = data.site_settings || {};
+  const { cart } = useCart();
+  const cartCount = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+
+  const logoUrl = headerData.logo || 'athena-icon.svg';
+  const menuLinks = headerData.menu_links || [
+    { label: 'Home', url: '/' },
+    { label: 'Producten', url: '#producten' },
+    { label: 'Over Ons', url: '#over-ons' }
+  ];
 
   return (
-    <header className="relative min-h-[60vh] flex items-center justify-center text-center px-6 overflow-hidden bg-primary text-white">
-      {/* Background Media Overlay */}
-      <div className="absolute inset-0 opacity-40">
-        <img src={getImageUrl(settings.hero_image)} className="w-full h-full" data-dock-type="media" data-dock-bind="site_settings.0.hero_image" />
-      </div>
+    <nav className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm">
+      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        <a href="/" className="flex items-center gap-3 group">
+          <img src={logoUrl} alt="Logo" className="w-10 h-10 group-hover:scale-110 transition-transform" />
+          <span className="text-2xl font-bold tracking-tight text-slate-900 group-hover:text-accent transition-colors" data-dock-type="text" data-dock-bind="header.site_name">
+            {headerData.site_name || 'Athena Shop'}
+          </span>
+        </a>
 
-      <div className="relative z-10 max-w-4xl mx-auto reveal">
-        <h1 className="text-5xl md:text-7xl lg:text-8xl mb-6 font-bold text-[var(--color-title)]" data-dock-type="text" data-dock-bind="site_settings.0.title">{title}</h1>
-        
-        {tagline && (
-          <p className="text-xl md:text-2xl font-light text-slate-300 mb-8 max-w-2xl mx-auto leading-relaxed" data-dock-type="text" data-dock-bind="site_settings.0.tagline">{tagline}</p>
-        )}
-        <div className="flex gap-4 justify-center">
-           <a href="#explore" className="btn-primary">Explore More</a>
+        <div className="hidden md:flex items-center gap-8">
+          {menuLinks.map((link, i) => (
+            <a key={i} href={link.url} className="text-sm font-medium text-slate-600 hover:text-accent transition-colors uppercase tracking-wider">
+              {link.label}
+            </a>
+          ))}
+          <a href="/#/checkout" className="relative p-2 text-slate-700 hover:text-accent transition-colors group">
+            <i className="fa-solid fa-cart-shopping text-xl"></i>
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-accent text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full animate-pulse">
+                {cartCount}
+              </span>
+            )}
+          </a>
         </div>
       </div>
-
-      {/* Modern Wave Divider */}
-      <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180">
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-[calc(100%+1.3px)] h-20 fill-background">
-          <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V46.96C25.54,60.05,72.59,70.97,121.39,70.97c48.8,0,105.51-12.21,135.51-24.54l64.49,10Z"></path>
-        </svg>
-      </div>
-    </header>
+    </nav>
   );
 }
-
-export default Header;

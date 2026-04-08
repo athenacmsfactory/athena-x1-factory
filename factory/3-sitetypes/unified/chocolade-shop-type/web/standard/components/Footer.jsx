@@ -1,70 +1,41 @@
 import React from 'react';
 
-export default function Footer({ primaryTable }) {
-  const info = primaryTable?.[0] || {};
+export default function Footer({ data }) {
+  const footerData = data.footer || {};
   
-  // Zoek velden met verschillende mogelijke aliassen
-  const naam = info.site_naam || info.bedrijfsnaam || info.naam_bedrijf || info.naam || info.titel || 'Athena Shop';
-  const adres = info.adres || info.address || info.locatie || '';
-  const telefoon = info.telefoonnummer || info.telefoon || info.phone || '';
-  const email = info.email_algemeen || info.email_publiek || info.email || info.order_email || '';
-  const kvk = info.kvk_nummer || info.kvk || info.chamber_of_commerce || '';
-
-  // Zoek de juiste keys voor de editor
-  const findKey = (search) => Object.keys(info).find(k => k.toLowerCase() === search.toLowerCase()) || Object.keys(info).find(k => k.toLowerCase().includes(search.toLowerCase()));
-  
-  const naamKey = findKey('site_naam') || findKey('naam') || findKey('titel') || 'site_naam';
-  const adresKey = findKey('adres') || findKey('address') || 'adres';
-  const telKey = findKey('telefoon') || findKey('phone') || 'telefoonnummer';
-  const emailKey = findKey('email_algemeen') || findKey('email') || findKey('order_email') || 'email_algemeen';
-  const kvkKey = findKey('kvk') || 'kvk_nummer';
-
   return (
-    <footer className="py-16 bg-slate-900 text-slate-300 border-t border-slate-800">
-      <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
-          {/* Company Info */}
-          <div>
-            <h3 className="text-2xl font-bold text-white mb-4">{naam}</h3>
-            {adres && (
-              <div className="mb-3 flex items-start gap-2">
-                <svg className="w-5 h-5 text-accent mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                <span data-dock-type="text" data-dock-bind="site_settings.0.site_name">...</span>
-                </svg>
-                <div className="text-sm">
-                    <span data-dock-type="text" data-dock-bind="site_settings.0.site_name">...</span>
-                </svg>
-                <div className="text-sm">
-                    <span data-dock-type="text" data-dock-bind="site_settings.0.site_name">
-                        {email}
-                    </span>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Legal */}
-          <div>
-            <h4 className="text-lg font-bold text-white mb-4">Bedrijfsgegevens</h4>
-            {kvk && (
-              <p className="text-sm mb-2">
-                <span className="text-slate-400">KVK:</span>{' '}
-                <span data-dock-type="text" data-dock-bind="site_settings.0.site_name">
-                  {kvk}
-                </span>
-              </p>
-            )}
+    <footer className="bg-slate-900 text-white py-20 px-6 mt-12 overflow-hidden relative">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 relative z-10">
+        <div>
+          <h3 className="text-xl font-bold mb-6 text-white" data-dock-type="text" data-dock-bind="footer.brand_name">{footerData.brand_name || 'Athena'}</h3>
+          <p className="text-slate-400 leading-relaxed" data-dock-type="text" data-dock-bind="footer.description">
+            {footerData.description || 'Premium kwaliteit en service sinds 2026.'}
+          </p>
+        </div>
+        <div>
+          <h4 className="font-bold mb-6 text-accent">Contact</h4>
+          <div className="space-y-4 text-slate-400">
+             <p><i className="fa-solid fa-envelope mr-3 text-accent/50"></i><span data-dock-type="text" data-dock-bind="footer.email">{footerData.email || 'info@athena.be'}</span></p>
+             <p><i className="fa-solid fa-phone mr-3 text-accent/50"></i><span data-dock-type="text" data-dock-bind="footer.phone">{footerData.phone || '+32 400 00 00 00'}</span></p>
           </div>
         </div>
-
-        {/* Bottom Bar */}
-        <div className="pt-8 border-t border-slate-800 text-center text-sm text-slate-500">
-          <p>&copy; {new Date().getFullYear()} {naam}. Alle rechten voorbehouden.</p>
-          <p className="mt-2 text-xs">Gemaakt met Athena CMS Factory</p>
+        <div>
+          <h4 className="font-bold mb-6 text-accent">Links</h4>
+          <ul className="space-y-3 text-slate-400">
+             <li><a href="/" className="hover:text-white transition-colors">Home</a></li>
+             <li><a href="#producten" className="hover:text-white transition-colors">Shop</a></li>
+          </ul>
         </div>
+        <div>
+          <h4 className="font-bold mb-6 text-accent">Nieuwsbrief</h4>
+          <div className="flex bg-white/10 rounded-full p-1 border border-white/20 focus-within:border-accent transition-all">
+            <input type="email" placeholder="Uw e-mail..." className="bg-transparent border-none focus:ring-0 px-4 py-2 w-full text-sm outline-none" />
+            <button className="bg-accent text-white px-6 py-2 rounded-full text-sm font-bold hover:scale-105 active:scale-95 transition-transform">Ok</button>
+          </div>
+        </div>
+      </div>
+      <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-white/10 text-center text-slate-500 text-sm">
+        <p>&copy; {new Date().getFullYear()} {footerData.brand_name || 'Athena'}. Alle rechten voorbehouden.</p>
       </div>
     </footer>
   );

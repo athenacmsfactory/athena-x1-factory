@@ -131,5 +131,3 @@ export default function Header({ data = {} }) {
     </nav>
   );
 }
-
-export default Header;

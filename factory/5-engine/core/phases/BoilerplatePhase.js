@@ -83,6 +83,9 @@ export class BoilerplatePhase extends BasePhase {
         return key ? dataModules[key].default : null;
     };
     data['section_order'] = getData('section_order') || [];
+    data['header'] = getData('header') || {};
+    data['hero'] = getData('hero') || {};
+    data['footer'] = getData('footer') || {};
     data['site_settings'] = getData('site_settings') || {};
     data['display_config'] = getData('display_config') || { sections: {} };
     data['layout_settings'] = getData('layout_settings') || {};
@@ -98,6 +101,6 @@ export class BoilerplatePhase extends BasePhase {
 
     transformWebshopApp(content) {
         // Keeping current legacy string-based replacement for now
-        return `import React from 'react';\nimport { HashRouter as Router, Routes, Route } from 'react-router-dom';\nimport Header from './components/Header';\nimport Section from './components/Section';\nimport Footer from './components/Footer';\nimport Checkout from './components/Checkout';\nimport CartOverlay from './components/CartOverlay';\nimport { CartProvider } from './components/CartContext';\nconst Layout = ({ data, children }) => (\n<div className=\"min-h-screen bg-[var(--color-background)]\">\n<Header data={data.basis || Object.values(data)[0]} siteSettings={data.site_settings} />\n<main className=\"pt-20\">{children}</main>\n<Footer siteSettings={data.site_settings} />\n<CartOverlay />\n</div>\n);\nconst App = ({ data }) => (\n<CartProvider>\n<Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>\n<Routes>\n<Route path=\"/\" element={<Layout data={data}><Section data={data} /></Layout>} />\n<Route path=\"/checkout\" element={<Layout data={data}><Checkout /></Layout>} />\n</Routes>\n</Router>\n</CartProvider>\n);\nexport default App;`;
+        return `import React from 'react';\nimport { HashRouter as Router, Routes, Route } from 'react-router-dom';\nimport Header from './components/Header';\nimport Section from './components/Section';\nimport Footer from './components/Footer';\nimport Checkout from './components/Checkout';\nimport CartOverlay from './components/CartOverlay';\nimport { CartProvider } from './components/CartContext';\nconst Layout = ({ data, children }) => (\n<div className=\"min-h-screen bg-[var(--color-background)]\">\n<Header data={data} />\n<main className=\"pt-20\">{children}</main>\n<Footer data={data} />\n<CartOverlay />\n</div>\n);\nconst App = ({ data }) => (\n<CartProvider>\n<Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>\n<Routes>\n<Route path=\"/\" element={<Layout data={data}><Section data={data} /></Layout>} />\n<Route path=\"/checkout\" element={<Layout data={data}><Checkout /></Layout>} />\n</Routes>\n</Router>\n</CartProvider>\n);\nexport default App;`;
     }
 }

@@ -1,26 +1,45 @@
 import React from 'react';
+import { useCart } from './CartContext';
 
-const Header = ({ profile }) => {
+export default function Header({ data }) {
+  const headerData = data.header || {};
+  const siteSettings = data.site_settings || {};
+  const { cart } = useCart();
+  const cartCount = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+
+  const logoUrl = headerData.logo || 'athena-icon.svg';
+  const menuLinks = headerData.menu_links || [
+    { label: 'Home', url: '/' },
+    { label: 'Producten', url: '#producten' },
+    { label: 'Over Ons', url: '#over-ons' }
+  ];
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 py-10 px-6">
-      <div className="max-w-7xl mx-auto flex justify-between items-center bg-black/50 backdrop-blur-2xl border border-white/10 rounded-full px-10 py-4">
-        <div className="text-xl font-black uppercase tracking-tighter">
-          <span data-dock-type="text" data-dock-bind="site_settings.0.site_name">...</span>
-        </div>
-        
-        <nav className="hidden md:flex gap-8 items-center">
-          {['Projects', 'Services', 'About', 'Contact'].map(item => (
-            <a key={item} href={`#\${item.toLowerCase()}`} className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 hover:text-white transition-colors">
-              {item}
+    <nav className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm">
+      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        <a href="/" className="flex items-center gap-3 group">
+          <img src={logoUrl} alt="Logo" className="w-10 h-10 group-hover:scale-110 transition-transform" />
+          <span className="text-2xl font-bold tracking-tight text-slate-900 group-hover:text-accent transition-colors" data-dock-type="text" data-dock-bind="header.site_name">
+            {headerData.site_name || 'Athena Shop'}
+          </span>
+        </a>
+
+        <div className="hidden md:flex items-center gap-8">
+          {menuLinks.map((link, i) => (
+            <a key={i} href={link.url} className="text-sm font-medium text-slate-600 hover:text-accent transition-colors uppercase tracking-wider">
+              {link.label}
             </a>
           ))}
-          <a href="#contact" className="bg-white text-black px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-blue-500 hover:text-white transition-all">
-            Let's Talk
+          <a href="/#/checkout" className="relative p-2 text-slate-700 hover:text-accent transition-colors group">
+            <i className="fa-solid fa-cart-shopping text-xl"></i>
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-accent text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full animate-pulse">
+                {cartCount}
+              </span>
+            )}
           </a>
-        </nav>
+        </div>
       </div>
-    </header>
+    </nav>
   );
-};
-
-export default Header;
+}

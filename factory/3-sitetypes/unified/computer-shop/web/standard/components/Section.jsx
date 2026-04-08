@@ -1,116 +1,75 @@
 import React, { useState, useEffect } from 'react';
-import { useCart } from './CartContext';
+/* {{IMPORTS}} */
 
-const Section = ({ title, data, tableName }) => {
-  const { addToCart } = useCart();
-  const [currentLayout, setCurrentLayout] = useState('grid');
-  
-  useEffect(() => {
-    // Load layout preference - still needed for rendering correct layout
-    fetch(`${import.meta.env.BASE_URL}layout_settings.json`)
-      .then(res => res.json())
-      .then(settings => setCurrentLayout(settings[tableName] || 'grid'))
-      .catch(() => setCurrentLayout('grid'));
-  }, [tableName]);
-  
-  if (!data || data.length === 0) return null;
-
-  // Render logic based on layout (Simplified)
-  const gridClasses = {
-    grid: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8',
-    list: 'flex flex-col gap-6',
-    'z-pattern': 'flex flex-col gap-12',
-    focus: 'flex flex-col gap-24'
+const Section = ({ data }) => {
+  const getImageUrl = (url) => {
+    if (!url) return '';
+    if (typeof url === 'object') url = url.text || url.url || '';
+    if (url.startsWith('http') || url.startsWith('data:')) return url;
+    const base = import.meta.env.BASE_URL || '/';
+    if (url.startsWith(base) && base !== '/') return url;
+    const isRootPublic = url.startsWith('./') || url.endsWith('.svg') || url.endsWith('.ico') || url === 'site-logo.svg' || url === 'athena-icon.svg';
+    const hasImagesPrefix = url.includes('/images/') || url.startsWith('images/');
+    const pathPrefix = (isRootPublic || hasImagesPrefix) ? '' : 'images/';
+    return (base + pathPrefix + url.replace('./', '')).replace(new RegExp('/+', 'g'), '/');
   };
 
-  const bind = (index, key) => JSON.stringify({ file: tableName, index, key });
+  const sectionOrder = data.section_order || [];
+  const layoutSettings = data.layout_settings || {};
+  const sectionSettings = data.section_settings || {};
+
+  useEffect(() => {
+    if (window.athenaScan) {
+      window.athenaScan(data);
+    }
+  }, [data, sectionOrder]);
+
+  const getComponent = (sectionName) => {
+      const lower = sectionName.toLowerCase();
+      /* {{MAPPING_LOGIC}} */
+      return GenericSection;
+  };
+
+  const headerData = data.header || {};
+  const heroData = data.hero || {};
+  const footerData = data.footer || {};
 
   return (
-    <section 
-      id={title.toLowerCase()} 
-      className="py-20 px-6" 
-      data-dock-section={tableName}
-    >
-      <div className="max-w-7xl mx-auto">
-        <header className="mb-12 text-center reveal relative">
-          <h2 className="text-4xl md:text-5xl mb-4 capitalize">{title.replace(/_/g, ' ')}</h2>
-          <div className="h-1 w-20 bg-accent mx-auto rounded-full"></div>
-        </header>
+    <div className="flex flex-col">
+      {/* 1. Hero Section (Explicitly rendered if exists) */}
+      {heroData && Object.keys(heroData).length > 0 && (
+        <section
+          id="hero"
+          data-dock-section="hero"
+          className="relative w-full h-auto min-h-[80vh] flex items-center justify-center overflow-hidden bg-slate-900 pt-24"
+        >
+          <div className="absolute inset-0 z-0">
+             <img src={getImageUrl(heroData.hero_image)} className="w-full h-full object-cover" data-dock-type="media" data-dock-bind="hero.hero_image" />
+             <div className="absolute inset-0 bg-black/50 z-10"></div>
+          </div>
+          <div className="relative z-20 text-center px-6 max-w-5xl text-white">
+            <h1 className="text-4xl md:text-7xl font-bold mb-6">
+              <span data-dock-type="text" data-dock-bind="hero.hero_header">{heroData.hero_header}</span>
+            </h1>
+            <p className="text-xl md:text-2xl mb-10 opacity-90">
+              <span data-dock-type="text" data-dock-bind="hero.hero_tagline">{heroData.hero_tagline}</span>
+            </p>
+            {heroData.cta_text && (
+              <a href={heroData.cta_url || "#"} className="bg-white text-slate-900 px-8 py-4 rounded-full font-bold hover:bg-slate-200 transition-all" data-dock-type="link" data-dock-bind="hero.cta_text">
+                {heroData.cta_text}
+              </a>
+            )}
+          </div>
+        </section>
+      )}
 
-        <div className={gridClasses[currentLayout] || gridClasses.grid}>
-          {data.map((item, index) => {
-            // Mapping known fields
-            const name = item.naam || item.product_naam || item.bedrijfsnaam || item.titel || Object.values(item)[1] || 'Naamloos';
-            const description = item.beschrijving || item.omschrijving || item.korte_bio || item.info || '';
-            const rawPrice = item.prijs || item.kosten;
-            const category = item.categorie || item.type || item.specialisatie;
-            const imageField = Object.keys(item).find(key => key.toLowerCase().includes('afbeelding') || key.toLowerCase().includes('foto') || key.toLowerCase().includes('image'));
-            
-            const nameField = Object.keys(item).find(k => (item[k] === name) && k !== 'absoluteIndex') || 'naam';
-            const descField = Object.keys(item).find(k => (item[k] === description) && k !== 'absoluteIndex') || 'beschrijving';
-
-            const price = typeof rawPrice === 'string' 
-              ? parseFloat(rawPrice.replace('€', '').replace(',', '.')) 
-              : parseFloat(rawPrice);
-
-            let imgSrc = "placeholder.jpg";
-            if (imageField && item[imageField]) {
-              imgSrc = item[imageField].startsWith('http') ? item[imageField] : `${import.meta.env.BASE_URL}images/${item[imageField]}`;
-            }
-
-            const absoluteIndex = item.absoluteIndex !== undefined ? item.absoluteIndex : index;
-
-            return (
-              <article 
-                key={absoluteIndex} 
-                className={`card group reveal flex ${currentLayout === 'list' ? 'flex-row items-center gap-6' : 'flex-col'} h-full`}
-              >
-                <div className={`relative ${currentLayout === 'list' ? 'w-48 h-32' : 'h-64'} mb-6 overflow-hidden rounded-2xl shrink-0`}>
-                  <img 
-                    src={imgSrc} 
-                    alt={name} 
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    data-dock-bind={bind(absoluteIndex, imageField)}
-                  />
-                  {category && <span className="absolute top-4 left-4 badge bg-white/90 backdrop-blur-md text-slate-800 border-none shadow-sm">{category}</span>}
-                </div>
-
-                <div className="flex flex-col flex-grow">
-                  <span data-dock-type="text" data-dock-bind="site_settings.0.site_name">
-                    {name}
-                  </span>
-                  
-                  {description && (
-                    <span data-dock-type="text" data-dock-bind="site_settings.0.site_name">
-                      {description}
-                    </span>
-                  )}
-                  
-                  <div className="mt-auto flex items-center justify-between pt-4 border-t border-slate-50">
-                    {price > 0 ? (
-                      <span className="text-xl font-black text-slate-900">
-                        €{price.toLocaleString('nl-NL', { minimumFractionDigits: 2 })}
-                      </span>
-                    ) : (
-                      <span></span>
-                    )}
-                    
-                    {price > 0 && (
-                      <button 
-                        className="btn-primary py-2 px-6 text-xs uppercase tracking-widest font-bold"
-                        onClick={() => addToCart({ id: `${tableName}-${absoluteIndex}`, name, price })}
-                      >
-                        Bestellen
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </article>
-            );
-          })}
-        </div>
-      </div>
-    </section>
+      {/* 2. Dynamic Sections Loop */}
+      {sectionOrder.filter(name => !['site_settings', 'basis', 'header', 'footer', 'hero'].includes(name.toLowerCase())).map((sectionName, idx) => {
+        const items = data[sectionName] || [];
+        if (items.length === 0) return null;
+        /* {{COMPONENT_RETURN}} */
+      })}
+    </div>
   );
 };
 

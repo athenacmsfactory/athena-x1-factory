@@ -1,43 +1,42 @@
 import React from 'react';
 
-const Footer = ({ profile, socials }) => {
+export default function Footer({ data }) {
+  const footerData = data.footer || {};
+  
   return (
-    <footer className="py-32 px-6 border-t border-white/5 bg-zinc-900/20">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-20 mb-32">
-          <div>
-            <h2 className="text-6xl md:text-9xl font-black uppercase tracking-tighter mb-10 leading-[0.8]">
-              Let's create <br /> <span className="text-zinc-800">Together.</span>
-            </h2>
-            <p className="text-zinc-500 text-xl max-w-md leading-relaxed">
-              Available for freelance opportunities and innovative collaborations.
-            </p>
-          </div>
-          <div className="flex flex-col justify-end items-start md:items-end">
-             <a href={`mailto:\${profile.contact_email}`} className="text-3xl md:text-5xl font-black uppercase tracking-tighter hover:text-blue-500 transition-colors mb-4 break-all">
-                <span data-dock-type="text" data-dock-bind={`socials.${idx}.titel`}>{social.titel || "..."}</span>
-             </a>
-             <div className="flex gap-6 mt-10">
-                {socials.map((social, idx) => (
-                  <a key={idx} href={social.url} className="text-xs font-black uppercase tracking-widest text-zinc-500 hover:text-white transition-colors">
-                    <span data-dock-type="text" data-dock-bind={`socials.${idx}.beschrijving`}>{social.beschrijving || "..."}</span>
-                  </a>
-                ))}
-             </div>
+    <footer className="bg-slate-900 text-white py-20 px-6 mt-12 overflow-hidden relative">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 relative z-10">
+        <div>
+          <h3 className="text-xl font-bold mb-6 text-white" data-dock-type="text" data-dock-bind="footer.brand_name">{footerData.brand_name || 'Athena'}</h3>
+          <p className="text-slate-400 leading-relaxed" data-dock-type="text" data-dock-bind="footer.description">
+            {footerData.description || 'Premium kwaliteit en service sinds 2026.'}
+          </p>
+        </div>
+        <div>
+          <h4 className="font-bold mb-6 text-accent">Contact</h4>
+          <div className="space-y-4 text-slate-400">
+             <p><i className="fa-solid fa-envelope mr-3 text-accent/50"></i><span data-dock-type="text" data-dock-bind="footer.email">{footerData.email || 'info@athena.be'}</span></p>
+             <p><i className="fa-solid fa-phone mr-3 text-accent/50"></i><span data-dock-type="text" data-dock-bind="footer.phone">{footerData.phone || '+32 400 00 00 00'}</span></p>
           </div>
         </div>
-
-        <div className="flex flex-col md:flex-row justify-between items-center gap-8 pt-10 border-t border-white/5 text-[10px] font-black uppercase tracking-[0.3em] text-zinc-600">
-          <div>© {new Date().getFullYear()} <span data-dock-type="text" data-dock-bind={`socials.${idx}.tag`}>{social.tag || "..."}</span></div>
-          <div className="flex gap-10">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-          </div>
-          <div>Built with Athena v7.4</div>
+        <div>
+          <h4 className="font-bold mb-6 text-accent">Links</h4>
+          <ul className="space-y-3 text-slate-400">
+             <li><a href="/" className="hover:text-white transition-colors">Home</a></li>
+             <li><a href="#producten" className="hover:text-white transition-colors">Shop</a></li>
+          </ul>
         </div>
+        <div>
+          <h4 className="font-bold mb-6 text-accent">Nieuwsbrief</h4>
+          <div className="flex bg-white/10 rounded-full p-1 border border-white/20 focus-within:border-accent transition-all">
+            <input type="email" placeholder="Uw e-mail..." className="bg-transparent border-none focus:ring-0 px-4 py-2 w-full text-sm outline-none" />
+            <button className="bg-accent text-white px-6 py-2 rounded-full text-sm font-bold hover:scale-105 active:scale-95 transition-transform">Ok</button>
+          </div>
+        </div>
+      </div>
+      <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-white/10 text-center text-slate-500 text-sm">
+        <p>&copy; {new Date().getFullYear()} {footerData.brand_name || 'Athena'}. Alle rechten voorbehouden.</p>
       </div>
     </footer>
   );
-};
-
-export default Footer;
+}

@@ -1,86 +1,41 @@
 import React from 'react';
 
 export default function Footer({ data }) {
-  const settingsSource = data?.site_settings || {};
-  const settings = Array.isArray(settingsSource) ? (settingsSource[0] || {}) : settingsSource;
-  const contactInfo = data?.contact?.[0] || {};
+  const footerData = data.footer || {};
   
-  const naam = settings.site_name || '{{PROJECT_NAME}}';
-  const email = contactInfo.email || settings.email || '';
-  const locatie = contactInfo.location || '';
-  const btw = contactInfo.btw_nummer || contactInfo.btw || '';
-  const linkedin = contactInfo.linkedin_url || contactInfo.linkedin || '';
-
   return (
-    <footer className="py-24 bg-slate-900 text-slate-400 border-t border-slate-800 relative overflow-hidden">
-      <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/5 rounded-full blur-[80px] -ml-32 -mb-32"></div>
-      
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-20 mb-20">
-          
-          {/* Brand Identity */}
-          <div className="space-y-6">
-            <h3 className="text-3xl font-serif font-bold text-white">
-              <span data-dock-type="text" data-dock-bind="site_settings.0.site_name">{naam}</span>
-            </h3>
-            {settings.tagline && (
-              <p className="text-lg leading-relaxed font-light">
-                <span data-dock-type="text" data-dock-bind="site_settings.0.tagline">{settings.tagline}</span>
-              </p>
-            )}
-          </div>
-
-          {/* Contact Details */}
-          <div className="space-y-6">
-            <h4 className="text-sm font-bold uppercase tracking-[0.2em] text-accent">Contact</h4>
-            <ul className="space-y-4">
-              {email && (
-                <li className="flex items-center gap-4">
-                  <i className="fa-solid fa-envelope text-accent w-5"></i>
-                  <span data-dock-type="text" data-dock-bind="contact.0.email">{email}</span>
-                </li>
-              )}
-              {locatie && (
-                <li className="flex items-center gap-4">
-                  <i className="fa-solid fa-location-dot text-accent w-5"></i>
-                  <span data-dock-type="text" data-dock-bind="contact.0.location">{locatie}</span>
-                </li>
-              )}
-              {linkedin && (
-                <li className="flex items-center gap-4">
-                  <i className="fa-brands fa-linkedin text-accent w-5"></i>
-                  <a href={"#"} data-dock-type="link" data-dock-bind="contact.0.linkedin_url">LinkedIn</a>
-                </li>
-              )}
-            </ul>
-          </div>
-
-          {/* Legal / Company Info */}
-          <div className="space-y-6">
-            <h4 className="text-sm font-bold uppercase tracking-[0.2em] text-accent">Bedrijfsgegevens</h4>
-            <div className="space-y-4">
-              {btw && (
-                <p className="flex items-center gap-2">
-                  <span className="text-slate-500">BTW:</span> 
-                  <span data-dock-type="text" data-dock-bind="contact.0.btw_nummer">{btw}</span>
-                </p>
-              )}
-              <p className="text-sm font-light leading-relaxed">
-                <span data-dock-type="text" data-dock-bind="site_settings.0.footer_text">{settings.footer_text || 'Professionele website geleverd door Athena CMS Factory.'}</span>
-              </p>
-            </div>
-          </div>
-
+    <footer className="bg-slate-900 text-white py-20 px-6 mt-12 overflow-hidden relative">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 relative z-10">
+        <div>
+          <h3 className="text-xl font-bold mb-6 text-white" data-dock-type="text" data-dock-bind="footer.brand_name">{footerData.brand_name || 'Athena'}</h3>
+          <p className="text-slate-400 leading-relaxed" data-dock-type="text" data-dock-bind="footer.description">
+            {footerData.description || 'Premium kwaliteit en service sinds 2026.'}
+          </p>
         </div>
-
-        {/* Copyright Bar */}
-        <div className="pt-12 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6 text-sm">
-          <p>&copy; {new Date().getFullYear()} {naam}. Alle rechten voorbehouden.</p>
-          <div className="flex items-center gap-2 opacity-50">
-            <img src="./athena-icon.svg" alt="Athena Logo" className="w-5 h-5" />
-            <span>Gemaakt met Athena CMS Factory</span>
+        <div>
+          <h4 className="font-bold mb-6 text-accent">Contact</h4>
+          <div className="space-y-4 text-slate-400">
+             <p><i className="fa-solid fa-envelope mr-3 text-accent/50"></i><span data-dock-type="text" data-dock-bind="footer.email">{footerData.email || 'info@athena.be'}</span></p>
+             <p><i className="fa-solid fa-phone mr-3 text-accent/50"></i><span data-dock-type="text" data-dock-bind="footer.phone">{footerData.phone || '+32 400 00 00 00'}</span></p>
           </div>
         </div>
+        <div>
+          <h4 className="font-bold mb-6 text-accent">Links</h4>
+          <ul className="space-y-3 text-slate-400">
+             <li><a href="/" className="hover:text-white transition-colors">Home</a></li>
+             <li><a href="#producten" className="hover:text-white transition-colors">Shop</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 className="font-bold mb-6 text-accent">Nieuwsbrief</h4>
+          <div className="flex bg-white/10 rounded-full p-1 border border-white/20 focus-within:border-accent transition-all">
+            <input type="email" placeholder="Uw e-mail..." className="bg-transparent border-none focus:ring-0 px-4 py-2 w-full text-sm outline-none" />
+            <button className="bg-accent text-white px-6 py-2 rounded-full text-sm font-bold hover:scale-105 active:scale-95 transition-transform">Ok</button>
+          </div>
+        </div>
+      </div>
+      <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-white/10 text-center text-slate-500 text-sm">
+        <p>&copy; {new Date().getFullYear()} {footerData.brand_name || 'Athena'}. Alle rechten voorbehouden.</p>
       </div>
     </footer>
   );

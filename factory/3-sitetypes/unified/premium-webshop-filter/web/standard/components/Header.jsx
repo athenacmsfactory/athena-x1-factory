@@ -1,46 +1,45 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useCart } from './CartContext';
 
-function Header({ siteSettings = {} }) {
-  const settings = Array.isArray(siteSettings) ? (siteSettings[0] || {}) : (siteSettings || {});
-  const siteName = settings.site_name || 'urban-soles';
-  const logoChar = (settings.logo_text || siteName).charAt(0).toUpperCase();
-  
-  // Use a reliable default logo if site_logo_image is missing
-  const displayLogo = settings.site_logo_image || "athena-icon.svg";
+export default function Header({ data }) {
+  const headerData = data.header || {};
+  const siteSettings = data.site_settings || {};
+  const { cart } = useCart();
+  const cartCount = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+
+  const logoUrl = headerData.logo || 'athena-icon.svg';
+  const menuLinks = headerData.menu_links || [
+    { label: 'Home', url: '/' },
+    { label: 'Producten', url: '#producten' },
+    { label: 'Over Ons', url: '#over-ons' }
+  ];
 
   return (
-    <nav 
-      className="fixed top-0 left-0 right-0 z-[1000] border-b border-white/10 px-6 py-5 transition-all duration-500"
-      style={{ backgroundColor: 'var(--color-header-bg, rgba(255,255,255,0.9))', backdropFilter: 'blur(16px)' }}
-    >
-      <div className="max-w-7xl mx-auto flex justify-between items-center">
-        {/* Logo & Identity */}
-        <Link to="/" className="flex items-center gap-4 group">
-          
-          <div className="relative w-12 h-12 overflow-hidden transition-transform duration-500">
-             <img src={displayLogo} className="w-full h-full object-contain" data-dock-type="media" data-dock-bind="site_settings.0.site_logo_image" />
-          </div>
-          
-          <div className="flex flex-col">
-            <span className="text-2xl font-serif font-black tracking-tight text-primary leading-none mb-1">
-              <span data-dock-type="text" data-dock-bind="site_settings.0.site_name">{siteName}</span>
-            </span>
-            {settings.tagline && (
-              <span className="text-[10px] uppercase tracking-[0.3em] text-accent font-bold opacity-80">
-                <span data-dock-type="text" data-dock-bind="site_settings.0.tagline">{settings.tagline}</span>
+    <nav className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm">
+      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        <a href="/" className="flex items-center gap-3 group">
+          <img src={logoUrl} alt="Logo" className="w-10 h-10 group-hover:scale-110 transition-transform" />
+          <span className="text-2xl font-bold tracking-tight text-slate-900 group-hover:text-accent transition-colors" data-dock-type="text" data-dock-bind="header.site_name">
+            {headerData.site_name || 'Athena Shop'}
+          </span>
+        </a>
+
+        <div className="hidden md:flex items-center gap-8">
+          {menuLinks.map((link, i) => (
+            <a key={i} href={link.url} className="text-sm font-medium text-slate-600 hover:text-accent transition-colors uppercase tracking-wider">
+              {link.label}
+            </a>
+          ))}
+          <a href="/#/checkout" className="relative p-2 text-slate-700 hover:text-accent transition-colors group">
+            <i className="fa-solid fa-cart-shopping text-xl"></i>
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-accent text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full animate-pulse">
+                {cartCount}
               </span>
             )}
-          </div>
-        </Link>
-
-        {/* Action Menu */}
-        <div className="hidden md:flex items-center gap-8">
-            <a href={"#"} data-dock-type="link" data-dock-bind="site_settings.0.cta_text">Lees Meer</a>
+          </a>
         </div>
       </div>
     </nav>
   );
 }
-
-export default Header;
