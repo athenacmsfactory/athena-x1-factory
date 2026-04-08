@@ -1,8 +1,9 @@
-import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from './CartContext';
 
 const CartOverlay = () => {
   const { cart, isCartOpen, setIsCartOpen, updateQuantity, cartTotal, cartCount } = useCart();
+  const navigate = useNavigate();
 
   if (!isCartOpen) return null;
 
@@ -81,7 +82,10 @@ const CartOverlay = () => {
             
             <button 
               className="btn-primary w-full py-5 text-lg shadow-xl shadow-accent/20" 
-              onClick={() => alert('Bedankt voor je interesse! De checkout wordt momenteel geconfigureerd.')}
+              onClick={() => {
+                setIsCartOpen(false);
+                navigate('/checkout');
+              }}
             >
               Afrekenen
             </button>
