@@ -25,65 +25,52 @@ export async function deployProject(selectedProject, commitMsg = "Deploy update"
         throw new Error("GITHUB_USER en GITHUB_PAT moeten zijn ingesteld in .env.");
     }
 
-    // --- DETECT MONOREPO ---
-    const monorepoRoot = path.resolve(projectDir, '../..');
-    const isMonorepo = fs.existsSync(path.join(monorepoRoot, '.git'));
+    // --- DETECT MONOREPO (v9 Vault-First) ---
+    const vaultRoot = path.resolve(root, '../../vault');
+    const isVaultMonorepo = fs.existsSync(path.join(vaultRoot, '.git'));
 
-    if (isMonorepo) {
-        console.log(`   🏗️  Monorepo-modus gedetecteerd (Root: ${monorepoRoot})`);
+    if (isVaultMonorepo) {
+        console.log(`   🏗️  v9 Vault-Monorepo gedetecteerd (Root: ${vaultRoot})`);
         
-        // 1. Site-specifieke voorbereiding (nog steeds nuttig voor de subtree repo)
-        const readmePath = path.join(projectDir, 'README.md');
-        const deployUrl = `https://${ORG}.github.io/${selectedProject}/`;
-        const newReadme = `# ${selectedProject}\n\n🚀 **Live Site:** [${deployUrl}](${deployUrl})\n\n---\nBuilt with **Athena CMS Factory** (Monorepo Workflow).`;
-        fs.writeFileSync(readmePath, newReadme);
-
-        const viteConfigPath = path.join(projectDir, 'vite.config.js');
-        if (fs.existsSync(viteConfigPath)) {
-            let viteConfig = fs.readFileSync(viteConfigPath, 'utf8');
-            const baseRegex = /base:\s*['"][^'"]*['"]|base:\s*process\.env\.NODE_ENV\s*===\s*.*?\?\s*.*?\/.*?:\s*['"]\/['"]/;
-            const newBase = `base: process.env.NODE_ENV === 'production' ? '/${selectedProject}/' : '/'`;
-            if (!viteConfig.includes(newBase)) {
-                if (baseRegex.test(viteConfig)) viteConfig = viteConfig.replace(baseRegex, newBase);
-                else viteConfig = viteConfig.replace('defineConfig({', `defineConfig({\n  ${newBase},`);
-                fs.writeFileSync(viteConfigPath, viteConfig);
-            }
+        // 1. Zorg dat de site in de vault up-to-date is (optioneel, maar we gaan ervan uit dat PUSH al gedaan is)
+        const siteInVault = path.join(vaultRoot, selectedProject);
+        if (!fs.existsSync(siteInVault)) {
+            console.log(`   ⚠️  Site niet gevonden in Vault. Heb je al op PUSH geklikt?`);
         }
 
-        // 2. Monorepo Commit & Push
-        try {
-            const currentBranch = execSync('git rev-parse --abbrev-ref HEAD', { cwd: monorepoRoot, encoding: 'utf8' }).trim();
-            console.log(`   📦 Wijzigingen toevoegen aan monorepo (Branch: ${currentBranch})...`);
-            
-            // Verifieer welke bestanden gewijzigd zijn
-            const changes = execSync('git status --porcelain', { cwd: monorepoRoot, encoding: 'utf8' });
-            console.log(`   🔍 Gevonden wijzigingen:\n${changes || 'Geen'}`);
+        const deployUrl = `https://athenacmsfactory.github.io/athena-x-vault/${selectedProject}/`;
 
-            execSync('git add .', { cwd: monorepoRoot, stdio: 'pipe' });
+        // 2. Vault-Monorepo Commit & Push naar de JUISTE repo
+        try {
+            const currentBranch = execSync('git rev-parse --abbrev-ref HEAD', { cwd: vaultRoot, encoding: 'utf8' }).trim();
+            console.log(`   📦 Wijzigingen toevoegen aan Vault-Monorepo (Branch: ${currentBranch})...`);
             
-            const statusAfterAdd = execSync('git status --porcelain', { cwd: monorepoRoot, encoding: 'utf8' });
+            execSync('git add .', { cwd: vaultRoot, stdio: 'pipe' });
+            
+            const statusAfterAdd = execSync('git status --porcelain', { cwd: vaultRoot, encoding: 'utf8' });
             
             if (statusAfterAdd.trim() !== "") {
-                console.log(`   📝 Committen naar monorepo: "${commitMsg}"...`);
-                execSync(`git commit -m "${commitMsg}"`, { cwd: monorepoRoot, stdio: 'pipe' });
+                const finalMsg = `release(${selectedProject}): ${commitMsg}`;
+                console.log(`   📝 Committen naar Vault: "${finalMsg}"...`);
+                execSync(`git commit -m "${finalMsg}"`, { cwd: vaultRoot, stdio: 'pipe' });
                 
-                console.log(`   📤 Pushen naar monorepo (origin ${currentBranch})...`);
-                const pushOutput = execSync(`git push origin ${currentBranch}`, { cwd: monorepoRoot, encoding: 'utf8' });
-                console.log(`   ✅ Monorepo push voltooid:\n${pushOutput}`);
+                console.log(`   📤 Pushen naar athena-x-vault (origin ${currentBranch})...`);
+                execSync(`git push origin ${currentBranch}`, { cwd: vaultRoot, encoding: 'utf8' });
+                console.log(`   ✅ Vault-Monorepo push voltooid.`);
             } else {
-                console.log(`   ℹ️ Geen wijzigingen om te committen naar de monorepo.`);
+                console.log(`   ℹ️ Geen nieuwe wijzigingen in de Vault om te pushen.`);
             }
 
             return {
                 success: true,
-                repoUrl: `https://github.com/${ORG}/athena-y`,
+                repoUrl: `https://github.com/athenacmsfactory/athena-x-vault`,
                 liveUrl: deployUrl,
                 status: 'pushed'
             };
         } catch (e) {
             const stderr = e.stderr ? e.stderr.toString() : e.message;
-            console.error(`   ❌ Monorepo push mislukt: ${stderr}`);
-            throw new Error(`Monorepo push failed: ${stderr}`);
+            console.error(`   ❌ Vault deployment mislukt: ${stderr}`);
+            throw new Error(`Vault deployment failed: ${stderr}`);
         }
     }
 
