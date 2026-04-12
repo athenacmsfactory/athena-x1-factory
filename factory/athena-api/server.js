@@ -496,6 +496,8 @@ app.get('/api/sitetypes', (req, res) => res.json(getExistingSiteTypes()));
 app.get('/api/sitetype/existing', (req, res) => res.json({ success: true, sitetypes: getExistingSiteTypes() }));
 app.get('/api/legos', (req, res) => res.json({ success: true, legos: siteCtrl.getLegos() }));
 
+app.post('/api/start-dock', async (req, res) => res.json(await serverCtrl.startDock()));
+app.post('/api/start-media-server', async (req, res) => res.json(await serverCtrl.startMediaVisualizer(req.body.siteName)));
 app.post('/api/start-layout-server', async (req, res) => res.json(await serverCtrl.startLayoutEditor()));
 
 app.get('/api/blueprints/:name', async (req, res) => {

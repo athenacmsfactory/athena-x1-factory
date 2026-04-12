@@ -24,6 +24,13 @@ export class SiteController {
         this.interpreter = new AthenaInterpreter(configManager);
         this.installManager = new InstallManager(this.root);
         this.sitetypesPreviewDir = path.join(this.root, 'sitetypes-preview');
+        
+        // 🔱 v10.2 Cache for Directory Scans (prevents battery drain)
+        this._cache = {
+            native: { data: null, timestamp: 0 },
+            external: { data: null, timestamp: 0 }
+        };
+        this.CACHE_TTL = 30000; // 30 seconds
     }
 
     /**
@@ -82,6 +89,13 @@ export class SiteController {
 
 
     _scanDir(dir, isNative) {
+        const cacheKey = isNative ? 'native' : 'external';
+        const now = Date.now();
+
+        if (this._cache[cacheKey].data && (now - this._cache[cacheKey].timestamp < this.CACHE_TTL)) {
+            return this._cache[cacheKey].data;
+        }
+
         console.log(`🔍 Scanning ${isNative ? 'NATIVE' : 'EXTERNAL'} directory: ${dir}`);
         if (!dir || !fs.existsSync(dir)) {
             console.log(`⚠️  Directory does not exist: ${dir}`);
@@ -97,7 +111,7 @@ export class SiteController {
             }
         });
 
-        return sites.map(site => {
+        const results = sites.map(site => {
             const sitePath = path.join(dir, site);
             const deployFile = path.join(sitePath, 'project-settings', 'deployment.json');
             const sheetFile = path.join(sitePath, 'project-settings', 'url-sheet.json');
@@ -173,6 +187,13 @@ export class SiteController {
                 deployData: deployData // <--- Keep full object for legacy support
             };
         });
+
+        this._cache[cacheKey] = {
+            data: results,
+            timestamp: now
+        };
+
+        return results;
     }
 
     /**

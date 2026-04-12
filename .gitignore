@@ -40,3 +40,6 @@ factory/test-reports/
 tmp/
 temp/
 .env
+
+# Runtime State
+config/active-processes.json
