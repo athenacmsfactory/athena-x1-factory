@@ -1,7 +1,7 @@
 import React from 'react';
 import { useCart } from './CartContext';
 
-export default function Header({ data }) {
+export default function Header({ data = {} }) {
   const headerData = data.header || {};
   const siteSettings = data.site_settings || {};
   const { cart } = useCart();

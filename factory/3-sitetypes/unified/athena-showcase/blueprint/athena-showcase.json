@@ -82,18 +82,28 @@
   ],
   "sections": [
     {
+      "component": "hero",
+      "category": "Common",
+      "props": {
+        "title": "Custom Title Test"
+      },
       "id": "hero",
-      "title": "Hoofdpagina",
+      "title": "hero",
       "fields": {
-        "title": "string",
-        "subtitle": "text",
-        "cta_text": "string",
-        "image": "image"
+        "title": "Custom Title Test"
       }
     },
     {
+      "component": "intro",
+      "category": "Common",
+      "props": {
+        "title": "string",
+        "content": "text",
+        "subcontent": "text",
+        "image": "image"
+      },
       "id": "intro",
-      "title": "De Revolutie in Webdesign",
+      "title": "intro",
       "fields": {
         "title": "string",
         "content": "text",
@@ -102,8 +112,19 @@
       }
     },
     {
+      "component": "voordelen",
+      "category": "Common",
+      "props": {
+        "items": [
+          {
+            "title": "string",
+            "description": "text",
+            "icon": "string"
+          }
+        ]
+      },
       "id": "voordelen",
-      "title": "Waarom kiezen voor Athena?",
+      "title": "voordelen",
       "fields": {
         "items": [
           {
@@ -115,8 +136,18 @@
       }
     },
     {
+      "component": "innovatie",
+      "category": "Common",
+      "props": {
+        "categories": [
+          {
+            "name": "string",
+            "skills": "text"
+          }
+        ]
+      },
       "id": "innovatie",
-      "title": "De Kracht van de Factory",
+      "title": "innovatie",
       "fields": {
         "categories": [
           {
@@ -127,8 +158,21 @@
       }
     },
     {
+      "component": "showcase",
+      "category": "Common",
+      "props": {
+        "items": [
+          {
+            "name": "string",
+            "category": "string",
+            "description": "text",
+            "link": "string",
+            "image": "image"
+          }
+        ]
+      },
       "id": "showcase",
-      "title": "Recent Gerealiseerde Sites",
+      "title": "showcase",
       "fields": {
         "items": [
           {
@@ -142,8 +186,20 @@
       }
     },
     {
+      "component": "proces",
+      "category": "Common",
+      "props": {
+        "items": [
+          {
+            "stap": "string",
+            "titel": "string",
+            "tijdsduur": "string",
+            "uitleg": "text"
+          }
+        ]
+      },
       "id": "proces",
-      "title": "Van Aanvraag tot Live in 24u",
+      "title": "proces",
       "fields": {
         "items": [
           {
@@ -156,8 +212,16 @@
       }
     },
     {
+      "component": "contact",
+      "category": "Common",
+      "props": {
+        "title": "string",
+        "email": "string",
+        "linkedin": "string",
+        "location": "string"
+      },
       "id": "contact",
-      "title": "Start Uw Project",
+      "title": "contact",
       "fields": {
         "title": "string",
         "email": "string",

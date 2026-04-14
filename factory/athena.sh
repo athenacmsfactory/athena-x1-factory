@@ -20,7 +20,7 @@ fuser -k $API_PORT/tcp $UI_PORT/tcp > /dev/null 2>&1
 sleep 1
 
 echo "🔱 Starting Athena API (Backend) via PM2..."
-cd "$FACTORY_ROOT/athena-api"
+cd "$FACTORY_ROOT/../athena-api"
 # Start API met pm2
 pm2 start server.js --name athena-api --watch --ignore-watch "node_modules logs"
 cd "$PROJECT_ROOT"

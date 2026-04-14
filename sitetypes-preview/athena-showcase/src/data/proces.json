@@ -1,20 +1,11 @@
 [
   {
-    "stap": "stap placeholder text #1",
-    "titel": "titel placeholder text #1",
-    "tijdsduur": "tijdsduur placeholder text #1",
-    "uitleg": "uitleg placeholder text #1"
+    "items": "items placeholder text #1"
   },
   {
-    "stap": "stap placeholder text #2",
-    "titel": "titel placeholder text #2",
-    "tijdsduur": "tijdsduur placeholder text #2",
-    "uitleg": "uitleg placeholder text #2"
+    "items": "items placeholder text #2"
   },
   {
-    "stap": "stap placeholder text #3",
-    "titel": "titel placeholder text #3",
-    "tijdsduur": "tijdsduur placeholder text #3",
-    "uitleg": "uitleg placeholder text #3"
+    "items": "items placeholder text #3"
   }
 ]

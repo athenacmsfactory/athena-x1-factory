@@ -1,9 +1,10 @@
 packages:
   - '5-engine'
   - '2-templates'
-  - 'athena-api'
+  - '../athena-api'
   - 'athena-dashboard-ui'
   - 'sites/*'
+  - '../sitetypes-preview/*'
 
 onlyBuiltDependencies:
   - esbuild

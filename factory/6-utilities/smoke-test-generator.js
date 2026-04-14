@@ -9,7 +9,7 @@ import {
     generateDataStructureAPI,
     generateDesignSuggestionAPI,
     generateCompleteSiteType
-} from '../athena-api/sitetype-api.js';
+} from '../../athena-api/sitetype-api.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

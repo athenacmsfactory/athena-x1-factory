@@ -1,17 +1,11 @@
 [
   {
-    "title": "Mock title 1",
-    "description": "description placeholder text #1",
-    "icon": "icon placeholder text #1"
+    "items": "items placeholder text #1"
   },
   {
-    "title": "Mock title 2",
-    "description": "description placeholder text #2",
-    "icon": "icon placeholder text #2"
+    "items": "items placeholder text #2"
   },
   {
-    "title": "Mock title 3",
-    "description": "description placeholder text #3",
-    "icon": "icon placeholder text #3"
+    "items": "items placeholder text #3"
   }
 ]

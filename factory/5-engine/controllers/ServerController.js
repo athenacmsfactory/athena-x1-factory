@@ -86,6 +86,7 @@ export class ServerController {
                     port: parseInt(port),
                     pid: info.pid,
                     type: info.type,
+                    startTime: info.startTime,
                     url: info.type === 'preview' ? `http://${hostname}:${port}/${info.id}/` : `http://${hostname}:${port}/`
                 });
             }
@@ -226,5 +227,58 @@ export class ServerController {
         }
 
         return 5100;
+    }
+
+    /**
+     * Stop all managed processes and then the system itself
+     */
+    async shutdown() {
+        console.log("🛑 Athena System Shutdown initiated by User.");
+        
+        try {
+            // 1. Get all tracked processes
+            const active = this.pm.listActive();
+            const portsToClean = Object.keys(active);
+            
+            // 2. Add system ports from config (just to be sure)
+            const configPorts = this.configManager.get('ports') || {};
+            Object.values(configPorts).forEach(p => {
+                if (parseInt(p) !== 5000 && !portsToClean.includes(p.toString())) {
+                    portsToClean.push(p.toString());
+                }
+            });
+
+            console.log(`🧹 Cleaning up ${portsToClean.length} potential process ports...`);
+
+            // 3. Brutal termination of everything on those ports
+            for (const port of portsToClean) {
+                if (parseInt(port) === 5000) continue;
+                try {
+                    // Try the nice way first via PM
+                    await this.pm.stopProcessByPort(parseInt(port));
+                    // Then ensure it's gone via shell if possible
+                    try {
+                        execSync(`fuser -k ${port}/tcp 2>/dev/null`, { stdio: 'ignore' });
+                    } catch(e) { /* ignore errors if fuser not present or port already free */ }
+                } catch (e) {
+                    console.error(`⚠️ Could not fully stop port ${port}: ${e.message}`);
+                }
+            }
+            
+            // 4. Final log and exit
+            console.log("👋 All managed processes terminated. Goodbye from Athena Dashboard.");
+            
+            // We give the response a tiny bit of time to reach the dashboard before we die
+            setTimeout(() => {
+                process.exit(0);
+            }, 800);
+
+            return { success: true, message: "Systeem is volledig afgesloten en alle poorten zijn vrijgegeven." };
+        } catch (e) {
+            console.error("❌ Critical error during shutdown:", e.message);
+            // Even on error, we try to exit
+            setTimeout(() => process.exit(1), 1000);
+            return { success: false, error: e.message };
+        }
     }
 }

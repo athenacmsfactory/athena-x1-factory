@@ -1,12 +1,12 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { AthenaConfigManager } from '../5-engine/lib/ConfigManager.js';
-import { generateWithAI } from '../5-engine/core/ai-engine.js';
+import { AthenaConfigManager } from '../factory/5-engine/lib/ConfigManager.js';
+import { generateWithAI } from '../factory/5-engine/core/ai-engine.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const monorepoRoot = path.resolve(__dirname, '../..');
+const monorepoRoot = path.resolve(__dirname, '..');
 const config = new AthenaConfigManager(monorepoRoot);
 const sitetypesDir = config.get('paths.sitetypes');
 
@@ -235,8 +235,8 @@ async function generateFiles(config, sitetypesDir) {
     fs.writeFileSync(path.join(blueprintDir, `${config.name}.json`), JSON.stringify(blueprint, null, 2));
     console.log("   ✅ Blueprint opgeslagen.");
 
-    // Stap 4: Kopieer basis bestanden van agency-luxury template
-    const templatePath = path.join(sitetypesDir, 'agency-luxury');
+    // Stap 4: Kopieer basis bestanden van athena-showcase template
+    const templatePath = path.join(sitetypesDir, 'athena-showcase');
     if (fs.existsSync(templatePath)) {
         console.log(`📁 Basisbestanden kopiëren van agency-luxury template...`);
         copyRecursiveSync(templatePath, sitetypePath, [

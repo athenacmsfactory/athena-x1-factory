@@ -1,10 +1,9 @@
 packages:
   - 'factory'
-  - 'factory/athena-api'
+  - 'athena-api'
   - 'factory/athena-dashboard-ui'
-  - 'dock'
   - 'sites/*'
-  - 'sites-external/*'
+  - 'sitetypes-preview/*'
 
 onlyBuiltDependencies:
   - esbuild

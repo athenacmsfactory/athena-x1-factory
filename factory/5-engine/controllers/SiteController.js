@@ -675,8 +675,158 @@ export default defineConfig({
     }
 
     /**
-     * Stop preview server
+     * Bepaalt poort voor een site via de centrale port-manager skill
      */
+    getSitePort(id, siteDir) {
+        const scriptPath = path.join(this.root, 'port-manager/scripts/manage_ports.py');
+        const project = 'athena';
+        const description = `Athena Site: ${id}`;
+        
+        try {
+            // Roep de python script aan: python3 manage_ports.py get <service> <project> [desc]
+            const cmd = `python3 "${scriptPath}" get "${id}" "${project}" "${description}"`;
+            const output = execSync(cmd).toString();
+            
+            // Extract PORT=xxxx uit de output
+            const match = output.match(/PORT=(\d+)/);
+            if (match) {
+                return parseInt(match[1]);
+            }
+            
+            // Fallback als de script faalt maar output geeft
+            throw new Error("Geen poort gevonden in script output.");
+        } catch (e) {
+            console.error("❌ Port Manager Skill failed:", e.message);
+            // Hele veilige fallback naar oude methode/range als de skill echt niet werkt
+            return 5100 + (Math.abs(id.split('').reduce((a, b) => (a << 5) - a + b.charCodeAt(0), 0)) % 1000);
+        }
+    }
+
+    /**
+     * Synchroniseert de huidige blueprint met de showcase preview site.
+     * Dit zorgt ervoor dat wijzigingen in de Sitetype Builder direct zichtbaar zijn.
+     */
+    async syncSitetypePreview(name) {
+        const showcasePath = path.join(this.sitetypesPreviewDir, name);
+        if (!fs.existsSync(showcasePath)) {
+            // Als de preview nog niet bestaat, doen we eerst een provision
+            await this.provisionSitetypePreview(name);
+        }
+
+        console.log(`📡 Synchronizing Sitetype Preview for '${name}'...`);
+
+        try {
+            const sitetypesDir = path.join(this.configManager.get('paths.factory'), '3-sitetypes/unified');
+            const blueprintFile = path.join(sitetypesDir, name, 'blueprint', `${name}.json`);
+            
+            if (!fs.existsSync(blueprintFile)) throw new Error(`Blueprint voor ${name} niet gevonden.`);
+            
+            const bp = JSON.parse(fs.readFileSync(blueprintFile, 'utf8'));
+            const sections = bp.sections || [];
+
+            // 1. Update Mock Data
+            const targetDataDir = path.join(showcasePath, 'src/data');
+            if (!fs.existsSync(targetDataDir)) fs.mkdirSync(targetDataDir, { recursive: true });
+            
+            // We genereren mock data op basis van de blueprint secties
+            const structureForMock = sections.map(s => ({
+                table_name: s.component.toLowerCase(),
+                columns: Object.keys(s.props || s.fields || {}).map(k => ({ name: k }))
+            }));
+            
+            // Voeg altijd site_settings en section_order toe
+            const mockData = this.generateMockData(structureForMock);
+            for (const [table, rows] of Object.entries(mockData)) {
+                fs.writeFileSync(path.join(targetDataDir, `${table}.json`), JSON.stringify(rows, null, 2));
+            }
+
+            // Update section_order.json
+            const sectionOrder = ['site_settings', 'header', 'hero', ...sections.map(s => s.component.toLowerCase()), 'footer'];
+            fs.writeFileSync(path.join(targetDataDir, 'section_order.json'), JSON.stringify(sectionOrder, null, 2));
+
+            // 2. Sync Components (Legos)
+            const targetCompDir = path.join(showcasePath, 'components');
+            if (!fs.existsSync(targetCompDir)) fs.mkdirSync(targetCompDir, { recursive: true });
+
+            const legosLib = this.getLegos();
+            const usedLegos = sections.map(s => s.component);
+            
+            let importStatements = "";
+            let mappingLogic = "";
+
+            usedLegos.forEach((legoName, idx) => {
+                // Fuzzy match: case-insensitive and stripping common suffixes/prefixes
+                const cleanName = legoName.toLowerCase().replace(/legov[0-9]+$/, '').replace(/v[0-9]+$/, '');
+                const lego = legosLib.find(l => {
+                    const lName = l.name.toLowerCase().replace(/legov[0-9]+$/, '').replace(/v[0-9]+$/, '');
+                    return lName === cleanName || l.name.toLowerCase() === legoName.toLowerCase();
+                });
+
+                if (lego) {
+                    const fileName = lego.fileName;
+                    // Kopieer de lego naar de showcase
+                    const targetFile = path.join(targetCompDir, fileName);
+                    fs.copyFileSync(lego.absolutePath, targetFile);
+
+                    const compVar = `${legoName.replace(/[^a-zA-Z0-9]/g, '_')}_${idx}`;
+                    importStatements += `import ${compVar} from './${lego.name}';\n`;
+                    mappingLogic += `      if (lower === '${legoName.toLowerCase()}') return ${compVar};\n`;
+                }
+            });
+
+            // 3. Update Section.jsx with new mapping
+            const sectionJsxPath = path.join(showcasePath, 'components/Section.jsx');
+            if (fs.existsSync(sectionJsxPath)) {
+                let content = fs.readFileSync(sectionJsxPath, 'utf8');
+                
+                // We bewaren de template structuur door placeholders te gebruiken als we ze vinden, 
+                // OF we overschrijven de specifieke blokken.
+                // Voor de showcase builder overschrijven we de blokken tussen markers.
+                
+                const importStart = "/* {{IMPORTS_START}} */";
+                const importEnd = "/* {{IMPORTS_END}} */";
+                const mappingStart = "/* {{MAPPING_START}} */";
+                const mappingEnd = "/* {{MAPPING_END}} */";
+
+                // Als de markers er niet zijn, voegen we ze toe aan de placeholders
+                if (!content.includes(importStart)) {
+                    content = content.replace("/* {{IMPORTS}} */", `${importStart}\n${importEnd}`);
+                }
+                if (!content.includes(mappingStart)) {
+                    content = content.replace("/* {{MAPPING_LOGIC}} */", `${mappingStart}\n${mappingEnd}`);
+                }
+
+                // Inject content
+                content = content.replace(new RegExp(`${importStart.replace(/[\/\*\{\}]/g, '\\$&')}[\\s\\S]*?${importEnd.replace(/[\/\*\{\}]/g, '\\$&')}`), `${importStart}\n${importStatements}${importEnd}`);
+                content = content.replace(new RegExp(`${mappingStart.replace(/[\/\*\{\}]/g, '\\$&')}[\\s\\S]*?${mappingEnd.replace(/[\/\*\{\}]/g, '\\$&')}`), `${mappingStart}\n${mappingLogic}${mappingEnd}`);
+
+                // Update component return logic too
+                const returnStart = "/* {{RETURN_START}} */";
+                const returnEnd = "/* {{RETURN_END}} */";
+                if (!content.includes(returnStart)) {
+                    content = content.replace("/* {{COMPONENT_RETURN}} */", `${returnStart}\n${returnEnd}`);
+                }
+
+                const returnCode = `
+        const Comp = getComponent(sectionName);
+        return (
+          <section key={idx} id={sectionName} data-dock-section={sectionName} className="py-20 border-b border-athena-border/5">
+             <Comp data={items} sectionSettings={sectionSettings[sectionName]} />
+          </section>
+        );
+                `.trim();
+
+                content = content.replace(new RegExp(`${returnStart.replace(/[\/\*\{\}]/g, '\\$&')}[\\s\\S]*?${returnEnd.replace(/[\/\*\{\}]/g, '\\$&')}`), `${returnStart}\n${returnCode}\n${returnEnd}`);
+
+                fs.writeFileSync(sectionJsxPath, content);
+            }
+
+            return { success: true, message: `Showcase voor '${name}' succesvol gesynchroniseerd.` };
+        } catch (e) {
+            console.error("❌ Sync failed:", e.message);
+            return { success: false, error: e.message };
+        }
+    }
     async stopPreview(id) {
         const active = this.pm.listActive();
         for (const port in active) {

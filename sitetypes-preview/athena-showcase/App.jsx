@@ -6,6 +6,7 @@ import Section from './components/Section';
 import Footer from './components/Footer';
 
 import { DisplayConfigProvider } from './components/DisplayConfigContext';
+import { CartProvider } from './components/CartContext';
 
 const App = ({ data }) => {
   const primaryTable = Object.keys(data)[0];
@@ -100,17 +101,19 @@ const App = ({ data }) => {
 
   const content = (
     <DisplayConfigProvider data={data}>
-      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-        <div className="min-h-screen bg-[var(--color-background)] text-[var(--color-text)] transition-colors duration-500">
-          <Header primaryTable={data[primaryTable]} tableName={primaryTable} siteSettings={data['site_settings']} />
-
-          <main style={{ paddingTop: 'var(--content-top-offset, 0px)' }}>
-            <Section data={data} />
-          </main>
-
-          <Footer data={data} />
-        </div>
-      </Router>
+      <CartProvider>
+        <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <div className="min-h-screen bg-[var(--color-background)] text-[var(--color-text)] transition-colors duration-500">
+            <Header data={data} />
+  
+            <main style={{ paddingTop: 'var(--content-top-offset, 0px)' }}>
+              <Section data={data} />
+            </main>
+  
+            <Footer data={data} />
+          </div>
+        </Router>
+      </CartProvider>
     </DisplayConfigProvider>
   );
 

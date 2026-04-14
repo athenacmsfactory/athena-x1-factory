@@ -8,30 +8,30 @@ import 'dotenv/config';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
 // Managers & Libs
-import { AthenaConfigManager } from '../5-engine/lib/ConfigManager.js';
-import { AthenaProcessManager } from '../5-engine/lib/ProcessManager.js';
-import { AthenaLogManager } from '../5-engine/lib/LogManager.js';
-import { AthenaSecretManager } from '../5-engine/lib/SecretManager.js';
-import { ExecutionService } from '../5-engine/lib/ExecutionService.js';
+import { AthenaConfigManager } from '../factory/5-engine/lib/ConfigManager.js';
+import { AthenaProcessManager } from '../factory/5-engine/lib/ProcessManager.js';
+import { AthenaLogManager } from '../factory/5-engine/lib/LogManager.js';
+import { AthenaSecretManager } from '../factory/5-engine/lib/SecretManager.js';
+import { ExecutionService } from '../factory/5-engine/lib/ExecutionService.js';
 
 // Controllers
-import { ProjectController } from '../5-engine/controllers/ProjectController.js';
-import { SiteController } from '../5-engine/controllers/SiteController.js';
-import { DoctorController } from '../5-engine/controllers/DoctorController.js';
-import { PaymentController } from '../5-engine/controllers/PaymentController.js';
-import { MarketingController } from '../5-engine/controllers/MarketingController.js';
-import { SystemController } from '../5-engine/controllers/SystemController.js';
-import { ToolController } from '../5-engine/controllers/ToolController.js';
-import { ServerController } from '../5-engine/controllers/ServerController.js';
-import { GithubController } from '../5-engine/controllers/GithubController.js';
-import { BuildController } from '../5-engine/controllers/BuildController.js';
-import { SiteHealer } from '../5-engine/controllers/SiteHealer.js';
-import { AutomationController } from '../5-engine/controllers/AutomationController.js';
-import { AthenaDataManager } from '../5-engine/lib/DataManager.js';
-import { JulesController } from '../5-engine/controllers/JulesController.js';
-import { LayoutAIController } from '../5-engine/controllers/LayoutAIController.js';
-import { LanguageController } from '../5-engine/controllers/LanguageController.js';
-import { AnalyticsController } from '../5-engine/controllers/AnalyticsController.js';
+import { ProjectController } from '../factory/5-engine/controllers/ProjectController.js';
+import { SiteController } from '../factory/5-engine/controllers/SiteController.js';
+import { DoctorController } from '../factory/5-engine/controllers/DoctorController.js';
+import { PaymentController } from '../factory/5-engine/controllers/PaymentController.js';
+import { MarketingController } from '../factory/5-engine/controllers/MarketingController.js';
+import { SystemController } from '../factory/5-engine/controllers/SystemController.js';
+import { ToolController } from '../factory/5-engine/controllers/ToolController.js';
+import { ServerController } from '../factory/5-engine/controllers/ServerController.js';
+import { GithubController } from '../factory/5-engine/controllers/GithubController.js';
+import { BuildController } from '../factory/5-engine/controllers/BuildController.js';
+import { SiteHealer } from '../factory/5-engine/controllers/SiteHealer.js';
+import { AutomationController } from '../factory/5-engine/controllers/AutomationController.js';
+import { AthenaDataManager } from '../factory/5-engine/lib/DataManager.js';
+import { JulesController } from '../factory/5-engine/controllers/JulesController.js';
+import { LayoutAIController } from '../factory/5-engine/controllers/LayoutAIController.js';
+import { LanguageController } from '../factory/5-engine/controllers/LanguageController.js';
+import { AnalyticsController } from '../factory/5-engine/controllers/AnalyticsController.js';
 
 
 import {
@@ -41,12 +41,12 @@ import {
     generateCompleteSiteType,
     getExistingSiteTypes
 } from './sitetype-api.js';
-import { generateWithAI } from '../5-engine/core/ai-engine.js';
+import { generateWithAI } from '../factory/5-engine/core/ai-engine.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const monorepoRoot = path.resolve(__dirname, '../..'); // Points to x-v9/athena
-const factoryRoot = path.resolve(__dirname, '..');    // Points to x-v9/athena/factory
+const monorepoRoot = path.resolve(__dirname, '..'); // Points to x-v9/athena
+const factoryRoot = path.resolve(__dirname, '../factory');    // Points to x-v9/athena/factory
 const root = factoryRoot; // Alias for backward compatibility
 
 
@@ -214,6 +214,7 @@ app.get('/api/system-status', (req, res) => res.json(systemCtrl.getSystemStatus(
 app.get('/api/config', (req, res) => res.json(systemCtrl.getSAConfig()));
 app.get('/api/settings', (req, res) => res.json(systemCtrl.getSettings()));
 app.post('/api/settings', (req, res) => res.json(systemCtrl.updateSettings(req.body)));
+app.post('/api/system/shutdown', async (req, res) => res.json(await serverCtrl.shutdown()));
 
 // --- PROJECT API ---
 app.get('/api/projects', (req, res) => res.json(projectCtrl.list()));
@@ -486,6 +487,15 @@ app.post('/api/sitetype/:name/preview', async (req, res) => {
 app.post('/api/sitetype/:name/provision', async (req, res) => {
     try {
         const result = await siteCtrl.provisionSitetypePreview(req.params.name);
+        res.json(result);
+    } catch (e) {
+        res.status(500).json({ success: false, error: e.message });
+    }
+});
+
+app.post('/api/sitetype/:name/sync', async (req, res) => {
+    try {
+        const result = await siteCtrl.syncSitetypePreview(req.params.name);
         res.json(result);
     } catch (e) {
         res.status(500).json({ success: false, error: e.message });

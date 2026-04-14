@@ -1,0 +1,55 @@
+{
+  "blueprint_name": "test1",
+  "description": "Een modern bedrijfsprofiel.",
+  "data_structure": [
+    {
+      "table_name": "inhoud",
+      "columns": [
+        {
+          "name": "titel",
+          "description": "Hoofdtekst van de sectie"
+        },
+        {
+          "name": "omschrijving",
+          "description": "Ondersteunende tekst"
+        }
+      ]
+    }
+  ],
+  "parser_instructions": {
+    "inhoud": {
+      "strategy": "Identificeer hiërarchische structuren in de tekst door te zoeken naar witregels, visuele scheidingstekens (zoals koppeltekens of dubbele punten) en patronen in tekstlengte om secties te onderscheiden.",
+      "fields": {
+        "titel": "Zoek naar de eerste regel van een tekstblok, vaak gekenmerkt door een kortere karakterlengte, het gebruik van hoofdletters (Title Case), of tekst die direct voorafgaat aan een dubbele punt of liggend streepje.",
+        "omschrijving": "Extraheer de tekstmassa die volgt op de titel; dit zijn doorgaans de langere zinsstructuren die eindigen met een punt en doorlopen tot de volgende witregel of sectiemarkering."
+      }
+    }
+  },
+  "design_system": {
+    "colors": {
+      "primary": "#3b82f6",
+      "secondary": "#1e293b",
+      "accent": "#10b981",
+      "background": "#000000",
+      "surface": "#111111"
+    },
+    "radius": "0.25rem",
+    "font_sans": "Inter",
+    "font_serif": "Inter"
+  },
+  "page_structure": {
+    "home": [
+      "hero",
+      "inhoud_overzicht",
+      "contact"
+    ],
+    "overons": [
+      "hero",
+      "beschrijving"
+    ],
+    "contact": [
+      "hero",
+      "contact_formulier"
+    ]
+  }
+}

@@ -1,14 +1,11 @@
 [
   {
-    "category": "category placeholder text #1",
-    "skills": "skills placeholder text #1"
+    "categories": "categories placeholder text #1"
   },
   {
-    "category": "category placeholder text #2",
-    "skills": "skills placeholder text #2"
+    "categories": "categories placeholder text #2"
   },
   {
-    "category": "category placeholder text #3",
-    "skills": "skills placeholder text #3"
+    "categories": "categories placeholder text #3"
   }
 ]

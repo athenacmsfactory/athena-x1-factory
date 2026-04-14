@@ -1,23 +1,11 @@
 [
   {
-    "name": "name placeholder text #1",
-    "category": "category placeholder text #1",
-    "description": "description placeholder text #1",
-    "link": "link placeholder text #1",
-    "image": "https://picsum.photos/seed/ath1/800/600"
+    "items": "items placeholder text #1"
   },
   {
-    "name": "name placeholder text #2",
-    "category": "category placeholder text #2",
-    "description": "description placeholder text #2",
-    "link": "link placeholder text #2",
-    "image": "https://picsum.photos/seed/ath2/800/600"
+    "items": "items placeholder text #2"
   },
   {
-    "name": "name placeholder text #3",
-    "category": "category placeholder text #3",
-    "description": "description placeholder text #3",
-    "link": "link placeholder text #3",
-    "image": "https://picsum.photos/seed/ath3/800/600"
+    "items": "items placeholder text #3"
   }
 ]
