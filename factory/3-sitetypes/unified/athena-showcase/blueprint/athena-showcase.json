@@ -1,233 +1,357 @@
 {
-  "blueprint_name": "athena-showcase",
-  "description": "High-end showcase en portfolio template met geoptimaliseerde kaarten, hover-effecten en een stapsgewijze proces-sectie. Ideaal voor creatieve bureaus en SaaS-producten.",
-  "features": {
-    "ecommerce": false,
-    "google_search_links": false,
-    "search_context": "Athena CMS Factory website laten maken KMO Vlaanderen AI automatisatie"
-  },
-  "data_structure": [
-    {
-      "table_name": "site_settings",
-      "columns": [
-        "site_name",
-        "tagline",
-        "logo_text",
-        "footer_text"
-      ]
-    },
-    {
-      "table_name": "contact",
-      "columns": [
-        "titel",
-        "email",
-        "telefoon",
-        "locatie",
-        "btw_nummer",
-        "linkedin_url"
-      ]
-    },
-    {
-      "table_name": "hero",
-      "columns": [
-        "title",
-        "subtitle",
-        "cta_text",
-        "image"
-      ]
-    },
-    {
-      "table_name": "intro",
-      "columns": [
-        "title",
-        "content",
-        "subcontent",
-        "image"
-      ]
-    },
-    {
-      "table_name": "voordelen",
-      "columns": [
-        "title",
-        "description",
-        "icon"
-      ]
-    },
-    {
-      "table_name": "innovatie",
-      "columns": [
-        "category",
-        "skills"
-      ]
-    },
-    {
-      "table_name": "showcase",
-      "columns": [
-        "name",
-        "category",
-        "description",
-        "link",
-        "image"
-      ]
-    },
-    {
-      "table_name": "proces",
-      "columns": [
-        "stap",
-        "titel",
-        "tijdsduur",
-        "uitleg"
-      ]
-    }
-  ],
+  "name": "athena-showcase",
   "sections": [
     {
       "component": "hero",
       "category": "Common",
-      "props": {
-        "title": "Custom Title Test"
-      },
-      "id": "hero",
+      "props": {},
+      "id": "hero-0",
       "title": "hero",
-      "fields": {
-        "title": "Custom Title Test"
-      }
+      "fields": {}
     },
     {
       "component": "intro",
       "category": "Common",
-      "props": {
-        "title": "string",
-        "content": "text",
-        "subcontent": "text",
-        "image": "image"
-      },
-      "id": "intro",
+      "props": {},
+      "id": "intro-1",
       "title": "intro",
-      "fields": {
-        "title": "string",
-        "content": "text",
-        "subcontent": "text",
-        "image": "image"
-      }
+      "fields": {}
     },
     {
       "component": "voordelen",
       "category": "Common",
-      "props": {
-        "items": [
-          {
-            "title": "string",
-            "description": "text",
-            "icon": "string"
-          }
-        ]
-      },
-      "id": "voordelen",
+      "props": {},
+      "id": "voordelen-2",
       "title": "voordelen",
-      "fields": {
-        "items": [
-          {
-            "title": "string",
-            "description": "text",
-            "icon": "string"
-          }
-        ]
-      }
+      "fields": {}
     },
     {
       "component": "innovatie",
       "category": "Common",
-      "props": {
-        "categories": [
-          {
-            "name": "string",
-            "skills": "text"
-          }
-        ]
-      },
-      "id": "innovatie",
+      "props": {},
+      "id": "innovatie-3",
       "title": "innovatie",
-      "fields": {
-        "categories": [
-          {
-            "name": "string",
-            "skills": "text"
-          }
-        ]
-      }
+      "fields": {}
     },
     {
       "component": "showcase",
       "category": "Common",
-      "props": {
-        "items": [
-          {
-            "name": "string",
-            "category": "string",
-            "description": "text",
-            "link": "string",
-            "image": "image"
-          }
-        ]
-      },
-      "id": "showcase",
+      "props": {},
+      "id": "showcase-4",
       "title": "showcase",
-      "fields": {
-        "items": [
-          {
-            "name": "string",
-            "category": "string",
-            "description": "text",
-            "link": "string",
-            "image": "image"
-          }
-        ]
-      }
+      "fields": {}
     },
     {
       "component": "proces",
       "category": "Common",
-      "props": {
-        "items": [
-          {
-            "stap": "string",
-            "titel": "string",
-            "tijdsduur": "string",
-            "uitleg": "text"
-          }
-        ]
-      },
-      "id": "proces",
+      "props": {},
+      "id": "proces-5",
       "title": "proces",
-      "fields": {
-        "items": [
-          {
-            "stap": "string",
-            "titel": "string",
-            "tijdsduur": "string",
-            "uitleg": "text"
-          }
-        ]
-      }
+      "fields": {}
     },
     {
       "component": "contact",
       "category": "Common",
-      "props": {
-        "title": "string",
-        "email": "string",
-        "linkedin": "string",
-        "location": "string"
-      },
-      "id": "contact",
+      "props": {},
+      "id": "contact-6",
       "title": "contact",
-      "fields": {
-        "title": "string",
-        "email": "string",
-        "linkedin": "string",
-        "location": "string"
-      }
+      "fields": {}
     }
-  ]
+  ],
+  "raw": {
+    "name": "athena-showcase",
+    "sections": [
+      {
+        "component": "hero",
+        "category": "Common",
+        "props": {},
+        "id": "hero-0",
+        "title": "hero",
+        "fields": {}
+      },
+      {
+        "component": "intro",
+        "category": "Common",
+        "props": {},
+        "id": "intro-1",
+        "title": "intro",
+        "fields": {}
+      },
+      {
+        "component": "voordelen",
+        "category": "Common",
+        "props": {},
+        "id": "voordelen-2",
+        "title": "voordelen",
+        "fields": {}
+      },
+      {
+        "component": "innovatie",
+        "category": "Common",
+        "props": {},
+        "id": "innovatie-3",
+        "title": "innovatie",
+        "fields": {}
+      },
+      {
+        "component": "showcase",
+        "category": "Common",
+        "props": {},
+        "id": "showcase-4",
+        "title": "showcase",
+        "fields": {}
+      },
+      {
+        "component": "proces",
+        "category": "Common",
+        "props": {},
+        "id": "proces-5",
+        "title": "proces",
+        "fields": {}
+      },
+      {
+        "component": "contact",
+        "category": "Common",
+        "props": {},
+        "id": "contact-6",
+        "title": "contact",
+        "fields": {}
+      }
+    ],
+    "raw": {
+      "blueprint_name": "athena-showcase",
+      "description": "High-end showcase en portfolio template met geoptimaliseerde kaarten, hover-effecten en een stapsgewijze proces-sectie. Ideaal voor creatieve bureaus en SaaS-producten.",
+      "features": {
+        "ecommerce": false,
+        "google_search_links": false,
+        "search_context": "Athena CMS Factory website laten maken KMO Vlaanderen AI automatisatie"
+      },
+      "data_structure": [
+        {
+          "table_name": "site_settings",
+          "columns": [
+            "site_name",
+            "tagline",
+            "logo_text",
+            "footer_text"
+          ]
+        },
+        {
+          "table_name": "contact",
+          "columns": [
+            "titel",
+            "email",
+            "telefoon",
+            "locatie",
+            "btw_nummer",
+            "linkedin_url"
+          ]
+        },
+        {
+          "table_name": "hero",
+          "columns": [
+            "title",
+            "subtitle",
+            "cta_text",
+            "image"
+          ]
+        },
+        {
+          "table_name": "intro",
+          "columns": [
+            "title",
+            "content",
+            "subcontent",
+            "image"
+          ]
+        },
+        {
+          "table_name": "voordelen",
+          "columns": [
+            "title",
+            "description",
+            "icon"
+          ]
+        },
+        {
+          "table_name": "innovatie",
+          "columns": [
+            "category",
+            "skills"
+          ]
+        },
+        {
+          "table_name": "showcase",
+          "columns": [
+            "name",
+            "category",
+            "description",
+            "link",
+            "image"
+          ]
+        },
+        {
+          "table_name": "proces",
+          "columns": [
+            "stap",
+            "titel",
+            "tijdsduur",
+            "uitleg"
+          ]
+        }
+      ],
+      "sections": [
+        {
+          "component": "hero",
+          "category": "Common",
+          "props": {
+            "title": "Custom Title Test"
+          },
+          "id": "hero",
+          "title": "hero",
+          "fields": {
+            "title": "Custom Title Test"
+          }
+        },
+        {
+          "component": "intro",
+          "category": "Common",
+          "props": {
+            "title": "string",
+            "content": "text",
+            "subcontent": "text",
+            "image": "image"
+          },
+          "id": "intro",
+          "title": "intro",
+          "fields": {
+            "title": "string",
+            "content": "text",
+            "subcontent": "text",
+            "image": "image"
+          }
+        },
+        {
+          "component": "voordelen",
+          "category": "Common",
+          "props": {
+            "items": [
+              {
+                "title": "string",
+                "description": "text",
+                "icon": "string"
+              }
+            ]
+          },
+          "id": "voordelen",
+          "title": "voordelen",
+          "fields": {
+            "items": [
+              {
+                "title": "string",
+                "description": "text",
+                "icon": "string"
+              }
+            ]
+          }
+        },
+        {
+          "component": "innovatie",
+          "category": "Common",
+          "props": {
+            "categories": [
+              {
+                "name": "string",
+                "skills": "text"
+              }
+            ]
+          },
+          "id": "innovatie",
+          "title": "innovatie",
+          "fields": {
+            "categories": [
+              {
+                "name": "string",
+                "skills": "text"
+              }
+            ]
+          }
+        },
+        {
+          "component": "showcase",
+          "category": "Common",
+          "props": {
+            "items": [
+              {
+                "name": "string",
+                "category": "string",
+                "description": "text",
+                "link": "string",
+                "image": "image"
+              }
+            ]
+          },
+          "id": "showcase",
+          "title": "showcase",
+          "fields": {
+            "items": [
+              {
+                "name": "string",
+                "category": "string",
+                "description": "text",
+                "link": "string",
+                "image": "image"
+              }
+            ]
+          }
+        },
+        {
+          "component": "proces",
+          "category": "Common",
+          "props": {
+            "items": [
+              {
+                "stap": "string",
+                "titel": "string",
+                "tijdsduur": "string",
+                "uitleg": "text"
+              }
+            ]
+          },
+          "id": "proces",
+          "title": "proces",
+          "fields": {
+            "items": [
+              {
+                "stap": "string",
+                "titel": "string",
+                "tijdsduur": "string",
+                "uitleg": "text"
+              }
+            ]
+          }
+        },
+        {
+          "component": "contact",
+          "category": "Common",
+          "props": {
+            "title": "string",
+            "email": "string",
+            "linkedin": "string",
+            "location": "string"
+          },
+          "id": "contact",
+          "title": "contact",
+          "fields": {
+            "title": "string",
+            "email": "string",
+            "linkedin": "string",
+            "location": "string"
+          }
+        }
+      ]
+    },
+    "blueprint_name": "athena-showcase"
+  },
+  "blueprint_name": "athena-showcase"
 }

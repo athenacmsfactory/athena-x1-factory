@@ -1,0 +1,20 @@
+[
+  {
+    "specificatie_id": 1,
+    "product_id": 1,
+    "specificatie_naam": "Mock specificatie_naam 1",
+    "waarde": "De waarde van de specificatie (bijv. 'Intel i9', '32GB DDR5'). placeholder text #1"
+  },
+  {
+    "specificatie_id": 2,
+    "product_id": 2,
+    "specificatie_naam": "Mock specificatie_naam 2",
+    "waarde": "De waarde van de specificatie (bijv. 'Intel i9', '32GB DDR5'). placeholder text #2"
+  },
+  {
+    "specificatie_id": 3,
+    "product_id": 3,
+    "specificatie_naam": "Mock specificatie_naam 3",
+    "waarde": "De waarde van de specificatie (bijv. 'Intel i9', '32GB DDR5'). placeholder text #3"
+  }
+]

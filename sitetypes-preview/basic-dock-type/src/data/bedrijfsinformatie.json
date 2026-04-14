@@ -1,0 +1,23 @@
+[
+  {
+    "naam": "Mock naam 1",
+    "beschrijving": "beschrijving placeholder text #1",
+    "telefoon": "telefoon placeholder text #1",
+    "email": "contact1@example.com",
+    "adres": "Mock Straat 1, Gent"
+  },
+  {
+    "naam": "Mock naam 2",
+    "beschrijving": "beschrijving placeholder text #2",
+    "telefoon": "telefoon placeholder text #2",
+    "email": "contact2@example.com",
+    "adres": "Mock Straat 2, Gent"
+  },
+  {
+    "naam": "Mock naam 3",
+    "beschrijving": "beschrijving placeholder text #3",
+    "telefoon": "telefoon placeholder text #3",
+    "email": "contact3@example.com",
+    "adres": "Mock Straat 3, Gent"
+  }
+]

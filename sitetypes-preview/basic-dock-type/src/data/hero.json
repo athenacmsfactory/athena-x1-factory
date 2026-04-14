@@ -1,0 +1,20 @@
+[
+  {
+    "title": "Mock title 1",
+    "subtitle": "Mock subtitle 1",
+    "cta_text": "cta_text placeholder text #1",
+    "image": "https://picsum.photos/seed/ath1/800/600"
+  },
+  {
+    "title": "Mock title 2",
+    "subtitle": "Mock subtitle 2",
+    "cta_text": "cta_text placeholder text #2",
+    "image": "https://picsum.photos/seed/ath2/800/600"
+  },
+  {
+    "title": "Mock title 3",
+    "subtitle": "Mock subtitle 3",
+    "cta_text": "cta_text placeholder text #3",
+    "image": "https://picsum.photos/seed/ath3/800/600"
+  }
+]

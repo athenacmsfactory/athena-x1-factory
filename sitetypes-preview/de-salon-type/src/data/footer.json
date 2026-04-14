@@ -1,0 +1,23 @@
+[
+  {
+    "footer_info": "Korte tekst over het bedrijf. placeholder text #1",
+    "contact_email": "contact1@example.com",
+    "contact_locatie": "Mock Straat 1, Gent",
+    "customer_service_links": "Links naar klantenservice pagina's. placeholder text #1",
+    "social_links": "Links naar sociale media profielen. placeholder text #1"
+  },
+  {
+    "footer_info": "Korte tekst over het bedrijf. placeholder text #2",
+    "contact_email": "contact2@example.com",
+    "contact_locatie": "Mock Straat 2, Gent",
+    "customer_service_links": "Links naar klantenservice pagina's. placeholder text #2",
+    "social_links": "Links naar sociale media profielen. placeholder text #2"
+  },
+  {
+    "footer_info": "Korte tekst over het bedrijf. placeholder text #3",
+    "contact_email": "contact3@example.com",
+    "contact_locatie": "Mock Straat 3, Gent",
+    "customer_service_links": "Links naar klantenservice pagina's. placeholder text #3",
+    "social_links": "Links naar sociale media profielen. placeholder text #3"
+  }
+]

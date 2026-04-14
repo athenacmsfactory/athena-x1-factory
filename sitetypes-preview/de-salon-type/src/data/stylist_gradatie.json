@@ -1,0 +1,20 @@
+[
+  {
+    "gradatie_id": 1,
+    "titel": "De titel van de stylist (Junior stylist, Stylist, Senior Stylist, Director). placeholder text #1",
+    "min_ervaring_jaren": "Minimum aantal jaren ervaring voor deze gradatie. placeholder text #1",
+    "omschrijving_criteria": "Gedetailleerde uitleg over de criteria (cursussen, werkzaam bij ons). placeholder text #1"
+  },
+  {
+    "gradatie_id": 2,
+    "titel": "De titel van de stylist (Junior stylist, Stylist, Senior Stylist, Director). placeholder text #2",
+    "min_ervaring_jaren": "Minimum aantal jaren ervaring voor deze gradatie. placeholder text #2",
+    "omschrijving_criteria": "Gedetailleerde uitleg over de criteria (cursussen, werkzaam bij ons). placeholder text #2"
+  },
+  {
+    "gradatie_id": 3,
+    "titel": "De titel van de stylist (Junior stylist, Stylist, Senior Stylist, Director). placeholder text #3",
+    "min_ervaring_jaren": "Minimum aantal jaren ervaring voor deze gradatie. placeholder text #3",
+    "omschrijving_criteria": "Gedetailleerde uitleg over de criteria (cursussen, werkzaam bij ons). placeholder text #3"
+  }
+]

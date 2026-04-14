@@ -1,0 +1,20 @@
+[
+  {
+    "social_id": 1,
+    "naam": "Mock naam 1",
+    "icoon_klasse": "De font-awesome of andere klasse voor het icoon. placeholder text #1",
+    "url": "https://picsum.photos/seed/ath1/800/600"
+  },
+  {
+    "social_id": 2,
+    "naam": "Mock naam 2",
+    "icoon_klasse": "De font-awesome of andere klasse voor het icoon. placeholder text #2",
+    "url": "https://picsum.photos/seed/ath2/800/600"
+  },
+  {
+    "social_id": 3,
+    "naam": "Mock naam 3",
+    "icoon_klasse": "De font-awesome of andere klasse voor het icoon. placeholder text #3",
+    "url": "https://picsum.photos/seed/ath3/800/600"
+  }
+]

@@ -1,0 +1,17 @@
+[
+  {
+    "categorie_id": 1,
+    "naam": "Mock naam 1",
+    "slug": "SEO-vriendelijke URL slug voor de categorie. placeholder text #1"
+  },
+  {
+    "categorie_id": 2,
+    "naam": "Mock naam 2",
+    "slug": "SEO-vriendelijke URL slug voor de categorie. placeholder text #2"
+  },
+  {
+    "categorie_id": 3,
+    "naam": "Mock naam 3",
+    "slug": "SEO-vriendelijke URL slug voor de categorie. placeholder text #3"
+  }
+]

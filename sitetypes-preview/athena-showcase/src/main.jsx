@@ -4,7 +4,7 @@ import App from './App';
 import './index.css';
 
 // Dynamically load all JSON files from src/data
-const modules = import.meta.glob('./src/data/*.json', { eager: true });
+const modules = import.meta.glob('./data/*.json', { eager: true });
 const loadedData = {};
 
 Object.keys(modules).forEach((path) => {

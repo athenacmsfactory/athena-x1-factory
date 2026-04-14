@@ -1,0 +1,29 @@
+[
+  {
+    "product_id": 1,
+    "naam": "Mock naam 1",
+    "categorie_id": 1,
+    "prijs": "102.20",
+    "korte_beschrijving": "Korte samenvatting voor overzichtspagina's. placeholder text #1",
+    "uitgebreide_beschrijving": 1,
+    "product_foto_url": "https://picsum.photos/seed/ath1/800/600"
+  },
+  {
+    "product_id": 2,
+    "naam": "Mock naam 2",
+    "categorie_id": 2,
+    "prijs": "43.98",
+    "korte_beschrijving": "Korte samenvatting voor overzichtspagina's. placeholder text #2",
+    "uitgebreide_beschrijving": 2,
+    "product_foto_url": "https://picsum.photos/seed/ath2/800/600"
+  },
+  {
+    "product_id": 3,
+    "naam": "Mock naam 3",
+    "categorie_id": 3,
+    "prijs": "10.20",
+    "korte_beschrijving": "Korte samenvatting voor overzichtspagina's. placeholder text #3",
+    "uitgebreide_beschrijving": 3,
+    "product_foto_url": "https://picsum.photos/seed/ath3/800/600"
+  }
+]

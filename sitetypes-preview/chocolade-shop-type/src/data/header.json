@@ -1,0 +1,17 @@
+[
+  {
+    "site_name": "Naam van de website. placeholder text #1",
+    "site_logo": "URL naar het logo. placeholder text #1",
+    "nav_links": "JSON array van navigatie links. placeholder text #1"
+  },
+  {
+    "site_name": "Naam van de website. placeholder text #2",
+    "site_logo": "URL naar het logo. placeholder text #2",
+    "nav_links": "JSON array van navigatie links. placeholder text #2"
+  },
+  {
+    "site_name": "Naam van de website. placeholder text #3",
+    "site_logo": "URL naar het logo. placeholder text #3",
+    "nav_links": "JSON array van navigatie links. placeholder text #3"
+  }
+]

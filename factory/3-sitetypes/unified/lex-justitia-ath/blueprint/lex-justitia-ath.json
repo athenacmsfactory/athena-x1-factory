@@ -1,87 +1,149 @@
 {
+  "name": "lex-justitia-ath",
+  "sections": [
+    {
+      "component": "header",
+      "category": "Common",
+      "props": {},
+      "id": "header-0",
+      "title": "header",
+      "fields": {}
+    },
+    {
+      "component": "hero",
+      "category": "Common",
+      "props": {},
+      "id": "hero-1",
+      "title": "hero",
+      "fields": {}
+    },
+    {
+      "component": "about_us",
+      "category": "Common",
+      "props": {},
+      "id": "about_us-2",
+      "title": "about_us",
+      "fields": {}
+    },
+    {
+      "component": "services",
+      "category": "Common",
+      "props": {},
+      "id": "services-3",
+      "title": "services",
+      "fields": {}
+    },
+    {
+      "component": "features",
+      "category": "Common",
+      "props": {},
+      "id": "features-4",
+      "title": "features",
+      "fields": {}
+    },
+    {
+      "component": "contact",
+      "category": "Common",
+      "props": {},
+      "id": "contact-5",
+      "title": "contact",
+      "fields": {}
+    },
+    {
+      "component": "footer",
+      "category": "Common",
+      "props": {},
+      "id": "footer-6",
+      "title": "footer",
+      "fields": {}
+    }
+  ],
+  "raw": {
     "blueprint_name": "lex-justitia-ath",
     "track": "docked",
     "data_structure": [
-        {
-            "table_name": "hero",
-            "columns": [
-                {
-                    "name": "title",
-                    "description": "Auto-generated field: title"
-                },
-                {
-                    "name": "subtitle",
-                    "description": "Auto-generated field: subtitle"
-                },
-                {
-                    "name": "button_text",
-                    "description": "Auto-generated field: button_text"
-                }
-            ]
-        },
-        {
-            "table_name": "about_us",
-            "columns": [
-                {
-                    "name": "title",
-                    "description": "Auto-generated field: title"
-                },
-                {
-                    "name": "text",
-                    "description": "Auto-generated field: text"
-                }
-            ]
-        },
-        {
-            "table_name": "services",
-            "columns": [
-                {
-                    "name": "title",
-                    "description": "Auto-generated field: title"
-                },
-                {
-                    "name": "description",
-                    "description": "Auto-generated field: description"
-                },
-                {
-                    "name": "icon",
-                    "description": "Auto-generated field: icon"
-                }
-            ]
-        },
-        {
-            "table_name": "features",
-            "columns": [
-                {
-                    "name": "title",
-                    "description": "Auto-generated field: title"
-                },
-                {
-                    "name": "text",
-                    "description": "Auto-generated field: text"
-                },
-                {
-                    "name": "icon",
-                    "description": "Auto-generated field: icon"
-                }
-            ]
-        },
-        {
-            "table_name": "contact",
-            "columns": [
-                {
-                    "name": "title",
-                    "description": "Auto-generated field: title"
-                },
-                {
-                    "name": "form_title",
-                    "description": "Auto-generated field: form_title"
-                },
-                {
-                    "name": "form_button_text",
-                    "description": "Auto-generated field: form_button_text"
-                }
-            ]
-        }
+      {
+        "table_name": "hero",
+        "columns": [
+          {
+            "name": "title",
+            "description": "Auto-generated field: title"
+          },
+          {
+            "name": "subtitle",
+            "description": "Auto-generated field: subtitle"
+          },
+          {
+            "name": "button_text",
+            "description": "Auto-generated field: button_text"
+          }
+        ]
+      },
+      {
+        "table_name": "about_us",
+        "columns": [
+          {
+            "name": "title",
+            "description": "Auto-generated field: title"
+          },
+          {
+            "name": "text",
+            "description": "Auto-generated field: text"
+          }
+        ]
+      },
+      {
+        "table_name": "services",
+        "columns": [
+          {
+            "name": "title",
+            "description": "Auto-generated field: title"
+          },
+          {
+            "name": "description",
+            "description": "Auto-generated field: description"
+          },
+          {
+            "name": "icon",
+            "description": "Auto-generated field: icon"
+          }
+        ]
+      },
+      {
+        "table_name": "features",
+        "columns": [
+          {
+            "name": "title",
+            "description": "Auto-generated field: title"
+          },
+          {
+            "name": "text",
+            "description": "Auto-generated field: text"
+          },
+          {
+            "name": "icon",
+            "description": "Auto-generated field: icon"
+          }
+        ]
+      },
+      {
+        "table_name": "contact",
+        "columns": [
+          {
+            "name": "title",
+            "description": "Auto-generated field: title"
+          },
+          {
+            "name": "form_title",
+            "description": "Auto-generated field: form_title"
+          },
+          {
+            "name": "form_button_text",
+            "description": "Auto-generated field: form_button_text"
+          }
+        ]
+      }
     ]
+  },
+  "blueprint_name": "lex-justitia-ath"
 }

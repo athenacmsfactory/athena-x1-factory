@@ -1,0 +1,20 @@
+[
+  {
+    "punt_id": 1,
+    "titel": "De sterke punt beschrijving (bijv. 'Snel geleverd', '2 jaar garantie', 'Deskundig advies'). placeholder text #1",
+    "icoon_naam": "Mock icoon_naam 1",
+    "prioriteit": "Definieert de weergavevolgorde op de website. placeholder text #1"
+  },
+  {
+    "punt_id": 2,
+    "titel": "De sterke punt beschrijving (bijv. 'Snel geleverd', '2 jaar garantie', 'Deskundig advies'). placeholder text #2",
+    "icoon_naam": "Mock icoon_naam 2",
+    "prioriteit": "Definieert de weergavevolgorde op de website. placeholder text #2"
+  },
+  {
+    "punt_id": 3,
+    "titel": "De sterke punt beschrijving (bijv. 'Snel geleverd', '2 jaar garantie', 'Deskundig advies'). placeholder text #3",
+    "icoon_naam": "Mock icoon_naam 3",
+    "prioriteit": "Definieert de weergavevolgorde op de website. placeholder text #3"
+  }
+]

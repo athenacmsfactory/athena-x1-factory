@@ -1,0 +1,26 @@
+[
+  {
+    "testimonial_id": 1,
+    "klant_naam": "Mock klant_naam 1",
+    "gebruikte_service": "De dienst waarvoor de klant kwam (haarkleuring, haarstyling). placeholder text #1",
+    "beoordeling_tekst": "De volledige review tekst. placeholder text #1",
+    "datum_review": "2026-04-14",
+    "is_actief": "Boolean om te bepalen of de review op de site getoond wordt. placeholder text #1"
+  },
+  {
+    "testimonial_id": 2,
+    "klant_naam": "Mock klant_naam 2",
+    "gebruikte_service": "De dienst waarvoor de klant kwam (haarkleuring, haarstyling). placeholder text #2",
+    "beoordeling_tekst": "De volledige review tekst. placeholder text #2",
+    "datum_review": "2026-04-14",
+    "is_actief": "Boolean om te bepalen of de review op de site getoond wordt. placeholder text #2"
+  },
+  {
+    "testimonial_id": 3,
+    "klant_naam": "Mock klant_naam 3",
+    "gebruikte_service": "De dienst waarvoor de klant kwam (haarkleuring, haarstyling). placeholder text #3",
+    "beoordeling_tekst": "De volledige review tekst. placeholder text #3",
+    "datum_review": "2026-04-14",
+    "is_actief": "Boolean om te bepalen of de review op de site getoond wordt. placeholder text #3"
+  }
+]

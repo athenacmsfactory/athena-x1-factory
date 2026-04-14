@@ -468,28 +468,30 @@ export class SiteController {
      * Start een preview voor een sitetype/blueprint blueprint met mockup data
      */
     async previewSitetypePreview(name) {
-        const showcasePath = path.join(this.sitetypesPreviewDir, name);
-        console.log(`🔍 Checking preview at: ${showcasePath}`);
+        // We always use the 'athena-showcase' directory for live previews
+        const showcasePath = path.join(this.sitetypesPreviewDir, 'athena-showcase');
+        const previewPort = 3032; // Fixed port for Builder Previews
         
-        // Als de showcase nog niet bestaat, geven we een specifieke status terug
+        console.log(`🔍 Using unified preview at: ${showcasePath}`);
+        
         if (!fs.existsSync(showcasePath)) {
             return { 
-                success: true, 
-                status: 'not_provisioned', 
-                message: `Preview site voor '${name}' moet nog gegenereerd worden.`,
-                canProvision: true
+                success: false, 
+                error: 'Showcase template missing',
+                message: `De template map 'athena-showcase' is niet gevonden in ${this.sitetypesPreviewDir}.`
             };
         }
 
-        const previewPort = this.getSitePort(`showcase-${name}`, showcasePath);
+        // Ensure the directory is synced with the requested sitetype first
+        await this.syncSitetypePreview(name);
         
-        // Stop andere processes op deze poort
+        // Stop any process already on this port
         await this.pm.stopProcessByPort(previewPort);
 
-        console.log(`🚀 Starting Sitetype Preview for ${name} on port ${previewPort}...`);
+        console.log(`🚀 Starting Unified Sitetype Preview on port ${previewPort}...`);
         
-        // Start de site vanuit de showcase map
-        await this.pm.startProcess(`showcase-${name}`, 'showcase-preview', previewPort, 'pnpm', ['dev', '--port', previewPort.toString(), '--host'], { cwd: showcasePath });
+        // Start Vite in the unified showcase directory
+        await this.pm.startProcess(`showcase-preview-main`, 'showcase-preview', previewPort, 'pnpm', ['dev', '--port', previewPort.toString(), '--host'], { cwd: showcasePath });
 
         return { success: true, status: 'starting', url: `http://localhost:${previewPort}/` };
     }
@@ -707,13 +709,16 @@ export default defineConfig({
      * Dit zorgt ervoor dat wijzigingen in de Sitetype Builder direct zichtbaar zijn.
      */
     async syncSitetypePreview(name) {
-        const showcasePath = path.join(this.sitetypesPreviewDir, name);
+        // We always use the 'athena-showcase' as the live synchronization target
+        // to avoid provisioning a new Vite project for every sitetype.
+        const showcasePath = path.join(this.sitetypesPreviewDir, 'athena-showcase');
+        
         if (!fs.existsSync(showcasePath)) {
-            // Als de preview nog niet bestaat, doen we eerst een provision
-            await this.provisionSitetypePreview(name);
+            // Fallback for extreme cases
+            await this.provisionSitetypePreview('athena-showcase');
         }
 
-        console.log(`📡 Synchronizing Sitetype Preview for '${name}'...`);
+        console.log(`📡 Synchronizing Sitetype Preview for '${name}' in 'athena-showcase'...`);
 
         try {
             const sitetypesDir = path.join(this.configManager.get('paths.factory'), '3-sitetypes/unified');
@@ -745,7 +750,7 @@ export default defineConfig({
             fs.writeFileSync(path.join(targetDataDir, 'section_order.json'), JSON.stringify(sectionOrder, null, 2));
 
             // 2. Sync Components (Legos)
-            const targetCompDir = path.join(showcasePath, 'components');
+            const targetCompDir = path.join(showcasePath, 'src/components');
             if (!fs.existsSync(targetCompDir)) fs.mkdirSync(targetCompDir, { recursive: true });
 
             const legosLib = this.getLegos();
@@ -775,7 +780,7 @@ export default defineConfig({
             });
 
             // 3. Update Section.jsx with new mapping
-            const sectionJsxPath = path.join(showcasePath, 'components/Section.jsx');
+            const sectionJsxPath = path.join(showcasePath, 'src/components/Section.jsx');
             if (fs.existsSync(sectionJsxPath)) {
                 let content = fs.readFileSync(sectionJsxPath, 'utf8');
                 

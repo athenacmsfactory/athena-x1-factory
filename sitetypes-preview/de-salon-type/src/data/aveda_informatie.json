@@ -1,0 +1,20 @@
+[
+  {
+    "info_id": 1,
+    "titel": "De sectietitel (e.g., Aveda, Ayurveda). placeholder text #1",
+    "hoofdtekst_nl": "Gedetailleerde tekst over de filosofie en producten van Aveda. placeholder text #1",
+    "focus_punten": "Belangrijke kernwaarden (fair trade, groen denken, well-being). placeholder text #1"
+  },
+  {
+    "info_id": 2,
+    "titel": "De sectietitel (e.g., Aveda, Ayurveda). placeholder text #2",
+    "hoofdtekst_nl": "Gedetailleerde tekst over de filosofie en producten van Aveda. placeholder text #2",
+    "focus_punten": "Belangrijke kernwaarden (fair trade, groen denken, well-being). placeholder text #2"
+  },
+  {
+    "info_id": 3,
+    "titel": "De sectietitel (e.g., Aveda, Ayurveda). placeholder text #3",
+    "hoofdtekst_nl": "Gedetailleerde tekst over de filosofie en producten van Aveda. placeholder text #3",
+    "focus_punten": "Belangrijke kernwaarden (fair trade, groen denken, well-being). placeholder text #3"
+  }
+]

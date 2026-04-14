@@ -513,11 +513,44 @@ app.post('/api/start-layout-server', async (req, res) => res.json(await serverCt
 app.get('/api/blueprints/:name', async (req, res) => {
     try {
         const sitetypesDir = configManager.get('paths.sitetypes');
-        const filePath = path.join(sitetypesDir, req.params.name, 'blueprint', `${req.params.name}.json`);
+        const blueprintDir = path.join(sitetypesDir, req.params.name, 'blueprint');
+        let filePath = path.join(blueprintDir, `${req.params.name}.json`);
+        
+        // Fuzzy match: if exact name doesn't exist, pick the first JSON in the blueprint dir
+        if (!fs.existsSync(filePath) && fs.existsSync(blueprintDir)) {
+            const files = fs.readdirSync(blueprintDir).filter(f => f.endsWith('.json'));
+            if (files.length > 0) filePath = path.join(blueprintDir, files[0]);
+        }
+
         if (fs.existsSync(filePath)) {
-            res.json(JSON.parse(fs.readFileSync(filePath, 'utf8')));
+            const blueprint = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+            
+            // Normalize for the UI: Check multiple places for section order
+            let sections = blueprint.sections || blueprint.page_structure?.home || [];
+            
+            // If still empty, try to derive it from the data_structure
+            const ds = blueprint.data_structure || blueprint.raw?.data_structure || (blueprint.raw && blueprint.raw.data_structure);
+            if (sections.length === 0 && ds) {
+                sections.push('header');
+                sections.push('hero');
+                ds.forEach(table => {
+                    if (!['header', 'hero', 'footer', 'site_settings', 'basis'].includes(table.table_name)) {
+                        sections.push(table.table_name);
+                    }
+                });
+                sections.push('footer');
+            }
+
+            res.json({
+                name: blueprint.blueprint_name || req.params.name,
+                sections: sections.map((s, idx) => {
+                    const comp = typeof s === 'string' ? s : (s.component || s.id);
+                    return { id: `${comp}-${idx}`, component: comp };
+                }),
+                raw: blueprint
+            });
         } else {
-            res.status(404).json({ error: 'Blueprint not found' });
+            res.status(404).json({ error: 'Blueprint not found in ' + blueprintDir });
         }
     } catch (e) {
         res.status(500).json({ error: e.message });

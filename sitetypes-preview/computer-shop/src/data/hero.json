@@ -1,0 +1,23 @@
+[
+  {
+    "hero_header": "Mock hero_header 1",
+    "hero_tagline": "Ondertitel of introductietekst. placeholder text #1",
+    "hero_image": "https://picsum.photos/seed/ath1/800/600",
+    "cta_text": "Tekst op de actieknop. placeholder text #1",
+    "cta_url": "https://picsum.photos/seed/ath1/800/600"
+  },
+  {
+    "hero_header": "Mock hero_header 2",
+    "hero_tagline": "Ondertitel of introductietekst. placeholder text #2",
+    "hero_image": "https://picsum.photos/seed/ath2/800/600",
+    "cta_text": "Tekst op de actieknop. placeholder text #2",
+    "cta_url": "https://picsum.photos/seed/ath2/800/600"
+  },
+  {
+    "hero_header": "Mock hero_header 3",
+    "hero_tagline": "Ondertitel of introductietekst. placeholder text #3",
+    "hero_image": "https://picsum.photos/seed/ath3/800/600",
+    "cta_text": "Tekst op de actieknop. placeholder text #3",
+    "cta_url": "https://picsum.photos/seed/ath3/800/600"
+  }
+]

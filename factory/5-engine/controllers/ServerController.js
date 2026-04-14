@@ -164,8 +164,31 @@ export class ServerController {
      * Stop all site preview servers ('preview' type)
      */
     async stopAllSiteServers() {
-        const count = await this.pm.stopAllProcesses('preview');
-        return { success: true, message: `${count} site servers gestopt.` };
+        console.log("⚠️ Critical Stop All requested. Cleaning up all site-related processes...");
+        
+        // Target all types that are not internal system components
+        // We want to stop previews, showcase-previews, editors, media, and dock
+        const registry = this.pm.listActive();
+        let stoppedCount = 0;
+
+        for (const port in registry) {
+            const info = registry[port];
+            // Safety: Don't kill the Dashboard API (5000) or things that might look like it
+            if (parseInt(port) !== 5000 && parseInt(port) !== 5001) {
+                try {
+                    await this.pm.stopProcessByPort(parseInt(port));
+                    // Additional shell kill insurance for site servers
+                    try {
+                        execSync(`fuser -k ${port}/tcp 2>/dev/null`, { stdio: 'ignore' });
+                    } catch(e) {}
+                    stoppedCount++;
+                } catch (e) {
+                    console.error(`Failed to stop port ${port}: ${e.message}`);
+                }
+            }
+        }
+        
+        return { success: true, message: `Opluimen voltooid: ${stoppedCount} processen gestuit.` };
     }
 
     /**
