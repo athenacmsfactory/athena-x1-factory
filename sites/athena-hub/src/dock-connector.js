@@ -9,8 +9,8 @@
     let lastKnownData = null;
 
     const getApiUrl = (path) => {
-        const base = import.meta.env.BASE_URL || '/';
-        return (base + '/' + path).replace(new RegExp('/+', 'g'), '/');
+        const baseUrl = window.location.pathname.split('/').slice(0, -1).join('/') || '/';
+        return (baseUrl + '/' + path).replace(new RegExp('/+', 'g'), '/');
     };
 
     const parseBinding = (bindStr) => {
@@ -69,7 +69,7 @@
             layouts: lastKnownData?.layout_settings?.[0] || lastKnownData?.layout_settings || {},
             data: lastKnownData || {},
             url: window.location.href,
-            currentPath: window.location.pathname.replace(import.meta.env.BASE_URL, '') || '/',
+            currentPath: window.location.pathname.replace( (window.location.pathname.split('/').slice(0, -1).join('/') || '/') , '') || '/',
             timestamp: Date.now()
         };
         window.parent.postMessage({ type: 'SITE_READY', structure }, '*');
@@ -145,7 +145,7 @@
                 const dockType = el.getAttribute('data-dock-type') || 'text';
                 if (dockType === 'media') {
                     const mediaEl = el.tagName === 'IMG' ? el : el.querySelector('img');
-                    if (mediaEl) mediaEl.src = value.startsWith('http') ? value : `${import.meta.env.BASE_URL}images/${value}`.replace(/\/+/g, '/');
+                    if (mediaEl) mediaEl.src = value.startsWith('http') ? value : `${ (window.location.pathname.split('/').slice(0, -1).join('/') || '/') }images/${value}`.replace(/\/+/g, '/');
                 } else if (dockType === 'link') {
                     const { label } = (typeof value === 'object') ? value : { label: value };
                     el.innerText = label || "";

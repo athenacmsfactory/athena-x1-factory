@@ -345,6 +345,7 @@ const DockFrame = () => {
 
       // CRUCIAL: Update local state immediately so modals see the change!
       setSiteStructure(prev => {
+        if (!prev || !prev.data) return prev;
         const newData = { ...prev.data };
         if (Array.isArray(newData[file])) {
           newData[file] = [...newData[file]];
@@ -499,10 +500,10 @@ const DockFrame = () => {
         });
         
         if (res.ok) {
-            setSiteStructure(prev => ({
-                ...prev,
-                data: { ...prev.data, navbar: links }
-            }));
+            setSiteStructure(prev => {
+                if (!prev || !prev.data) return prev;
+                return { ...prev, data: { ...prev.data, navbar: links } };
+            });
 
             // 🔥 Direct Sync for instant UI feedback
             if (iframeRef.current) {
@@ -860,10 +861,10 @@ const DockFrame = () => {
             // Optimistic update
             const newItems = [...items];
             [newItems[index], newItems[newIndex]] = [newItems[newIndex], newItems[index]];
-            setSiteStructure(prev => ({
-                ...prev,
-                data: { ...prev.data, [tableName]: newItems }
-            }));
+            setSiteStructure(prev => {
+                if (!prev || !prev.data) return prev;
+                return { ...prev, data: { ...prev.data, [tableName]: newItems } };
+            });
             
             if (iframeRef.current) {
                 iframeRef.current.contentWindow.postMessage({
@@ -897,10 +898,10 @@ const DockFrame = () => {
       });
       
       if (res.ok) {
-        setSiteStructure(prev => ({
-          ...prev,
-          data: { ...prev.data, section_settings: updatedSections }
-        }));
+        setSiteStructure(prev => {
+          if (!prev || !prev.data) return prev;
+          return { ...prev, data: { ...prev.data, section_settings: updatedSections } };
+        });
         setTimeout(forceRefresh, 300);
       }
     } catch (err) { console.error(err); }
@@ -1354,7 +1355,7 @@ const DockFrame = () => {
               sectionOrder={siteStructure?.sections}
               sectionSettings={siteStructure?.data?.section_settings}
               onReorder={(newOrder) => {
-                  setSiteStructure(prev => ({ ...prev, sections: newOrder }));
+                  setSiteStructure(prev => (prev ? { ...prev, sections: newOrder } : prev));
                   // Server save logic (if needed) ...
               }}
               onDelete={(id) => deleteSection(id)}

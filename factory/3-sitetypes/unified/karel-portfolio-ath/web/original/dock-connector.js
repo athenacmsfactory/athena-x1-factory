@@ -9,8 +9,8 @@
     let lastKnownData = null;
 
     const getApiUrl = (path) => {
-        const base = import.meta.env.BASE_URL || '/';
-        return (base + '/' + path).replace(new RegExp('/+', 'g'), '/');
+        const baseUrl = window.location.pathname.split('/').slice(0, -1).join('/') || '/';
+        return (baseUrl + '/' + path).replace(new RegExp('/+', 'g'), '/');
     };
 
     // --- 2. THEME MAPPINGS ---
@@ -129,7 +129,7 @@
         // Text & Media Update (Live Preview)
         if (type === 'DOCK_UPDATE_TEXT') {
             const elements = document.querySelectorAll('[data-dock-bind]');
-            const baseUrl = import.meta.env.BASE_URL || '/';
+            const baseUrl =  (window.location.pathname.split('/').slice(0, -1).join('/') || '/')  || '/';
             
             elements.forEach(el => {
                 try {

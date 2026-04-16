@@ -9,8 +9,8 @@
     let lastKnownData = null;
 
     const getApiUrl = (path) => {
-        const base = import.meta.env.BASE_URL || '/';
-        return (base + '/' + path).replace(new RegExp('/+', 'g'), '/');
+        const baseUrl = window.location.pathname.split('/').slice(0, -1).join('/') || '/';
+        return (baseUrl + '/' + path).replace(new RegExp('/+', 'g'), '/');
     };
 
     // --- 2. THEME MAPPINGS ---
@@ -123,9 +123,9 @@
             console.log("✈️ Navigating to:", path);
             
             // Construct full URL respecting Base Path
-            const base = import.meta.env.BASE_URL || '/';
+            const baseUrl = window.location.pathname.split('/').slice(0, -1).join('/') || '/';
             // Clean join of base and path
-            const targetPath = (base + '/' + path).replace(new RegExp('/+', 'g'), '/');
+            const targetPath = (baseUrl + '/' + path).replace(new RegExp('/+', 'g'), '/');
             
             window.location.href = targetPath;
         }
