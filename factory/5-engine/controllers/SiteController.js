@@ -23,7 +23,8 @@ export class SiteController {
         this.dataManager = new AthenaDataManager(configManager.get('paths.factory'));
         this.interpreter = new AthenaInterpreter(configManager);
         this.installManager = new InstallManager(this.root);
-        this.sitetypesPreviewDir = path.join(this.root, 'sitetypes-preview');
+        this.sitetypesPreviewDir = path.join(path.dirname(this.root), 'control/sitetypes-preview');
+        this.sitetypesDir = this.configManager.get('paths.sitetypes');
         
         // 🔱 v10.2 Cache for Directory Scans (prevents battery drain)
         this._cache = {
@@ -169,11 +170,20 @@ export class SiteController {
             const isAthena = fs.existsSync(configPath) || fs.existsSync(deployFile);
             const isInstalled = fs.existsSync(path.join(sitePath, 'node_modules'));
 
+            let siteType = 'legacy';
+            if (fs.existsSync(configPath)) {
+                try {
+                    const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+                    if (config.siteType) siteType = config.siteType;
+                } catch (e) { /* ignore config errors */ }
+            }
+
             return {
                 id: site,
                 name: site,
                 path: sitePath,
                 type: isNative ? 'native' : 'external',
+                siteType, // <--- New property for grouping
                 isNative, // <--- Explicit property for Dashboard filtering
                 isAthena, // <--- New flag to hide Modernize button for Athena projects
                 status: status,
@@ -468,32 +478,62 @@ export class SiteController {
      * Start een preview voor een sitetype/blueprint blueprint met mockup data
      */
     async previewSitetypePreview(name) {
-        // We always use the 'athena-showcase' directory for live previews
         const showcasePath = path.join(this.sitetypesPreviewDir, 'athena-showcase');
         const previewPort = 3032; // Fixed port for Builder Previews
         
-        console.log(`🔍 Using unified preview at: ${showcasePath}`);
-        
+        console.log(`🔍 Checking showcase template at: ${showcasePath}`);
+
         if (!fs.existsSync(showcasePath)) {
-            return { 
-                success: false, 
-                error: 'Showcase template missing',
-                message: `De template map 'athena-showcase' is niet gevonden in ${this.sitetypesPreviewDir}.`
+            // Auto-provision if missing
+            console.log(`⚠️ Showcase template missing. Attempting to auto-provision 'athena-showcase'...`);
+            try {
+                await this.provisionSitetypePreview('athena-showcase');
+            } catch (e) {
+                return { 
+                    success: false, 
+                    error: 'Showcase template missing and provisioning failed',
+                    message: `De template map 'athena-showcase' kon niet worden aangemaakt in ${this.sitetypesPreviewDir}. Error: ${e.message}`
+                };
+            }
+        }
+
+        // Sync data and components first
+        console.log(`🔄 Syncing blueprint '${name}' to showcase...`);
+        const syncResult = await this.syncSitetypePreview(name);
+        if (!syncResult.success) {
+            return { success: false, error: `Sync failed: ${syncResult.error}` };
+        }
+        
+        // Check if already running on this port
+        const active = this.pm.listActive();
+        if (active[previewPort] && active[previewPort].id === 'showcase-preview-main') {
+            console.log(`⚡ Showcase server already active on port ${previewPort}. Skipping restart (HMR will handle updates).`);
+            return {
+                success: true,
+                status: 'active',
+                url: `http://localhost:${previewPort}`,
+                message: 'Showcase server is al actief. Updates zijn gesynchroniseerd via HMR.'
             };
         }
 
-        // Ensure the directory is synced with the requested sitetype first
-        await this.syncSitetypePreview(name);
-        
-        // Stop any process already on this port
+        // Stop any other process on this port if it's not our showcase
         await this.pm.stopProcessByPort(previewPort);
-
-        console.log(`🚀 Starting Unified Sitetype Preview on port ${previewPort}...`);
         
-        // Start Vite in the unified showcase directory
-        await this.pm.startProcess(`showcase-preview-main`, 'showcase-preview', previewPort, 'pnpm', ['dev', '--port', previewPort.toString(), '--host'], { cwd: showcasePath });
-
-        return { success: true, status: 'starting', url: `http://localhost:${previewPort}/` };
+        // Start de process via ProcessManager
+        console.log(`🚀 Starting showcase process for ${name} at ${showcasePath}`);
+        
+        try {
+            this.pm.startProcess(`showcase-preview-main`, 'showcase-preview', previewPort, 'pnpm', ['dev', '--port', previewPort.toString(), '--host'], { cwd: showcasePath });
+            
+            return { 
+                success: true, 
+                status: 'starting', 
+                url: `http://localhost:${previewPort}`,
+                message: `Showcase preview voor '${name}' wordt gestart op poort ${previewPort}.`
+            };
+        } catch (e) {
+            return { success: false, error: `Process start failed: ${e.message}` };
+        }
     }
 
     /**
@@ -508,8 +548,6 @@ export class SiteController {
         console.log(`✨ Provisioning preview site for '${name}'...`);
         
         try {
-            // Gebruik de bestaande createProject logica maar forceer de output naar showcaseDir
-            // We simuleren een creatie-optie die de map overschrijft
             const sitetypesDir = this.configManager.get('paths.sitetypes');
             const blueprintFile = path.join(sitetypesDir, name, 'blueprint', `${name}.json`);
             
@@ -677,34 +715,6 @@ export default defineConfig({
     }
 
     /**
-     * Bepaalt poort voor een site via de centrale port-manager skill
-     */
-    getSitePort(id, siteDir) {
-        const scriptPath = path.join(this.root, 'port-manager/scripts/manage_ports.py');
-        const project = 'athena';
-        const description = `Athena Site: ${id}`;
-        
-        try {
-            // Roep de python script aan: python3 manage_ports.py get <service> <project> [desc]
-            const cmd = `python3 "${scriptPath}" get "${id}" "${project}" "${description}"`;
-            const output = execSync(cmd).toString();
-            
-            // Extract PORT=xxxx uit de output
-            const match = output.match(/PORT=(\d+)/);
-            if (match) {
-                return parseInt(match[1]);
-            }
-            
-            // Fallback als de script faalt maar output geeft
-            throw new Error("Geen poort gevonden in script output.");
-        } catch (e) {
-            console.error("❌ Port Manager Skill failed:", e.message);
-            // Hele veilige fallback naar oude methode/range als de skill echt niet werkt
-            return 5100 + (Math.abs(id.split('').reduce((a, b) => (a << 5) - a + b.charCodeAt(0), 0)) % 1000);
-        }
-    }
-
-    /**
      * Synchroniseert de huidige blueprint met de showcase preview site.
      * Dit zorgt ervoor dat wijzigingen in de Sitetype Builder direct zichtbaar zijn.
      */
@@ -721,32 +731,69 @@ export default defineConfig({
         console.log(`📡 Synchronizing Sitetype Preview for '${name}' in 'athena-showcase'...`);
 
         try {
-            const sitetypesDir = path.join(this.configManager.get('paths.factory'), '3-sitetypes/unified');
+            const sitetypesDir = this.configManager.get('paths.sitetypes');
             const blueprintFile = path.join(sitetypesDir, name, 'blueprint', `${name}.json`);
             
             if (!fs.existsSync(blueprintFile)) throw new Error(`Blueprint voor ${name} niet gevonden.`);
             
             const bp = JSON.parse(fs.readFileSync(blueprintFile, 'utf8'));
             const sections = bp.sections || [];
+            
+            // Helper to get component name robustly
+            const getCompName = (s) => (s.component || s.name || s.id || 'unknown').toLowerCase();
+
+            const dataStructure = bp.data_structure || (bp.raw ? bp.raw.data_structure : []) || [];
 
             // 1. Update Mock Data
             const targetDataDir = path.join(showcasePath, 'src/data');
             if (!fs.existsSync(targetDataDir)) fs.mkdirSync(targetDataDir, { recursive: true });
             
             // We genereren mock data op basis van de blueprint secties
-            const structureForMock = sections.map(s => ({
-                table_name: s.component.toLowerCase(),
-                columns: Object.keys(s.props || s.fields || {}).map(k => ({ name: k }))
-            }));
+            const structureForMock = sections.map(s => {
+                const compName = getCompName(s);
+                // Check of deze tabel voorkomt in de data_structure voor rijkere mock data
+                const dsTable = dataStructure.find(t => t.table_name.toLowerCase() === compName);
+                const columns = dsTable ? dsTable.columns : Object.keys(s.props || s.fields || {}).map(k => ({ name: k }));
+                
+                return {
+                    table_name: compName,
+                    columns: columns
+                };
+            });
             
             // Voeg altijd site_settings en section_order toe
             const mockData = this.generateMockData(structureForMock);
-            for (const [table, rows] of Object.entries(mockData)) {
+            
+            // Ook de rest van de data_structure mocken als het nog niet in structureForMock zit
+            const existingTables = structureForMock.map(s => s.table_name);
+            const extraMockData = this.generateMockData(dataStructure.filter(t => !existingTables.includes(t.table_name.toLowerCase())));
+            
+            const finalMockData = { ...extraMockData, ...mockData };
+
+            for (const [table, rows] of Object.entries(finalMockData)) {
                 fs.writeFileSync(path.join(targetDataDir, `${table}.json`), JSON.stringify(rows, null, 2));
             }
 
             // Update section_order.json
-            const sectionOrder = ['site_settings', 'header', 'hero', ...sections.map(s => s.component.toLowerCase()), 'footer'];
+            // We voegen 'hero' niet meer hardcoded toe aan de lijst, want de Manual Hero in Section.jsx 
+            // rendert altijd zolang er data.hero is. Maar we willen 'hero' wel in de data-sync hebben.
+            let sectionOrder = ['site_settings', 'header', ...sections.map(s => getCompName(s)), 'footer'];
+            
+            // Zorg dat 'hero' altijd in de lijst staat voor data-sync doeleinden, maar gefilterd in de loop
+            if (!sectionOrder.includes('hero')) {
+                // Voeg toe na header
+                sectionOrder.splice(2, 0, 'hero');
+            }
+
+            // Als er GEEN secties zijn gedefinieerd (behalve de 'hero' die we net toevoegden), 
+            // tonen we alles uit de data_structure als fallback
+            if (sections.length === 0 && dataStructure.length > 0) {
+                const dsTables = dataStructure
+                    .map(t => t.table_name.toLowerCase())
+                    .filter(name => !['site_settings', 'header', 'footer', 'hero', 'basis'].includes(name));
+                sectionOrder = ['site_settings', 'header', 'hero', ...dsTables, 'footer'];
+            }
+            
             fs.writeFileSync(path.join(targetDataDir, 'section_order.json'), JSON.stringify(sectionOrder, null, 2));
 
             // 2. Sync Components (Legos)
@@ -754,12 +801,14 @@ export default defineConfig({
             if (!fs.existsSync(targetCompDir)) fs.mkdirSync(targetCompDir, { recursive: true });
 
             const legosLib = this.getLegos();
-            const usedLegos = sections.map(s => s.component);
+            const usedLegos = sections.map(s => (s.component || s.name || s.id));
             
             let importStatements = "";
             let mappingLogic = "";
 
-            usedLegos.forEach((legoName, idx) => {
+            sections.forEach((s, idx) => {
+                const legoName = s.component || s.name || s.id;
+                if (!legoName) return;
                 // Fuzzy match: case-insensitive and stripping common suffixes/prefixes
                 const cleanName = legoName.toLowerCase().replace(/legov[0-9]+$/, '').replace(/v[0-9]+$/, '');
                 const lego = legosLib.find(l => {
@@ -776,6 +825,10 @@ export default defineConfig({
                     const compVar = `${legoName.replace(/[^a-zA-Z0-9]/g, '_')}_${idx}`;
                     importStatements += `import ${compVar} from './${lego.name}';\n`;
                     mappingLogic += `      if (lower === '${legoName.toLowerCase()}') return ${compVar};\n`;
+                } else {
+                    console.log(`⚠️ Lego component not found for: ${legoName}`);
+                    // Fallback mapping for unknown components to at least render a GenericSection
+                    mappingLogic += `      if (lower === '${legoName.toLowerCase()}') return GenericSection;\n`;
                 }
             });
 
@@ -816,7 +869,7 @@ export default defineConfig({
         const Comp = getComponent(sectionName);
         return (
           <section key={idx} id={sectionName} data-dock-section={sectionName} className="py-20 border-b border-athena-border/5">
-             <Comp data={items} sectionSettings={sectionSettings[sectionName]} />
+             <Comp data={items} sectionName={sectionName} sectionSettings={sectionSettings[sectionName]} />
           </section>
         );
                 `.trim();

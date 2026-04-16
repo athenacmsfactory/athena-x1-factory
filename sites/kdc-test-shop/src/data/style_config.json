@@ -21,5 +21,8 @@
   "--color-surface-rgb": "255 255 255",
   "--color-heading-rgb": "99 102 241",
   "--color-title-rgb": "99 102 241",
-  "--color-button-bg-rgb": "16 185 129"
+  "--color-button-bg-rgb": "16 185 129",
+  "content_top_offset": 115,
+  "dark_header_color": "#cc2424",
+  "light_header_color": "#ec0e0e"
 }

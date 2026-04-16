@@ -24,34 +24,18 @@
       {
         "component": "hero",
         "category": "Common",
-        "props": {
-          "title": "string",
-          "subtitle": "string",
-          "cta_text": "string",
-          "image": "image"
-        },
-        "id": "hero",
+        "props": {},
+        "id": "hero-0",
         "title": "hero",
-        "fields": {
-          "title": "string",
-          "subtitle": "string",
-          "cta_text": "string",
-          "image": "image"
-        }
+        "fields": {}
       },
       {
         "component": "about",
         "category": "Common",
-        "props": {
-          "content": "text",
-          "image": "image"
-        },
-        "id": "about",
+        "props": {},
+        "id": "about-1",
         "title": "about",
-        "fields": {
-          "content": "text",
-          "image": "image"
-        }
+        "fields": {}
       }
     ],
     "raw": {
@@ -91,38 +75,7 @@
         }
       ],
       "raw": {
-        "blueprint_name": "basic-dock-type",
-        "description": "Een minimalistisch sitetype voor het testen van de Athena Dock.",
-        "recommended_layout": "standard",
-        "recommended_style": "modern",
-        "data_structure": [
-          {
-            "table_name": "bedrijfsinformatie",
-            "columns": [
-              "naam",
-              "beschrijving",
-              "telefoon",
-              "email",
-              "adres"
-            ]
-          },
-          {
-            "table_name": "hero",
-            "columns": [
-              "title",
-              "subtitle",
-              "cta_text",
-              "image"
-            ]
-          },
-          {
-            "table_name": "about",
-            "columns": [
-              "content",
-              "image"
-            ]
-          }
-        ],
+        "name": "basic-dock-type",
         "sections": [
           {
             "component": "hero",
@@ -156,7 +109,76 @@
               "image": "image"
             }
           }
-        ]
+        ],
+        "raw": {
+          "blueprint_name": "basic-dock-type",
+          "description": "Een minimalistisch sitetype voor het testen van de Athena Dock.",
+          "recommended_layout": "standard",
+          "recommended_style": "modern",
+          "data_structure": [
+            {
+              "table_name": "bedrijfsinformatie",
+              "columns": [
+                "naam",
+                "beschrijving",
+                "telefoon",
+                "email",
+                "adres"
+              ]
+            },
+            {
+              "table_name": "hero",
+              "columns": [
+                "title",
+                "subtitle",
+                "cta_text",
+                "image"
+              ]
+            },
+            {
+              "table_name": "about",
+              "columns": [
+                "content",
+                "image"
+              ]
+            }
+          ],
+          "sections": [
+            {
+              "component": "hero",
+              "category": "Common",
+              "props": {
+                "title": "string",
+                "subtitle": "string",
+                "cta_text": "string",
+                "image": "image"
+              },
+              "id": "hero",
+              "title": "hero",
+              "fields": {
+                "title": "string",
+                "subtitle": "string",
+                "cta_text": "string",
+                "image": "image"
+              }
+            },
+            {
+              "component": "about",
+              "category": "Common",
+              "props": {
+                "content": "text",
+                "image": "image"
+              },
+              "id": "about",
+              "title": "about",
+              "fields": {
+                "content": "text",
+                "image": "image"
+              }
+            }
+          ]
+        },
+        "blueprint_name": "basic-dock-type"
       },
       "blueprint_name": "basic-dock-type"
     },

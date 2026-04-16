@@ -62,7 +62,9 @@
     "hero_tagline": "De nieuwste componenten en randapparatuur, direct leverbaar vanuit onze test-omgeving.",
     "hero_image": "images/hero-tech.png",
     "cta_text": "Bekijk Aanbiedingen",
-    "cta_url": "#producten"
+    "cta_url": "#producten",
+    "hero_show_arrow": false,
+    "hero_cta_style": "solid"
   },
   "klanten": [],
   "layout_settings": {
@@ -277,6 +279,11 @@
     "site_name": "kdc-test-shop",
     "tagline": ""
   },
+  "site_settings": {
+    "header_visible": true,
+    "header_height": 250,
+    "header_transparantie": 0.15
+  },
   "style_bindings": {
     "site_name": "kdc-test-shop",
     "tagline": ""
@@ -304,6 +311,9 @@
     "--color-surface-rgb": "255 255 255",
     "--color-heading-rgb": "99 102 241",
     "--color-title-rgb": "99 102 241",
-    "--color-button-bg-rgb": "16 185 129"
+    "--color-button-bg-rgb": "16 185 129",
+    "content_top_offset": 115,
+    "dark_header_color": "#cc2424",
+    "light_header_color": "#ec0e0e"
   }
 }
