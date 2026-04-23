@@ -1,3 +1,0 @@
-User-agent: *
-Allow: /
-Sitemap: https://auto-bakery-final.netlify.app/sitemap.xml
