@@ -1,13 +1,16 @@
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
+import { useAuth } from './AuthContext';
+import { db, doc, getDoc, setDoc } from '../lib/firebase';
 
 const CartContext = createContext();
 
 export const CartProvider = ({ children, siteId = 'athena' }) => {
   const [cart, setCart] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const { user } = useAuth();
   const storageKey = `athena_cart_${siteId}`;
 
-  // Load cart from localStorage on init
+  // 1. Load cart from localStorage on initial boot
   useEffect(() => {
     const savedCart = localStorage.getItem(storageKey);
     if (savedCart) {
@@ -19,10 +22,80 @@ export const CartProvider = ({ children, siteId = 'athena' }) => {
     }
   }, [storageKey]);
 
-  // Save cart to localStorage on change
+  // 2. Handle User Login / Cart Syncing
   useEffect(() => {
+    if (!user) return;
+
+    const syncCartOnLogin = async () => {
+      try {
+        const cartRef = doc(db, "carts", user.uid);
+        const cartSnap = await getDoc(cartRef);
+        
+        let mergedCart = [...cart];
+        
+        if (cartSnap.exists()) {
+          const remoteCart = cartSnap.data().items || [];
+          
+          // Merge logic: items in remote that aren't in local, or update quantities
+          remoteCart.forEach(remoteItem => {
+            const localIndex = mergedCart.findIndex(item => item.id === remoteItem.id);
+            if (localIndex > -1) {
+              // Item exists in both: pick the one with more quantity or remote?
+              // Let's just combine for now
+              mergedCart[localIndex].quantity = Math.max(mergedCart[localIndex].quantity, remoteItem.quantity);
+            } else {
+              mergedCart.push(remoteItem);
+            }
+          });
+        }
+        
+        setCart(mergedCart);
+        // Immediately save merged cart to Firestore
+        await setDoc(cartRef, { items: mergedCart, updatedAt: new Date() });
+      } catch (error) {
+        console.error("Error syncing cart with Firestore:", error);
+      }
+    };
+
+    syncCartOnLogin();
+  }, [user]); // Run when user logs in
+
+  // 3. Clear cart on logout to prevent data leakage on shared computers
+  useEffect(() => {
+    // If we were logged in (user exists) and now we are not (no user), clear the state
+    // Note: We use a ref or check if it's a transition to avoid clearing on initial guest load
+    if (!user && localStorage.getItem(`athena_was_logged_in_${siteId}`)) {
+      setCart([]);
+      localStorage.removeItem(storageKey);
+      localStorage.removeItem(`athena_was_logged_in_${siteId}`);
+      console.log("🔒 Cart cleared after logout for security");
+    }
+    
+    if (user) {
+      localStorage.setItem(`athena_was_logged_in_${siteId}`, 'true');
+    }
+  }, [user, siteId, storageKey]);
+
+  // 4. Save cart to localStorage AND Firestore on change (DEBOUNCED)
+  useEffect(() => {
+    // Always save to localStorage immediately for UI responsiveness
     localStorage.setItem(storageKey, JSON.stringify(cart));
-  }, [cart, storageKey]);
+
+    if (!user) return;
+
+    // Debounce Firestore writes to optimize "tokens" (Firebase operations)
+    const timeoutId = setTimeout(async () => {
+      try {
+        const cartRef = doc(db, "carts", user.uid);
+        await setDoc(cartRef, { items: cart, updatedAt: new Date() });
+        console.log("🛒 Cart synced to Firestore (Debounced)");
+      } catch (error) {
+        console.error("Error saving cart to Firestore:", error);
+      }
+    }, 2000); // 2 second debounce
+
+    return () => clearTimeout(timeoutId);
+  }, [cart, user, storageKey]);
 
   const addToCart = useCallback((product) => {
     setCart(prevCart => {

@@ -1,12 +1,20 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from './CartContext';
+import { useAuth } from './AuthContext';
+import AuthModal from './AuthModal';
+import OrderHistoryModal from './OrderHistoryModal';
 
 export default function Header({ data = {} }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isOrdersOpen, setIsOrdersOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  
   const headerData = data?.header || {};
   const settings = data?.site_settings || {};
   const { cartCount, setIsCartOpen } = useCart();
+  const { user, userProfile, logout } = useAuth();
   const navigate = useNavigate();
 
   const siteName = headerData.site_name || settings.site_name || "Karel's Store";
@@ -27,6 +35,7 @@ export default function Header({ data = {} }) {
   };
 
   return (
+    <>
     <nav
       className="fixed top-0 left-0 right-0 z-[1000] border-b border-white/10 px-6 transition-all duration-500 flex items-center"
       style={{
@@ -65,6 +74,47 @@ export default function Header({ data = {} }) {
 
         {/* Actions & Tools */}
         <div className="flex items-center gap-4 md:gap-8">
+          {/* User Icon */}
+          <div className="relative">
+            <button 
+              onClick={() => user ? setIsProfileOpen(!isProfileOpen) : setIsAuthModalOpen(true)}
+              className="p-2 text-primary hover:text-accent transition-all duration-300"
+              aria-label="User profile"
+            >
+              {user ? (
+                <div className="w-8 h-8 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center font-bold text-xs border border-emerald-200">
+                  {userProfile?.naam?.charAt(0) || user.email.charAt(0).toUpperCase()}
+                </div>
+              ) : (
+                <i className="fa-solid fa-circle-user text-2xl"></i>
+              )}
+            </button>
+
+            {/* Profile Dropdown */}
+            {user && isProfileOpen && (
+              <div className="absolute right-0 mt-4 w-48 bg-white rounded-2xl shadow-2xl border border-slate-100 p-2 animate-in slide-in-from-top-2 duration-200">
+                <div className="px-4 py-3 border-b border-slate-50 mb-1">
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Ingelogd als</p>
+                  <p className="text-sm font-bold truncate text-slate-900">{userProfile?.naam || user.email}</p>
+                </div>
+                
+                <button 
+                  onClick={() => { setIsOrdersOpen(true); setIsProfileOpen(false); }}
+                  className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 rounded-xl transition-colors font-medium flex items-center gap-2"
+                >
+                  <i className="fa-solid fa-clock-rotate-left opacity-40"></i> Mijn Bestellingen
+                </button>
+
+                <button 
+                  onClick={() => { logout(); setIsProfileOpen(false); }}
+                  className="w-full text-left px-4 py-2 text-sm text-rose-500 hover:bg-rose-50 rounded-xl transition-colors font-medium flex items-center gap-2"
+                >
+                  <i className="fa-solid fa-right-from-bracket"></i> Uitloggen
+                </button>
+              </div>
+            )}
+          </div>
+
           {/* Cart Icon */}
           <button 
             onClick={() => setIsCartOpen(true)}
@@ -86,7 +136,7 @@ export default function Header({ data = {} }) {
                 className="bg-primary text-white px-6 py-2.5 rounded-full font-bold text-sm hover:bg-accent transition-all duration-300 shadow-lg shadow-primary/10"
                 onClick={(e) => { 
                   if (e.shiftKey) return; 
-                  const target = document.getElementById("contact");
+                  const target = document.getElementById("footer");
                   if (target) { e.preventDefault(); target.scrollIntoView({ behavior: "smooth" }); }
               }} data-dock-type="link" data-dock-bind="site_settings.0.header_cta_text">Contact</button>
             )}
@@ -122,12 +172,15 @@ export default function Header({ data = {} }) {
           {settings.header_show_button !== false && (
             <button onClick={(e) => { 
                 if (e.shiftKey) return; 
-                const target = document.getElementById("contact");
+                const target = document.getElementById("footer");
                 if (target) { e.preventDefault(); target.scrollIntoView({ behavior: "smooth" }); }
             }} data-dock-type="link" data-dock-bind="site_settings.0.header_cta_text">Contact</button>
           )}
         </div>
       </div>
     </nav>
+    <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+    <OrderHistoryModal isOpen={isOrdersOpen} onClose={() => setIsOrdersOpen(false)} />
+    </>
   );
 }

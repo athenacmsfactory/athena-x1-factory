@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCart } from './CartContext';
+import { useAuth } from './AuthContext';
 import { Link } from 'react-router-dom';
 import { db } from '../lib/firebase';
 import { collection, addDoc, serverTimestamp, doc, setDoc } from 'firebase/firestore';
 
 const Checkout = () => {
     const { cart, cartTotal, clearCart } = useCart();
+    const { user, userProfile } = useAuth();
     const [isProcessing, setIsProcessing] = useState(false);
     const [paymentStatus, setPaymentStatus] = useState(null); // 'success', 'error', null
     const [formData, setFormData] = useState({
@@ -15,6 +17,19 @@ const Checkout = () => {
         adres: '',
         opmerkingen: ''
     });
+
+    // Pre-fill form if user is logged in
+    useEffect(() => {
+        if (userProfile) {
+            setFormData(prev => ({
+                ...prev,
+                naam: userProfile.naam || prev.naam,
+                email: userProfile.email || user.email || prev.email,
+                telefoon: userProfile.telefoon || prev.telefoon,
+                adres: userProfile.adres || prev.adres
+            }));
+        }
+    }, [userProfile, user]);
 
     const gateway = import.meta.env.VITE_PAYMENT_GATEWAY || 'email';
     const stripeKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
@@ -42,6 +57,7 @@ const Checkout = () => {
 
             // 2. Save the order to Firestore
             const orderData = {
+                userId: user?.uid || null, // Link to authenticated user
                 customerId: formData.email,
                 customer: formData,
                 items: cart.map(item => ({
