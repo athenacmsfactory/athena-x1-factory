@@ -1,9 +1,0 @@
-{
-  "site_name": "KDC Test Shop",
-  "site_logo": "athena-icon.svg",
-  "nav_links": [
-    { "label": "Producten", "url": "#producten" },
-    { "label": "Over Ons", "url": "#about" },
-    { "label": "Contact", "url": "#footer" }
-  ]
-}
